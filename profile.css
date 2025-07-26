@@ -1,0 +1,939 @@
+.orange-bg{
+background-color: #f97316;
+}
+.pink-bg{
+background-color: #f472b6;
+}
+.green-bg{
+  background-color: #a7f3d0;
+}
+.lavendar-bg{
+  background-color: #c4b5fd;
+}
+.blue-bg{
+  background-color: #38bdf8;
+}
+.yellow-bg{
+  background-color: 	skyblue;
+}
+html, body {
+  height: 100%;
+  color: white; /* Default light text */
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  overflow-x: hidden;
+}
+.page {
+  height: auto;
+  width: 100vw;
+}
+.panel {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* PANEL 1 */
+#panel1 {
+  font-size: 5rem; 
+  align-items: start; 
+  padding-left: 5vw;
+  background-image: url('Images/sun.png'); 
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position:center;
+}
+
+#panel1 h1 {
+  color: #f97316;
+  margin: 0;
+  width: 100%; /* H1 will take full available width if flex-direction is row, but here it's column */
+  padding: 0;
+  position: relative; /* Not strictly necessary here, but good practice if you ever absolutely position children within h1 */
+  text-align: left; /* Ensure text within h1 is left-aligned */
+  /* You might want to adjust font-size more responsively here */
+  font-size: clamp(3rem, 10vw, 8rem); /* Responsive font size for H1 */
+}
+
+.typing-container {
+  color: #000;
+  font-size: 2rem;
+  margin-top: 1rem; 
+  font-size: clamp(1rem, 3vw, 2.5rem);
+}
+
+#typed-text {
+  font-weight: 600;
+}
+
+/* Optional: Media queries for fine-tuning on smaller screens */
+
+
+
+
+
+/* PANEL 2 */
+.panel2 {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+
+#panel2-left, #panel2-right {
+  width: 50vw;
+}
+#panel2-left{
+  padding: 0 20px;
+  z-index: 20;
+}
+#panel2-right img{
+  position: absolute;
+  bottom: 0;
+  right: 6rem;
+  scale: 1.3;
+}
+
+.typing-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  display: inline;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.cursor {
+  font-weight: bold;
+  animation: blinkCursor 0.7s infinite;
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+
+/* PANEL 3 */
+
+
+.panel3 {
+  height: 100vh;
+  width: 100vw;
+  font-size: 4rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  overflow:hidden;
+  position: relative;
+  z-index: 1;
+}
+.panel3 h1{
+  font-size: 4rem;
+  padding: 0 20px;
+}
+.panel3 img{
+  height: 100%;
+  width: 40vw;
+  transform: rotate(65deg);
+  filter: invert(1);
+}
+
+
+/* SKILLS SECTION */
+
+
+.skills-section {
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
+  z-index: 2; /* must be above .panel3 if you're seeing images from it */
+} 
+.horizontal-wrapper {
+  display: flex;
+  height: 100%;
+  width: 200vw; /* 3x width now */
+}
+
+.slide {
+  flex: 0 0 200vw;
+  height: 100vh;
+  position: relative;
+}
+
+/* Internal pseudo-slides inside #slide1 */
+.virtual-slide {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+#vslide1 {
+  left: 0;
+  display: flex;
+  justify-content: center;
+}
+#vslide1 h1{
+  width: 50vw;
+  text-align: center;
+}
+#vslide1 img{
+  width: 50vw;
+}
+
+#vslide2 {
+  left: 100vw;
+}
+
+.skill-container {
+  font-size: 4rem;
+  font-weight: bold;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.skill {
+  display: inline-block;
+}
+
+
+/* CASUAL SECTION */
+
+#casual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-between;
+  align-items: flex-end;
+  background-image: url("Images/CoffeeDoddle.png");
+  background-position: 20px 30px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  overflow: visible;
+}
+
+#coffee_text{
+  font-size: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin-top: 5vh;
+  margin-right: 5vw;
+  width: 40vw;
+  height: 100%;
+}
+#coffee_text span {
+  opacity: 0;
+  transform: translateY(30px);
+  display: inline-block; /* Required for transform to work properly on inline elements */
+}
+
+/* WORK EXPERIENCE SECTION */
+
+.exp-horizontal-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
+  z-index: 2;
+}
+.exp-panel-container-wrapper {
+  display: flex;
+  height: 100%;
+  width: 300vw; /* 3x width now */
+}
+.exp-panel-container{
+flex: 0 0 300vw;
+  height: 100vh;
+  position: relative;
+}
+#exp-heading h1{
+ font-size: 3rem;
+}
+.exp-panel {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#exp-vslide1 {
+  left: 0;
+  background-image: url("/Images/young.png");
+  background-position: 110% 120%;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+}
+#exp-vslide2 {
+  left: 100vw;
+}
+#exp-vslide2 .exp-panel-content{
+  display: flex;
+  flex-direction: row ;
+  justify-content: space-between;
+  width: 100vw;
+}
+#sap-exp-card, #nagarro-exp-card,#cn-exp-card{
+  width: 40vw;
+  font-size: 1.2rem;
+}
+
+#exp-vslide3 {
+  left: 200vw;
+  background-image: url("/Images/plane.png");
+  background-position:bottom right;
+  background-repeat: no-repeat;
+}
+
+
+#strollingImage {
+  transform: rotateY(180deg);
+}
+
+
+
+/* EDUCATION SECTION */
+
+
+.heading-mask-section {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  background: url('/Images/sky.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Masked text effect */
+.mask-heading {
+  font-size: 10vw;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #3B4B6B;
+}
+.word-wrapper {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #4b0082; /* muted indigo */
+  text-align: start;
+  line-height: 1.2;
+  position: relative;
+}
+#space-for-u{
+  width: 1rem;
+}
+.top-word, .bottom-word {
+  letter-spacing: 0.4rem;
+}
+
+.shared-u {
+  display: inline-block;
+  color: #000;
+  position: relative;
+}
+
+.blank-space {
+  display: inline-block;
+  width: 1.3ch;
+}
+
+/* EDUCATION */
+
+.zoom-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh; /* Make it full screen */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  font-size: 1.5rem;
+}
+
+.zoom-content {
+  display: flex;
+  flex-direction: row;
+  font-size: 8px;
+  width: 40vw;
+  border: 2px solid white;
+}
+.edu-card{
+  width: 50%;
+  justify-content: center;
+  padding: 5px;
+}
+
+
+
+.zoom-content h1 {
+  font-size: 3rem;
+}
+.casual2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center; 
+  flex-wrap: wrap;
+  height: fit-content;
+}
+.casual2-content{
+  height: 100%;
+  width: 90%;
+}
+.casual2-content div{
+  text-align: center;
+  filter: invert(1);
+}
+.casual2-content p{
+  height: 50%;
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+
+/* PROJECT SECTION */
+
+
+.project-section {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  height: fit-content; /* Ensure it takes full viewport height */
+  text-align: center;
+}
+.project-container{
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: auto;
+}
+
+.project-heading h1 {
+  font-size: 6rem; /* Adjust size as needed */
+  letter-spacing: 0.6rem;
+}
+
+.project-details{
+  width: 80vw;
+  border: 4px solid white;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  align-items: center;
+}
+.streamsphere{
+  width: 100%;
+}
+#project-img{
+  height: 100%;
+  display: flex;
+  justify-content: center; /* horizontal centering */
+  align-items: center; 
+}
+#project-img img{
+  width: 40vw;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; 
+}
+#ss-website-icon{
+  width: 50px;
+  filter: invert(1);
+}
+#ss-github-icon{
+  width: 50px;
+}
+
+
+/* CONTACT ME */
+.contact-me {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-self: center;
+  gap: 2rem;
+  position: relative;
+  box-sizing: border-box;
+
+}
+.contact-me-heading {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  max-width: 100vw;
+}
+.contact-me{
+  display: flex;
+  justify-content: end;
+  height: 100vh;
+}
+.contact-me-message{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.footer {
+  width: 100%;
+  padding: 2rem;
+  background-color: #222;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  gap: 3rem; /* space between mail and call */
+  align-items: center;
+  font-size: 1rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.contact {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+#location-icon{
+  width: 35px;
+  height: 35px;
+}
+.contact img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.contact span {
+  font-weight: 400;
+}
+
+
+
+@media (max-width: 480px) {
+  #panel1 {
+    font-size: 2rem; /* Even smaller base font size */
+    padding-left: 2vw;
+  }
+  #panel1 h1 {
+    font-size: clamp(2rem, 7vw, 4rem);
+  }
+  .typing-container {
+    font-size: clamp(0.8rem, 2vw, 1.5rem);
+    margin-top: 0.5rem;
+    padding-left: 0.2rem;
+  }
+}
+@media (max-width: 912px) {
+  #panel1 {
+    font-size: 3rem; 
+    padding-left: 3vw;
+  }
+  #panel1 h1 {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+  }
+  .typing-container {
+    font-size: clamp(0.9rem, 2.5vw, 2rem);
+    margin-top: 0.8rem;
+    padding-left: 0.3rem;
+  }
+}
+
+@media (max-width: 1215px){
+  .zoom-content h1 {
+  font-size: 2rem;
+}
+}
+@media (max-width: 912px) {
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* General adjustments */
+  .panel, .page, .skills-section, .exp-horizontal-wrapper, .heading-mask-section, .zoom-section, .casual2, .project-section, .contact-me {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100vw !important;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+  .page{
+    width: 100vw;
+    height: 100vh;
+  }
+
+  /* PANEL 1 - Home */
+  #panel1 {
+    background-size: cover;
+    align-items: center;
+    padding-left: 0;
+    text-align: center;
+  }
+
+  #panel1 h1 {
+    text-align: center;
+  }
+
+  .typing-container {
+    padding-left: 0;
+    text-align: center;
+  }
+
+  /* PANEL 2 - Intro */
+  .panel2 {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+    justify-content: center;
+    padding: 20px 0;
+    
+  }
+
+  #panel2-left, #panel2-right {
+    width: 100%;
+    text-align: center;
+  }
+  #panel2-left{
+    margin: 4rem 0;
+  }
+
+  #panel2-right img {
+    position: static;
+    transform: scale(1);
+    width: 80%;
+  }
+
+  .typing-text {
+    font-size: 1.5rem;
+  }
+
+  /* PANEL 3 */
+  .panel3 {
+    flex-direction: column;
+    padding: 1rem 0;
+    height: fit-content;
+  }
+
+  .panel3 img {
+    display: none;
+  }
+
+  .panel3 h1 {
+    font-size: 2rem;
+  }
+
+  /* SKILLS SECTION */
+  .skills-section{
+    padding: 10px;
+    height: fit-content;
+  }
+  .horizontal-wrapper {
+    flex-direction: column;
+    width: 100vw;
+    height: auto;
+  }
+
+  .slide, .virtual-slide {
+    position: static;
+    width: 100vw;
+    flex: 0;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  #vslide1,#vslide2{
+    height: auto;
+    margin: 50px 0;
+  }
+  .skill-container {
+    font-size: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100vw;
+    height: auto;
+    padding: 0;
+  }
+#vslide1 h1{
+  font-size: 3.5rem ;
+}
+  #strollingImage {
+    transform: none;
+    width: 50%;
+  }
+
+  /* CASUAL SECTION */
+  #casual {
+    align-items: baseline;
+    background-position: center top;
+    background-size: 200px;
+    margin: 0;
+    padding: 0;
+    height: fit-content;
+  }
+
+
+  #coffee_text {
+    font-size: 1.8rem;
+    width: 100%;
+    margin: 12rem 0;
+    align-items: center;
+    height: fit-content;
+  }
+
+  #coffee_text div {
+    text-align: center;
+    height: fit-content;
+  }
+
+  /* WORK EXPERIENCE SECTION */
+  .exp-horizontal-wrapper{
+    height: max-content;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+  }
+  .exp-panel-container-wrapper {
+    width: 100%;
+    height: max-content;
+    font-size: 20px;
+  }
+  .virtual-slide #exp-heading {
+    height: fit-content;
+  }
+  .virtual-slide{
+    width: 100vw;
+  }
+  #exp-heading h1{
+    height: 60vh;
+    font-size: 3rem;
+    margin: 5rem;
+  }
+
+  .exp-panel-container {
+    display: flex;
+    font-size: 2rem;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100vw;
+    height: fit-content;
+  }
+
+  .exp-panel-content {
+    display: flex;
+    flex-wrap: wrap;
+    height: fit-content;
+    margin: 0;
+    flex-direction: column !important;
+    align-items: center;
+    justify-content: start;
+  }
+  #exp-vslide1{
+    background-image: none;
+  }
+  #exp-vslide1,#exp-vsldie2,#exp-vslide3{
+    background-position: bottom;
+    background-size: 250px;
+    height: fit-content;
+    width: 100vw;
+  }
+  #sap-exp-card, #nagarro-exp-card, #cn-exp-card {
+    width: 95%;
+    height: auto;
+    margin: 2rem 0;
+    margin-bottom: 1rem;
+    text-align: left;
+    padding: 0 15px;
+  }
+  #sap-exp-card, #nagarro-exp-card, #cn-exp-card div{
+    font-size: 15px;
+  }
+  #sap-exp,#cn-exp{
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100vw;
+  }
+  .exp-company{
+    font-size: 3rem;
+    text-align: left;
+    padding-left: 15px;
+    margin: 20px 0 0 0;
+  }
+
+  /* EDUCATION SECTION */
+  .heading-mask-section {
+    background-size: cover;
+    padding: 2rem 0;
+  }
+
+  .word-wrapper {
+    font-size: 1.5rem;
+    text-align: start;
+  }
+  .top-word{
+    margin: 0 0 10px 0;
+    padding: 0;
+  }
+
+  .zoom-section {
+    flex-direction: column;
+    padding: 1rem 0;
+    height: fit-content;
+  }
+
+  .zoom-content {
+    width: 90%;
+    flex-direction: column-reverse;
+  }
+
+  .edu-card {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+  #biet{
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .edu-card h1 {
+    font-size: 2rem;
+  }
+
+  /* CASUAL 2 */
+  .casual2 {
+    flex-direction: column;
+    padding: 1rem 0;
+    text-align: center;
+    height: fit-content;
+    width: 100vw;
+  }
+
+  .casual2-content p {
+    padding: 0;
+  }
+
+  .casual2 img {
+    width: 80%;
+    height: auto;
+    margin-top: 1rem;
+  }
+
+  /* PROJECT SECTION */
+  .project-section{
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+  }
+  .project-container{
+    width: 100%;
+    height: auto;
+  }
+  .project-details {
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem 0;
+
+    border: 0;
+  }
+  .project-heading{
+    margin-top: 50px;
+  }
+  .project-heading h1 {
+    font-size: 2.5rem;
+  }
+  #project-img{
+    padding: 20px;
+  }
+  #project-img img {
+    width: 100%;
+  }
+
+  .project-links img {
+    width: 40px;
+  }
+
+  /* CONTACT ME */
+  .contact-me {
+    width: 100vw;
+    flex-direction: column;
+    background-position: bottom right;
+    background-size: 150%;
+    justify-content: start;
+    align-items: start;
+    padding: 0;
+    margin: 0;
+  }
+
+  .contact-me-heading {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    max-width: 100%;
+    height: 100%;
+    padding: 1rem 0 0 0;
+  }
+
+  .contact-me-message{
+    font-size: 1rem;
+    height: 20vh;
+  }
+
+  .contact-me-image{
+    height: 75vh;
+  }
+  .contact-me-image img{
+    height: 75vh;
+  }
+  .footer {
+    flex-direction: column;
+    font-size: 0.9rem;
+    padding: 0;
+    margin: 0;
+    display: inline;
+  }
+
+  .contact {
+    justify-content: center;
+  }
+}
+
+
+@media (max-width: 1015px) {
+  #cn-exp,#cn-exp-card{
+    width: fit-content;
+  }
+  
+  
+  
+}
