@@ -613,7 +613,7 @@ flex: 0 0 300vw;
   /* PANEL 2 - Intro */
   .panel2 {
     flex-direction: column;
-    height: auto;
+    height: 100vh;
     padding: 1rem;
     justify-content: center;
     padding: 20px 0;

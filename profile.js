@@ -224,18 +224,18 @@ ScrollTrigger.matchMedia({
 
 
 // Typing line in .panel2
-gsap.to(".text-content", {
-  text: "I build cool stuff on the web — front to back, pixels to APIs.",
-  scrollTrigger: {
-    trigger: ".panel2",
-    start: "top 50%",
-    end: "top top",
-    scrub: true,
-    pinSpacing: false
-  },
-  duration: 3,
-  ease: "none"
-});
+// gsap.to(".text-content", {
+//   text: "I build cool stuff on the web — front to back, pixels to APIs.",
+//   scrollTrigger: {
+//     trigger: ".panel2",
+//     start: "top 50%",
+//     end: "top top",
+//     scrub: true,
+//     pinSpacing: false
+//   },
+//   duration: 3,
+//   ease: "none"
+// });
 ScrollTrigger.matchMedia({
   // Desktop
   "(min-width: 768px)": function() {
