@@ -613,10 +613,9 @@ flex: 0 0 300vw;
   /* PANEL 2 - Intro */
   .panel2 {
     flex-direction: column;
-    height: 100vh;
-    padding: 1rem;
+    height: auto;
     justify-content: center;
-    padding: 20px 0;
+    padding: 10px 0;
     
   }
 
@@ -661,12 +660,13 @@ flex: 0 0 300vw;
   .horizontal-wrapper {
     flex-direction: column;
     width: 100vw;
-    height: auto;
+    height: 100vh;
   }
 
   .slide, .virtual-slide {
     position: static;
     width: 100vw;
+    height: 100vh;
     flex: 0;
     justify-content: center;
     align-items: center;
