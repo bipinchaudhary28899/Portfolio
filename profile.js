@@ -236,3 +236,33 @@ gsap.to(".text-content", {
   duration: 3,
   ease: "none"
 });
+ScrollTrigger.matchMedia({
+  // Desktop
+  "(min-width: 768px)": function() {
+    gsap.to(".text-content", {
+      text: "I build cool stuff on the web — front to back, pixels to APIs.",
+      scrollTrigger: {
+        trigger: ".panel2",
+        start: "top 50%", // trigger earlier for smoother feel
+        end: "top top",     // more scroll distance
+        scrub: true,
+        pinSpacing: false
+      },
+      ease: "none"
+    });
+  },
+
+  // Mobile
+  "(max-width: 767px)": function() {
+    // On mobile, don't scrub — just trigger once
+    gsap.to(".text-content", {
+      text: "I build cool stuff on the web — front to back, pixels to APIs.",
+      scrollTrigger: {
+        trigger: ".panel2",
+        start: "top 80%",
+        once: true // run only once
+      },
+      duration: 2
+    });
+  }
+});
