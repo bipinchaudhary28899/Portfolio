@@ -135,6 +135,6 @@ body::after {
   transform-origin: left center;
 }
 .cp-header {
-  border-bottom: none !important;
+  border-bottom: 80px solid transparent !important;
   align-items: flex-start !important;
 }

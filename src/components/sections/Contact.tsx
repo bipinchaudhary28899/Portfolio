@@ -11,8 +11,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 export function Contact() {
   const sec = useRef<HTMLElement>(null);
-  const [form, setForm]   = useState({ name: "", email: "", message: "" });
-  const [sent, setSent]   = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -34,10 +36,27 @@ export function Contact() {
     return () => ctx.revert();
   }, []);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Wire to your backend / email service as needed
-    setSent(true);
+    setSending(true);
+    setError("");
+
+    try {
+      const res = await fetch("https://formspree.io/f/xjglywnz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error("Failed to send");
+
+      setSent(true);
+      setForm({ name: "", email: "", message: "" });
+    } catch {
+      setError("Something went wrong. Please try again or email me directly.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const inputStyle = {
@@ -123,11 +142,25 @@ export function Contact() {
                 <span className="text-5xl">✉️</span>
                 <h3 className="text-xl font-bold" style={{ color: "var(--fg)" }}>Message sent!</h3>
                 <p className="text-sm" style={{ color: "var(--muted)" }}>I'll get back to you as soon as possible.</p>
+                <button
+                  onClick={() => setSent(false)}
+                  className="mt-2 text-xs underline"
+                  style={{ color: "var(--accent)" }}>
+                  Send another message
+                </button>
               </div>
             ) : (
               <form onSubmit={submit}
                 className="rounded-2xl border p-8 flex flex-col gap-5"
                 style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+
+                {error && (
+                  <div className="text-sm px-4 py-3 rounded-lg"
+                    style={{ background: "rgba(255,101,53,0.1)", color: "var(--accent)", border: "1px solid rgba(255,101,53,0.2)" }}>
+                    {error}
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: "var(--muted)" }}>
                     Name
@@ -167,11 +200,18 @@ export function Contact() {
                     onBlur={e => (e.target.style.borderColor = "var(--border)")}
                   />
                 </div>
-                <button type="submit"
+
+                <button type="submit" disabled={sending}
                   className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-85"
-                  style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}>
-                  Send Message <Send size={14} />
+                  style={{
+                    background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))",
+                    opacity: sending ? 0.6 : 1,
+                    cursor: sending ? "not-allowed" : "pointer"
+                  }}>
+                  {sending ? "Sending..." : "Send Message"}
+                  {!sending && <Send size={14} />}
                 </button>
+
               </form>
             )}
           </div>

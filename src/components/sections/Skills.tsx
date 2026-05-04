@@ -39,7 +39,7 @@ export function Skills() {
           </h2>
         </div>
 
-        <div className="skills-grid grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="skills-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {categories.map(([cat, items]) => (
             <div key={cat} className="skill-cat opacity-0 rounded-2xl border p-6"
               style={{ background: "var(--card)", borderColor: "var(--border)" }}>
