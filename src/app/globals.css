@@ -55,7 +55,11 @@
 
 /* ── Reset ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+
+html {
+  scroll-behavior: smooth;
+  /* NOTE: do NOT set overflow-x here — it breaks position:fixed on mobile browsers */
+}
 
 body {
   background: var(--bg);
@@ -64,6 +68,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  position: relative; /* required for overflow-x: hidden to work on iOS Safari */
 }
 
 /* Film grain overlay */
@@ -128,4 +133,8 @@ body::after {
   height: 1px;
   background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
   transform-origin: left center;
+}
+.cp-header {
+  border-bottom: none !important;
+  align-items: flex-start !important;
 }

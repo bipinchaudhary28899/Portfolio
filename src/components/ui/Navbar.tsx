@@ -12,9 +12,10 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    /* Fade-in only — no Y transform so position:fixed stays stable on mobile */
     gsap.fromTo(ref.current,
-      { y: -60, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.9, ease: "power3.out", delay: 0.25 },
+      { opacity: 0 },
+      { opacity: 1, duration: 0.7, ease: "power2.out", delay: 0.2 },
     );
   }, []);
 
@@ -39,6 +40,9 @@ export function Navbar() {
         background: scrolled ? "var(--nav-bg-scrolled)" : "var(--nav-bg)",
         borderBottom: `1px solid ${scrolled ? "var(--border)" : "transparent"}`,
         transition: "background .3s, border-color .3s",
+        /* Force GPU compositing layer — prevents address-bar resize jank on iOS/Android */
+        transform: "translateZ(0)",
+        WebkitTransform: "translateZ(0)",
       }}
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-12 h-16 flex items-center justify-between">
