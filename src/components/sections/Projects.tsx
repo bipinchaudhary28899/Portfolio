@@ -1,160 +1,246 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ExternalLink, ArrowRight } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/components/ui/icons";
-import { FadeIn, StaggerContainer, staggerItem } from "@/components/ui/motion-wrapper";
 import { projects } from "@/data/portfolio";
 
-function ProjectCard({ project }: { project: typeof projects[0] }) {
+gsap.registerPlugin(ScrollTrigger);
+
+const TINTS = [
+  "rgba(255,101,53,0.05)",
+  "rgba(255,159,28,0.05)",
+  "rgba(255,101,53,0.03)",
+  "rgba(255,159,28,0.03)",
+];
+
+/* ── Mobile card ─────────────────────────────────────────────────────────── */
+function ProjectCard({ p, i }: { p: (typeof projects)[0]; i: number }) {
   return (
-    <motion.article
-      variants={staggerItem}
-      className="card group flex flex-col overflow-hidden"
-    >
-      {/* Image */}
-      <div
-        className="relative h-44 overflow-hidden flex-shrink-0"
-        style={{ backgroundColor: "var(--muted-bg)" }}
-      >
-        {/* Gradient fallback / overlay */}
-        <div
-          className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent 40%, var(--accent-glow) 100%)",
-          }}
-        />
-        <div
-          className="w-full h-full flex items-center justify-center text-4xl font-bold"
-          style={{ color: "var(--card-border)" }}
-        >
-          {project.title.charAt(0)}
+    <div className="proj-card rounded-2xl border p-6 flex flex-col gap-4 opacity-0"
+      style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+      <div className="flex items-center justify-between">
+        <span className="font-mono text-xs" style={{ color: "var(--accent)" }}>
+          {String(i + 1).padStart(2, "0")}
+        </span>
+        <div className="flex gap-2">
+          {p.githubUrl !== "#" && (
+            <a href={p.githubUrl} target="_blank" rel="noopener noreferrer"
+              className="p-1.5 rounded transition-colors hover:text-white" style={{ color: "var(--muted)" }}>
+              <GithubIcon width={15} height={15} />
+            </a>
+          )}
+          {p.liveUrl !== "#" && (
+            <a href={p.liveUrl} target="_blank" rel="noopener noreferrer"
+              className="p-1.5 rounded transition-colors" style={{ color: "var(--accent)" }}>
+              <ExternalLink size={15} />
+            </a>
+          )}
         </div>
       </div>
-
-      {/* Content */}
-      <div className="flex flex-col flex-1 p-5">
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <h3
-            className="text-base font-semibold leading-snug"
-            style={{ color: "var(--foreground)" }}
-          >
-            {project.title}
-          </h3>
-          <div className="flex items-center gap-1.5 flex-shrink-0">
-            <motion.a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${project.title} GitHub`}
-              className="p-1.5 rounded-lg transition-colors"
-              style={{ color: "var(--muted)" }}
-              whileHover={{ color: "var(--foreground)", scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <GithubIcon width={16} height={16} />
-            </motion.a>
-            <motion.a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${project.title} Live Demo`}
-              className="p-1.5 rounded-lg transition-colors"
-              style={{ color: "var(--muted)" }}
-              whileHover={{ color: "var(--accent)", scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <ExternalLink size={16} />
-            </motion.a>
-          </div>
-        </div>
-
-        <p
-          className="text-sm leading-relaxed flex-1 mb-4"
-          style={{ color: "var(--muted)" }}
-        >
-          {project.description}
-        </p>
-
-        {/* Tech stack */}
-        <div className="flex flex-wrap gap-1.5">
-          {project.tech.map((t) => (
-            <span
-              key={t}
-              className="text-xs px-2.5 py-1 rounded-full border font-medium"
-              style={{
-                borderColor: "var(--card-border)",
-                color: "var(--muted)",
-                backgroundColor: "var(--muted-bg)",
-              }}
-            >
-              {t}
-            </span>
-          ))}
-        </div>
+      <h3 className="text-xl font-bold leading-snug" style={{ color: "var(--fg)" }}>{p.title}</h3>
+      <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>{p.description}</p>
+      <div className="flex flex-wrap gap-1.5">
+        {p.tech.map((t) => (
+          <span key={t} className="text-xs px-2.5 py-1 rounded-full border"
+            style={{ borderColor: "var(--border)", color: "var(--muted)", background: "var(--bg)" }}>{t}</span>
+        ))}
       </div>
-    </motion.article>
+    </div>
   );
 }
 
-export function Projects() {
+/* ── Desktop panel ───────────────────────────────────────────────────────── */
+function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
+  const num = String(i + 1).padStart(2, "0");
   return (
-    <section
-      id="projects"
-      className="py-24 sm:py-32"
-      style={{ backgroundColor: "var(--muted-bg)" }}
+    <div
+      className="relative flex flex-col justify-between group border-r"
+      style={{
+        flexShrink: 0,
+        width: "min(78vw,860px)",
+        height: "100%",
+        borderColor: "var(--border)",
+        background: TINTS[i % TINTS.length],
+        padding: "2.5rem 3.5rem",
+        overflow: "hidden",
+      }}
     >
-      <div className="max-w-6xl mx-auto px-6">
-        <FadeIn>
-          <div className="mb-14 text-center">
-            <span
-              className="inline-block text-sm font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--accent)" }}
-            >
-              Work
-            </span>
-            <h2
-              className="text-3xl sm:text-4xl font-bold mb-4"
-              style={{ color: "var(--foreground)" }}
-            >
+      {/* Ghost number */}
+      <span className="absolute top-6 right-8 font-black font-mono pointer-events-none select-none"
+        style={{ fontSize: "clamp(7rem,15vw,14rem)", lineHeight: 1, opacity: 0.05, color: "var(--fg)" }}>
+        {num}
+      </span>
+
+      {/* Top */}
+      <div className="flex items-start justify-between relative z-10">
+        <span className="font-mono text-xs tracking-widest" style={{ color: "var(--accent)" }}>
+          {num} / {String(projects.length).padStart(2, "0")}
+        </span>
+        <div className="flex gap-2">
+          {p.githubUrl !== "#" && (
+            <a href={p.githubUrl} target="_blank" rel="noopener noreferrer"
+              className="p-2 rounded-lg border transition-all hover:scale-110"
+              style={{ border: "1px solid var(--border)", color: "var(--muted)" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--accent)"; (e.currentTarget as HTMLElement).style.color = "var(--fg)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.color = "var(--muted)"; }}>
+              <GithubIcon width={15} height={15} />
+            </a>
+          )}
+          {p.liveUrl !== "#" && (
+            <a href={p.liveUrl} target="_blank" rel="noopener noreferrer"
+              className="p-2 rounded-lg border transition-all hover:scale-110"
+              style={{ border: "1px solid var(--border)", color: "var(--muted)" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--accent)"; (e.currentTarget as HTMLElement).style.color = "var(--accent)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.color = "var(--muted)"; }}>
+              <ExternalLink size={15} />
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* Middle */}
+      <div className="relative z-10 flex-1 flex flex-col justify-center mt-10">
+        <h3 className="font-black tracking-tight leading-none mb-6"
+          style={{ fontSize: "clamp(2.4rem,5vw,4.5rem)", color: "var(--fg)" }}>
+          {p.title}
+        </h3>
+        <p className="text-sm sm:text-base leading-relaxed max-w-md" style={{ color: "var(--fg-dim)" }}>
+          {p.description}
+        </p>
+      </div>
+
+      {/* Tech */}
+      <div className="relative z-10 flex flex-wrap gap-2 mt-8">
+        {p.tech.map((t) => (
+          <span key={t} className="text-xs px-3 py-1 rounded-full border"
+            style={{ borderColor: "var(--border)", color: "var(--muted)", background: "var(--card)" }}>{t}</span>
+        ))}
+      </div>
+
+      {/* Hover accent line */}
+      <div className="absolute bottom-0 left-0 right-0 h-0.5 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"
+        style={{ background: "linear-gradient(90deg,var(--grad-a),var(--grad-b))" }} />
+    </div>
+  );
+}
+
+/* ── Section ─────────────────────────────────────────────────────────────── */
+export function Projects() {
+  const desktopSec  = useRef<HTMLElement>(null);
+  const trackRef    = useRef<HTMLDivElement>(null);
+  const headRef     = useRef<HTMLDivElement>(null);
+  const mobileHdRef = useRef<HTMLDivElement>(null);
+  const mobileCards = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    /* Sync track padding to actual header height */
+    const syncPadding = () => {
+      if (headRef.current && trackRef.current) {
+        trackRef.current.style.paddingTop = headRef.current.offsetHeight + "px";
+      }
+    };
+    syncPadding();
+    window.addEventListener("resize", syncPadding);
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 768px)", () => {
+      const section = desktopSec.current!;
+      const track   = trackRef.current!;
+      const ctx = gsap.context(() => {
+        gsap.fromTo(headRef.current,
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+            scrollTrigger: { trigger: section, start: "top 80%", toggleActions: "play none none none" } });
+
+        const dist = () => track.scrollWidth - window.innerWidth;
+        gsap.to(track, {
+          x: () => -dist(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => "+=" + dist(),
+            pin: true,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+      });
+      return () => ctx.revert();
+    });
+
+    mm.add("(max-width: 767px)", () => {
+      const ctx = gsap.context(() => {
+        gsap.fromTo(mobileHdRef.current,
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
+            scrollTrigger: { trigger: mobileHdRef.current, start: "top 85%", toggleActions: "play none none none" } });
+        gsap.fromTo(
+          mobileCards.current?.querySelectorAll(".proj-card") ?? [],
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: "power3.out",
+            scrollTrigger: { trigger: mobileCards.current, start: "top 85%", toggleActions: "play none none none" } });
+      });
+      return () => ctx.revert();
+    });
+
+    return () => {
+      mm.revert();
+      window.removeEventListener("resize", syncPadding);
+    };
+  }, []);
+
+  return (
+    <div id="projects">
+      {/* ── Desktop ── */}
+      <section
+        ref={desktopSec}
+        className="hidden md:block relative"
+        style={{ height: "100vh", overflow: "hidden", background: "var(--bg)" }}
+      >
+        <div ref={headRef} className="absolute top-0 left-0 right-0 z-20 opacity-0 flex items-end justify-between px-14 pt-24 pb-5"
+          style={{ borderColor: "var(--border)" }}>
+          <div>
+            <p className="section-label mb-1">Work</p>
+            <h2 className="font-bold" style={{ fontSize: "clamp(1.8rem,3.5vw,3rem)", color: "var(--fg)" }}>
               Selected Projects
             </h2>
-            <p
-              className="text-base max-w-xl mx-auto"
-              style={{ color: "var(--muted)" }}
-            >
-              A selection of projects I've built — ranging from full-stack apps
-              to developer tools and open-source contributions.
-            </p>
           </div>
-        </FadeIn>
+          <a href="https://github.com/bipinchaudhary28899" target="_blank" rel="noopener noreferrer"
+            className="text-sm font-medium mb-1 flex items-center gap-1.5 transition-opacity hover:opacity-70"
+            style={{ color: "var(--accent)" }}>
+            All on GitHub →
+          </a>
+        </div>
 
-        <StaggerContainer
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          staggerDelay={0.07}
-        >
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </StaggerContainer>
+        {/* paddingTop set dynamically to match header height */}
+        <div ref={trackRef} className="h-track items-stretch" style={{ height: "100%" }}>
+          <div style={{ flexShrink: 0, width: 48 }} />
+          {projects.map((p, i) => <ProjectPanel key={p.id} p={p} i={i} />)}
+          <div style={{ flexShrink: 0, width: 48 }} />
+        </div>
+      </section>
 
-        <FadeIn delay={0.2}>
-          <div className="mt-12 text-center">
-            <motion.a
-              href="https://github.com/bipinchaudhary28899"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-medium hover:underline underline-offset-4 transition-colors"
-              style={{ color: "var(--accent)" }}
-              whileHover={{ gap: "10px" }}
-            >
-              See more on GitHub
-              <ArrowRight size={16} />
-            </motion.a>
-          </div>
-        </FadeIn>
-      </div>
-    </section>
+      {/* ── Mobile ── */}
+      <section className="block md:hidden py-20 px-5" style={{ background: "var(--bg)" }}>
+        <div ref={mobileHdRef} className="mb-10 opacity-0">
+          <p className="section-label mb-2">Work</p>
+          <h2 className="text-3xl font-bold" style={{ color: "var(--fg)" }}>Selected Projects</h2>
+        </div>
+        <div ref={mobileCards} className="flex flex-col gap-5">
+          {projects.map((p, i) => <ProjectCard key={p.id} p={p} i={i} />)}
+        </div>
+        <div className="mt-8">
+          <a href="https://github.com/bipinchaudhary28899" target="_blank" rel="noopener noreferrer"
+            className="text-sm font-medium" style={{ color: "var(--accent)" }}>
+            All on GitHub →
+          </a>
+        </div>
+      </section>
+    </div>
   );
 }

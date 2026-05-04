@@ -1,153 +1,332 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FadeIn } from "@/components/ui/motion-wrapper";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Plane } from "lucide-react";
 import { experiences } from "@/data/portfolio";
-import { Briefcase } from "lucide-react";
-import { useRef } from "react";
-import { useInView } from "framer-motion";
 
-function TimelineItem({
-  experience,
-  index,
-}: {
-  experience: typeof experiences[0];
-  index: number;
-}) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px 0px" });
+gsap.registerPlugin(ScrollTrigger);
 
+/* ── Experience card ─────────────────────────────────────────────────────── */
+function ExpCard({ exp }: { exp: (typeof experiences)[0] }) {
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x: -24 }}
-      animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.12,
-        ease: "easeOut",
-      }}
-      className="relative flex gap-6"
+    <div
+      className="rounded-2xl border overflow-hidden transition-all duration-300 hover:-translate-y-1"
+      style={{ background: "var(--card)", borderColor: "var(--border)" }}
     >
-      {/* Timeline dot */}
-      <div className="flex flex-col items-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={isInView ? { scale: 1 } : {}}
-          transition={{ duration: 0.4, delay: index * 0.12 + 0.2 }}
-          className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center z-10 border-2"
-          style={{
-            background: "linear-gradient(135deg, var(--gradient-start), var(--gradient-end))",
-            borderColor: "var(--background)",
-            color: "white",
-          }}
-        >
-          <Briefcase size={16} />
-        </motion.div>
-        {index < experiences.length - 1 && (
-          <div
-            className="w-0.5 flex-1 mt-3 min-h-[3rem]"
-            style={{
-              background:
-                "linear-gradient(to bottom, var(--gradient-start), var(--card-border))",
-            }}
-          />
-        )}
-      </div>
-
-      {/* Content */}
-      <div
-        className="flex-1 p-5 rounded-xl border mb-6"
-        style={{
-          borderColor: "var(--card-border)",
-          backgroundColor: "var(--card)",
-        }}
-      >
-        <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
-          <div>
-            <h3
-              className="text-base font-semibold"
-              style={{ color: "var(--foreground)" }}
-            >
-              {experience.role}
-            </h3>
-            <p
-              className="text-sm font-medium"
-              style={{ color: "var(--accent)" }}
-            >
-              {experience.company}
-            </p>
-          </div>
+      {/* Top accent */}
+      <div className="h-0.5" style={{ background: "linear-gradient(90deg,var(--grad-a),var(--grad-b))" }} />
+      <div className="p-5 sm:p-8 flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <p className="section-label">{exp.company}</p>
+          <h3 className="text-lg sm:text-xl font-bold leading-snug" style={{ color: "var(--fg)" }}>
+            {exp.role}
+          </h3>
           <span
-            className="text-xs px-3 py-1 rounded-full border flex-shrink-0"
-            style={{
-              borderColor: "var(--card-border)",
-              color: "var(--muted)",
-              backgroundColor: "var(--muted-bg)",
-            }}
+            className="self-start text-xs px-3 py-1 rounded-full font-semibold"
+            style={{ background: "rgba(255,101,53,.1)", color: "var(--accent)" }}
           >
-            {experience.period}
+            {exp.period}
           </span>
         </div>
-
-        <p
-          className="text-sm leading-relaxed mb-4"
-          style={{ color: "var(--muted)" }}
-        >
-          {experience.description}
+        <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
+          {exp.description}
         </p>
-
         <div className="flex flex-wrap gap-1.5">
-          {experience.tech.map((t) => (
+          {exp.tech.map((t) => (
             <span
               key={t}
-              className="text-xs px-2.5 py-1 rounded-full border font-medium"
-              style={{
-                borderColor: "var(--card-border)",
-                color: "var(--muted)",
-                backgroundColor: "var(--muted-bg)",
-              }}
+              className="text-xs px-2.5 py-1 rounded-full border"
+              style={{ borderColor: "var(--border)", color: "var(--muted)", background: "var(--bg)" }}
             >
               {t}
             </span>
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
+/* ── Section ─────────────────────────────────────────────────────────────── */
 export function Experience() {
+  const sectionRef      = useRef<HTMLElement>(null);
+  const planeRef        = useRef<HTMLDivElement>(null);
+  const mobilePlaneRef  = useRef<HTMLDivElement>(null);
+  const mobileHd        = useRef<HTMLDivElement>(null);
+  const mobileCards     = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    /* ── Scroll-direction rotation — works on ALL screen sizes ── */
+    const planes = () => [planeRef.current, mobilePlaneRef.current].filter(Boolean) as HTMLDivElement[];
+    gsap.set(planes(), { rotation: -42 });
+
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const down = y > lastY;
+      lastY = y;
+      gsap.to(planes(), { rotation: down ? 138 : -42, duration: 0.35, ease: "power2.out", overwrite: "auto" });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const mm = gsap.matchMedia();
+
+    /* ── Desktop ── */
+    mm.add("(min-width: 768px)", () => {
+      const ctx = gsap.context(() => {
+
+        /* Plane pulse */
+        gsap.to(planeRef.current, { scale: 1.1, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+        /* Cards slide in from their side */
+        gsap.utils.toArray<HTMLElement>(".exp-card-desktop").forEach((card, i) => {
+          const fromLeft = i % 2 === 0;
+          gsap.fromTo(
+            card,
+            { opacity: 0, x: fromLeft ? -60 : 60 },
+            { opacity: 1, x: 0, duration: 0.85, ease: "power3.out",
+              scrollTrigger: { trigger: card, start: "top 78%", toggleActions: "play none none none" } },
+          );
+        });
+
+        /* Center dots pop in */
+        gsap.utils.toArray<HTMLElement>(".timeline-dot").forEach((dot) => {
+          gsap.fromTo(dot,
+            { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.5)",
+              scrollTrigger: { trigger: dot, start: "top 78%", toggleActions: "play none none none" } },
+          );
+        });
+
+        /* Horizontal connectors draw toward center */
+        gsap.utils.toArray<HTMLElement>(".timeline-connector").forEach((line, i) => {
+          const fromRight = i % 2 === 0;
+          gsap.fromTo(line,
+            { scaleX: 0, transformOrigin: fromRight ? "right center" : "left center" },
+            { scaleX: 1, duration: 0.45, ease: "power2.out",
+              scrollTrigger: { trigger: line, start: "top 78%", toggleActions: "play none none none" } },
+          );
+        });
+
+      }, sectionRef);
+      return () => ctx.revert();
+    });
+
+    /* ── Mobile ── */
+    mm.add("(max-width: 767px)", () => {
+      const ctx = gsap.context(() => {
+        /* Mobile plane pulse */
+        gsap.to(mobilePlaneRef.current, { scale: 1.15, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+        gsap.fromTo(mobileHd.current,
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
+            scrollTrigger: { trigger: mobileHd.current, start: "top 85%", toggleActions: "play none none none" } });
+        gsap.fromTo(
+          mobileCards.current?.querySelectorAll(".exp-mobile-card") ?? [],
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, stagger: 0.15, duration: 0.65, ease: "power3.out",
+            scrollTrigger: { trigger: mobileCards.current, start: "top 85%", toggleActions: "play none none none" } },
+        );
+      });
+      return () => ctx.revert();
+    });
+
+    return () => {
+      mm.revert();
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
-    <section
-      id="experience"
-      className="py-24 sm:py-32"
-      style={{ backgroundColor: "var(--muted-bg)" }}
-    >
-      <div className="max-w-3xl mx-auto px-6">
-        <FadeIn>
-          <div className="mb-14 text-center">
-            <span
-              className="inline-block text-sm font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--accent)" }}
-            >
-              Career
-            </span>
+    <div id="experience" style={{ overflowX: "clip" }}>
+
+      {/* ══ DESKTOP ══════════════════════════════════════════════════════════ */}
+      <section
+        ref={sectionRef}
+        className="hidden md:block py-28 px-6 sm:px-12 lg:px-20"
+        style={{ background: "var(--bg-alt)" }}
+      >
+        <div className="max-w-6xl mx-auto">
+
+          {/* Section header */}
+          <div className="text-center mb-28">
+            <p className="section-label mb-3">Career</p>
             <h2
-              className="text-3xl sm:text-4xl font-bold"
-              style={{ color: "var(--foreground)" }}
+              className="font-black tracking-tight leading-none"
+              style={{ fontSize: "clamp(2.4rem,5vw,5rem)", color: "var(--fg)" }}
             >
               Work Experience
             </h2>
           </div>
-        </FadeIn>
 
-        <div>
+          {/* Timeline container */}
+          <div className="relative" style={{ paddingBottom: "2rem" }}>
+
+            {/* ── Background (static) line ── */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                left: "50%", top: 0, bottom: 0,
+                width: 2,
+                transform: "translateX(-50%)",
+                background: "var(--border)",
+              }}
+            />
+
+            {/* ── Sticky airplane ─────────────────────────────────────────── */}
+            {/*
+                height: 0  →  takes no vertical space in flow
+                position: sticky; top: 50vh  →  stays centered in viewport
+                overflow: visible  →  children still render outside zero-height box
+            */}
+            <div
+              style={{
+                position: "sticky",
+                top: "calc(50vh - 26px)",
+                height: 0,
+                zIndex: 30,
+                overflow: "visible",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  transform: "translateX(-50%) translateY(-50%)",
+                }}
+              >
+                {/* Plane icon — orange, no background circle */}
+                <div ref={planeRef} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Plane size={28} color="var(--accent)" style={{ filter: "drop-shadow(0 0 8px rgba(255,101,53,.7))" }} />
+                </div>
+              </div>
+            </div>
+
+            {/* ── Experience entries ─────────────────────────────────────── */}
+            {experiences.map((exp, i) => {
+              const isLeft = i % 2 === 0;
+              return (
+                <div
+                  key={exp.id}
+                  className="relative flex items-center"
+                  style={{ marginBottom: i < experiences.length - 1 ? "9rem" : "3rem", minHeight: 160 }}
+                >
+                  {/* ─ Left card ─ */}
+                  {isLeft ? (
+                    <div
+                      className="exp-card-desktop"
+                      style={{ width: "calc(50% - 2.5rem)", paddingRight: "1.5rem" }}
+                    >
+                      <ExpCard exp={exp} />
+                    </div>
+                  ) : (
+                    <div style={{ width: "calc(50% - 2.5rem)" }} />
+                  )}
+
+                  {/* ─ Horizontal connector ─ */}
+                  <div
+                    className="timeline-connector absolute h-px"
+                    style={{
+                      width: "2.5rem",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      ...(isLeft
+                        ? { right: "calc(50% - 1px)" }
+                        : { left:  "calc(50% - 1px)" }),
+                      background: "linear-gradient(90deg,var(--grad-a),var(--grad-b))",
+                    }}
+                  />
+
+                  {/* ─ Center dot ─ */}
+                  <div
+                    className="timeline-dot absolute"
+                    style={{
+                      left: "50%",
+                      top: "50%",
+                      transform: "translate(-50%,-50%)",
+                      zIndex: 20,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: "50%",
+                        background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))",
+                        border: "3px solid var(--bg-alt)",
+                        boxShadow: "0 0 12px rgba(255,101,53,.5)",
+                      }}
+                    />
+                  </div>
+
+                  {/* ─ Right card ─ */}
+                  {!isLeft ? (
+                    <div
+                      className="exp-card-desktop"
+                      style={{ width: "calc(50% - 2.5rem)", marginLeft: "auto", paddingLeft: "1.5rem" }}
+                    >
+                      <ExpCard exp={exp} />
+                    </div>
+                  ) : (
+                    <div style={{ width: "calc(50% - 2.5rem)", marginLeft: "auto" }} />
+                  )}
+                </div>
+              );
+            })}
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══ MOBILE ═══════════════════════════════════════════════════════════ */}
+      <section className="block md:hidden py-20 px-5" style={{ background: "var(--bg-alt)", overflowX: "clip" }}>
+        {/* Left-side mini timeline line */}
+        <div ref={mobileHd} className="mb-10 opacity-0">
+          <p className="section-label mb-2">Career</p>
+          <h2 className="text-3xl font-bold" style={{ color: "var(--fg)" }}>Work Experience</h2>
+        </div>
+
+        <div ref={mobileCards} className="relative flex flex-col gap-0">
+          {/* Vertical line */}
+          <div
+            className="absolute"
+            style={{ left: 19, top: 0, bottom: 0, width: 2, background: "var(--border)" }}
+          />
+
+          {/* Sticky traveling plane */}
+          <div style={{ position: "sticky", top: "calc(50vh - 12px)", height: 0, zIndex: 30, overflow: "visible" }}>
+            <div style={{ position: "absolute", left: 19, transform: "translateX(-50%) translateY(-50%)" }}>
+              <div ref={mobilePlaneRef} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Plane size={22} color="var(--accent)" style={{ filter: "drop-shadow(0 0 7px rgba(255,101,53,.75))" }} />
+              </div>
+            </div>
+          </div>
+
           {experiences.map((exp, i) => (
-            <TimelineItem key={exp.id} experience={exp} index={i} />
+            <div key={exp.id} className="exp-mobile-card opacity-0 relative flex gap-6 pb-10 last:pb-0">
+              {/* Timeline dot */}
+              <div className="flex-shrink-0 mt-7" style={{ zIndex: 2, width: 20, display: "flex", justifyContent: "center" }}>
+                <div style={{
+                  width: 10, height: 10, borderRadius: "50%",
+                  background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))",
+                  border: "2px solid var(--bg-alt)",
+                  boxShadow: "0 0 8px rgba(255,101,53,.4)",
+                  marginTop: 4,
+                }} />
+              </div>
+
+              {/* Card */}
+              <div className="flex-1 min-w-0">
+                <ExpCard exp={exp} />
+              </div>
+            </div>
           ))}
         </div>
-      </div>
-    </section>
+      </section>
+
+    </div>
   );
 }

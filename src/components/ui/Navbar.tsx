@@ -1,197 +1,114 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
-import { Moon, Sun, Menu, X, Download } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { Menu, X } from "lucide-react";
 import { navLinks, personalInfo } from "@/data/portfolio";
-import { useActiveSection } from "@/hooks/useActiveSection";
-import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export function Navbar() {
+  const ref                     = useRef<HTMLElement>(null);
+  const [open, setOpen]         = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
-
-  const sectionIds = navLinks.map((l) => l.href.replace("#", ""));
-  const activeSection = useActiveSection(sectionIds);
-
-  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    gsap.fromTo(ref.current,
+      { y: -60, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.9, ease: "power3.out", delay: 0.25 },
+    );
   }, []);
 
-  const handleNav = (href: string) => {
-    setMobileOpen(false);
-    const el = document.querySelector(href);
-    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 30);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  const go = (href: string) => {
+    setOpen(false);
+    document.getElementById(href.slice(1))?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <>
-      <motion.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          scrolled
-            ? "backdrop-blur-xl border-b"
-            : "bg-transparent border-transparent"
-        )}
-        style={{
-          backgroundColor: scrolled ? "var(--nav-bg)" : "transparent",
-          borderColor: scrolled ? "var(--card-border)" : "transparent",
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <motion.button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="font-bold text-lg tracking-tight gradient-text"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            {personalInfo.name.split(" ")[0]}
-            <span style={{ color: "var(--accent)" }}>.</span>
-          </motion.button>
+    <header
+      ref={ref}
+      className="fixed top-0 left-0 right-0 z-50 opacity-0"
+      style={{
+        backdropFilter: "blur(18px)",
+        WebkitBackdropFilter: "blur(18px)",
+        background: scrolled ? "var(--nav-bg-scrolled)" : "var(--nav-bg)",
+        borderBottom: `1px solid ${scrolled ? "var(--border)" : "transparent"}`,
+        transition: "background .3s, border-color .3s",
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 h-16 flex items-center justify-between">
+        {/* Wordmark */}
+        <button onClick={() => go("#hero")} className="font-black text-xl tracking-tight" style={{ color: "var(--fg)" }}>
+          <span style={{ color: "var(--accent)" }}>B</span>ipin
+        </button>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
-            {navLinks.map((link) => {
-              const isActive = activeSection === link.href.replace("#", "");
-              return (
-                <button
-                  key={link.href}
-                  onClick={() => handleNav(link.href)}
-                  className={cn(
-                    "relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
-                    isActive
-                      ? "text-[var(--accent)]"
-                      : "text-[var(--muted)] hover:text-[var(--foreground)]"
-                  )}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId="nav-pill"
-                      className="absolute inset-0 rounded-lg"
-                      style={{ backgroundColor: "var(--accent-glow)" }}
-                      transition={{ type: "spring", duration: 0.4 }}
-                    />
-                  )}
-                  <span className="relative z-10">{link.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-2">
-            {/* Theme toggle */}
-            {mounted && (
-              <motion.button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-2 rounded-lg text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--muted-bg)] transition-colors duration-200"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Toggle theme"
-              >
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={theme}
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-                  </motion.div>
-                </AnimatePresence>
-              </motion.button>
-            )}
-
-            {/* Resume download */}
-            <motion.a
-              href={personalInfo.resumeUrl}
-              download
-              className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-colors duration-200"
-              style={{
-                borderColor: "var(--accent)",
-                color: "var(--accent)",
-              }}
-              whileHover={{
-                scale: 1.03,
-                backgroundColor: "var(--accent-glow)",
-              }}
-              whileTap={{ scale: 0.97 }}
-              aria-label="Download Resume"
-            >
-              <Download size={15} />
-              Resume
-            </motion.a>
-
-            {/* Mobile hamburger */}
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-7">
+          {navLinks.map((l) => (
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-lg text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--muted-bg)] transition-colors"
-              aria-label="Toggle menu"
+              key={l.href}
+              onClick={() => go(l.href)}
+              className="text-sm font-medium transition-colors duration-200 hover:text-white"
+              style={{ color: "var(--muted)" }}
             >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              {l.label}
             </button>
-          </div>
-        </div>
-      </motion.header>
+          ))}
+        </nav>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
-            className="fixed top-16 left-0 right-0 z-40 border-b backdrop-blur-xl"
-            style={{
-              backgroundColor: "var(--nav-bg)",
-              borderColor: "var(--card-border)",
-            }}
+        {/* Desktop right side */}
+        <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
+          <a
+            href={personalInfo.resumeUrl}
+            download
+            className="inline-flex items-center text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-85"
+            style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))", color: "#fff" }}
           >
-            <nav className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
-              {navLinks.map((link, i) => (
-                <motion.button
-                  key={link.href}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.06 }}
-                  onClick={() => handleNav(link.href)}
-                  className={cn(
-                    "text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors",
-                    activeSection === link.href.replace("#", "")
-                      ? "text-[var(--accent)] bg-[var(--accent-glow)]"
-                      : "text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--muted-bg)]"
-                  )}
-                >
-                  {link.label}
-                </motion.button>
-              ))}
-              <a
-                href={personalInfo.resumeUrl}
-                download
-                className="mt-2 flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium border"
-                style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
-                onClick={() => setMobileOpen(false)}
-              >
-                <Download size={15} />
-                Download Resume
-              </a>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+            Resume ↓
+          </a>
+        </div>
+
+        {/* Mobile right side */}
+        <div className="md:hidden flex items-center gap-3">
+          <ThemeToggle />
+          <button
+            className="p-1.5 rounded"
+            style={{ color: "var(--fg-dim)" }}
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile dropdown */}
+      {open && (
+        <div
+          className="md:hidden border-t px-6 py-6 flex flex-col gap-5"
+          style={{ borderColor: "var(--border)", background: "var(--bg)" }}
+        >
+          {navLinks.map((l) => (
+            <button key={l.href} onClick={() => go(l.href)} className="text-left text-base font-medium" style={{ color: "var(--fg-dim)" }}>
+              {l.label}
+            </button>
+          ))}
+          <a
+            href={personalInfo.resumeUrl}
+            download
+            className="mt-1 inline-flex items-center justify-center text-sm font-semibold px-4 py-2.5 rounded-lg"
+            style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))", color: "#fff" }}
+          >
+            Download Resume
+          </a>
+        </div>
+      )}
+    </header>
   );
 }

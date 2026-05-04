@@ -1,253 +1,180 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FadeIn } from "@/components/ui/motion-wrapper";
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Mail, MapPin, Send } from "lucide-react";
+import { GithubIcon, LinkedinIcon } from "@/components/ui/icons";
 import { personalInfo } from "@/data/portfolio";
-import { Send, CheckCircle } from "lucide-react";
-import { GithubIcon, LinkedinIcon, MailIcon } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
 
-interface FormState {
-  name: string;
-  email: string;
-  message: string;
-}
+gsap.registerPlugin(ScrollTrigger);
 
 export function Contact() {
-  const [form, setForm] = useState<FormState>({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const sec = useRef<HTMLElement>(null);
+  const [form, setForm]   = useState({ name: "", email: "", message: "" });
+  const [sent, setSent]   = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".contact-header",
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
+          scrollTrigger: { trigger: ".contact-header", start: "top 85%", toggleActions: "play none none none" } });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+      gsap.fromTo(".contact-left",
+        { opacity: 0, x: -40 },
+        { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
+          scrollTrigger: { trigger: ".contact-body", start: "top 85%", toggleActions: "play none none none" } });
+
+      gsap.fromTo(".contact-right",
+        { opacity: 0, x: 40 },
+        { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
+          scrollTrigger: { trigger: ".contact-body", start: "top 85%", toggleActions: "play none none none" } });
+    }, sec);
+    return () => ctx.revert();
+  }, []);
+
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("loading");
-    // Simulate form submission
-    await new Promise((r) => setTimeout(r, 1200));
-    setStatus("success");
-    setForm({ name: "", email: "", message: "" });
+    // Wire to your backend / email service as needed
+    setSent(true);
   };
-
-  const inputClass = cn(
-    "w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all duration-200",
-    "placeholder:text-[var(--muted)] focus:ring-2"
-  );
 
   const inputStyle = {
-    backgroundColor: "var(--card)",
-    borderColor: "var(--card-border)",
-    color: "var(--foreground)",
-  };
+    background: "var(--bg)",
+    border: "1px solid var(--border)",
+    color: "var(--fg)",
+    borderRadius: 10,
+    padding: "0.75rem 1rem",
+    width: "100%",
+    fontSize: "0.875rem",
+    outline: "none",
+    transition: "border-color .2s",
+  } as const;
 
   return (
-    <section
-      id="contact"
-      className="py-24 sm:py-32"
-      style={{ background: "var(--background)" }}
-    >
-      <div className="max-w-6xl mx-auto px-6">
-        <FadeIn>
-          <div className="mb-14 text-center">
-            <span
-              className="inline-block text-sm font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "var(--accent)" }}
-            >
-              Contact
-            </span>
-            <h2
-              className="text-3xl sm:text-4xl font-bold mb-4"
-              style={{ color: "var(--foreground)" }}
-            >
-              Let&apos;s work together
-            </h2>
-            <p className="text-base max-w-lg mx-auto" style={{ color: "var(--muted)" }}>
-              I&apos;m always open to new opportunities, collaborations, or just a good chat about tech.
+    <section ref={sec} id="contact" className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"
+      style={{ background: "var(--bg-alt)" }}>
+      <div className="max-w-6xl mx-auto">
+
+        <div className="contact-header opacity-0 mb-14">
+          <p className="section-label mb-3">Let's Talk</p>
+          <h2 className="font-black tracking-tight leading-none"
+            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)" }}>
+            Get in Touch
+          </h2>
+        </div>
+
+        <div className="contact-body grid md:grid-cols-2 gap-12 items-start">
+
+          {/* Left: info */}
+          <div className="contact-left opacity-0 flex flex-col gap-8">
+            <p className="text-base leading-relaxed" style={{ color: "var(--fg-dim)" }}>
+              Whether you have a project in mind, a role to fill, or just want to connect — my inbox is open.
             </p>
-          </div>
-        </FadeIn>
 
-        <div className="grid md:grid-cols-2 gap-12 items-start">
-          {/* Contact info */}
-          <FadeIn direction="left">
-            <div className="space-y-6">
-              <p className="text-base leading-relaxed" style={{ color: "var(--muted)" }}>
-                Whether you have a project in mind, an opportunity to discuss, or just
-                want to connect — my inbox is always open.
-              </p>
+            <div className="flex flex-col gap-5">
+              <a href={`mailto:${personalInfo.email}`}
+                className="flex items-center gap-4 p-5 rounded-xl border transition-all hover:border-orange-500/50 group"
+                style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+                <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: "rgba(255,101,53,.12)" }}>
+                  <Mail size={18} style={{ color: "var(--accent)" }} />
+                </span>
+                <div>
+                  <p className="text-xs uppercase tracking-wider mb-0.5" style={{ color: "var(--muted)" }}>Email</p>
+                  <p className="text-sm font-medium" style={{ color: "var(--fg)" }}>{personalInfo.email}</p>
+                </div>
+              </a>
 
-              <div className="space-y-4">
-                {[
-                  { icon: MailIcon, label: "Email", value: personalInfo.email, href: `mailto:${personalInfo.email}` },
-                  { icon: GithubIcon, label: "GitHub", value: "bipinchaudhary28899", href: personalInfo.github },
-                  { icon: LinkedinIcon, label: "LinkedIn", value: "bipinchaudhary28899", href: personalInfo.linkedin },
-                ].map(({ icon: Icon, label, value, href }) => (
-                  <motion.a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 rounded-xl border transition-all duration-200"
-                    style={{
-                      borderColor: "var(--card-border)",
-                      backgroundColor: "var(--card)",
-                    }}
-                    whileHover={{
-                      borderColor: "var(--accent)",
-                      backgroundColor: "var(--accent-glow)",
-                      x: 4,
-                    }}
-                  >
-                    <div
-                      className="p-2.5 rounded-lg"
-                      style={{
-                        backgroundColor: "var(--accent-glow)",
-                        color: "var(--accent)",
-                      }}
-                    >
-                      <Icon width={18} height={18} />
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-widest mb-0.5" style={{ color: "var(--muted)" }}>
-                        {label}
-                      </p>
-                      <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
-                        {value}
-                      </p>
-                    </div>
-                  </motion.a>
-                ))}
+              <div className="flex items-center gap-4 p-5 rounded-xl border"
+                style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+                <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: "rgba(255,101,53,.12)" }}>
+                  <MapPin size={18} style={{ color: "var(--accent)" }} />
+                </span>
+                <div>
+                  <p className="text-xs uppercase tracking-wider mb-0.5" style={{ color: "var(--muted)" }}>Location</p>
+                  <p className="text-sm font-medium" style={{ color: "var(--fg)" }}>{personalInfo.location}</p>
+                </div>
               </div>
             </div>
-          </FadeIn>
 
-          {/* Form */}
-          <FadeIn direction="right" delay={0.15}>
-            <div
-              className="p-6 sm:p-8 rounded-2xl border"
-              style={{
-                borderColor: "var(--card-border)",
-                backgroundColor: "var(--card)",
-              }}
-            >
-              <AnimatePresence mode="wait">
-                {status === "success" ? (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0, scale: 0.92 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center gap-4 py-10 text-center"
-                  >
-                    <div
-                      className="w-14 h-14 rounded-full flex items-center justify-center"
-                      style={{
-                        backgroundColor: "var(--accent-glow)",
-                        color: "var(--accent)",
-                      }}
-                    >
-                      <CheckCircle size={28} />
-                    </div>
-                    <h3 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>
-                      Message sent!
-                    </h3>
-                    <p className="text-sm" style={{ color: "var(--muted)" }}>
-                      Thanks for reaching out. I&apos;ll get back to you soon.
-                    </p>
-                    <button
-                      onClick={() => setStatus("idle")}
-                      className="mt-2 text-sm font-medium underline underline-offset-4"
-                      style={{ color: "var(--accent)" }}
-                    >
-                      Send another message
-                    </button>
-                  </motion.div>
-                ) : (
-                  <motion.form
-                    key="form"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    onSubmit={handleSubmit}
-                    className="space-y-4"
-                    noValidate
-                  >
-                    <div>
-                      <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--muted)" }}>
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        required
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="Your name"
-                        className={inputClass}
-                        style={{ ...inputStyle, outlineColor: "var(--accent)" }}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--muted)" }}>
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="your@email.com"
-                        className={inputClass}
-                        style={{ ...inputStyle, outlineColor: "var(--accent)" }}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--muted)" }}>
-                        Message
-                      </label>
-                      <textarea
-                        name="message"
-                        required
-                        value={form.message}
-                        onChange={handleChange}
-                        rows={5}
-                        placeholder="Tell me about your project or opportunity..."
-                        className={cn(inputClass, "resize-none")}
-                        style={{ ...inputStyle, outlineColor: "var(--accent)" }}
-                      />
-                    </div>
-
-                    <motion.button
-                      type="submit"
-                      disabled={status === "loading"}
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white transition-opacity disabled:opacity-60"
-                      style={{
-                        background: "linear-gradient(135deg, var(--gradient-start), var(--gradient-end))",
-                      }}
-                      whileHover={{ scale: 1.02, boxShadow: "0 4px 20px var(--accent-glow)" }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      {status === "loading" ? (
-                        <motion.div
-                          className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white"
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                        />
-                      ) : (
-                        <>
-                          <Send size={15} />
-                          Send Message
-                        </>
-                      )}
-                    </motion.button>
-                  </motion.form>
-                )}
-              </AnimatePresence>
+            {/* Socials */}
+            <div className="flex items-center gap-4">
+              <a href={personalInfo.github} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-all hover:border-orange-500/50"
+                style={{ border: "1px solid var(--border)", color: "var(--fg-dim)", background: "var(--card)" }}>
+                <GithubIcon width={16} height={16} /> GitHub
+              </a>
+              <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-all hover:border-orange-500/50"
+                style={{ border: "1px solid var(--border)", color: "var(--fg-dim)", background: "var(--card)" }}>
+                <LinkedinIcon width={16} height={16} /> LinkedIn
+              </a>
             </div>
-          </FadeIn>
+          </div>
+
+          {/* Right: form */}
+          <div className="contact-right opacity-0">
+            {sent ? (
+              <div className="rounded-2xl border p-10 flex flex-col items-center justify-center gap-4 text-center"
+                style={{ background: "var(--card)", borderColor: "var(--border)", minHeight: 340 }}>
+                <span className="text-5xl">✉️</span>
+                <h3 className="text-xl font-bold" style={{ color: "var(--fg)" }}>Message sent!</h3>
+                <p className="text-sm" style={{ color: "var(--muted)" }}>I'll get back to you as soon as possible.</p>
+              </div>
+            ) : (
+              <form onSubmit={submit}
+                className="rounded-2xl border p-8 flex flex-col gap-5"
+                style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+                <div>
+                  <label className="block text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: "var(--muted)" }}>
+                    Name
+                  </label>
+                  <input
+                    type="text" required placeholder="Your name"
+                    value={form.name}
+                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                    style={inputStyle}
+                    onFocus={e => (e.target.style.borderColor = "var(--accent)")}
+                    onBlur={e => (e.target.style.borderColor = "var(--border)")}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: "var(--muted)" }}>
+                    Email
+                  </label>
+                  <input
+                    type="email" required placeholder="you@example.com"
+                    value={form.email}
+                    onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                    style={inputStyle}
+                    onFocus={e => (e.target.style.borderColor = "var(--accent)")}
+                    onBlur={e => (e.target.style.borderColor = "var(--border)")}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: "var(--muted)" }}>
+                    Message
+                  </label>
+                  <textarea
+                    required rows={5} placeholder="What's on your mind?"
+                    value={form.message}
+                    onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+                    style={{ ...inputStyle, resize: "vertical" }}
+                    onFocus={e => (e.target.style.borderColor = "var(--accent)")}
+                    onBlur={e => (e.target.style.borderColor = "var(--border)")}
+                  />
+                </div>
+                <button type="submit"
+                  className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-85"
+                  style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}>
+                  Send Message <Send size={14} />
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </div>
     </section>
