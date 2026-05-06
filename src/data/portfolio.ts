@@ -42,6 +42,15 @@ export const projects = [
     tech: ["Next.js", "PostgreSQL", "Supabase", "Vercel", "WhatsApp API", "Zod", "JWT"],
     liveUrl: "https://www.chaudharydentalcare.com/",
     githubUrl: "https://github.com/bipinchaudhary28899/DentalConnect",
+  },
+  {
+    id: 3,
+    title: "Argumint",
+    description:
+      "Full-stack debate platform with AI-powered argument generation using OpenAI APIs, real-time WebSocket updates, and a React frontend. Users can create debate topics, post arguments, and receive AI-generated counterarguments to foster critical thinking and engagement.",
+    tech: ["React.js", "Socket.io", "Node.js", "MongoDB", "Whisper API", "Zod", "JWT"],
+    liveUrl: "https://argumint-frontend.vercel.app/",
+    githubUrl: "https://github.com/bipinchaudhary28899/Argumint",
   }
 ];
 
