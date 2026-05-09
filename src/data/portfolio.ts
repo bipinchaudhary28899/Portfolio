@@ -69,7 +69,7 @@ export const experiences = [
     role: "Independent Full-Stack Developer",
     company: "Self-Employed",
     companyFull: "Independent Full-Stack Developer (Remote)",
-    period: "Oct 2023 – Present",
+    period: "Sept 2025 – Present",
     description:
       "Built and deployed production-grade applications including a video streaming platform (StreamSphere) and a clinic management system (DentalConnect) with real-world users. Designed end-to-end system architecture covering authentication, scheduling engines, caching strategies, and async workflows. Integrated third-party services — WhatsApp API and OpenAI — for real-time communication and AI-powered features.",
     tech: ["Next.js", "Angular", "Node.js", "AWS", "MongoDB", "Redis", "PostgreSQL", "OpenAI", "WhatsApp API"],
