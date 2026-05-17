@@ -13,15 +13,31 @@ export function Certifications() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(".cert-header",
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: ".cert-header", start: "top 85%", toggleActions: "play none none none" } });
+      const mm = gsap.matchMedia();
 
-      gsap.fromTo(".cert-card",
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power3.out",
-          scrollTrigger: { trigger: ".cert-grid", start: "top 85%", toggleActions: "play none none none" } });
+      /* ── Header ── */
+      const htl = gsap.timeline({
+        scrollTrigger: { trigger: ".cert-header", start: "top 85%", toggleActions: "play none none none" },
+      });
+      htl.fromTo(".cert-label",  { opacity: 0, x: -24 },         { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" })
+         .fromTo(".cert-title",  { opacity: 0, y: 44, skewY: 2 }, { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out" }, "-=0.2");
+
+      /* ── Desktop: column-wave — cards pop in with back.out, stagger by column ── */
+      mm.add("(min-width: 768px)", () => {
+        gsap.fromTo(".cert-card",
+          { opacity: 0, y: 55, scale: 0.88 },
+          { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: 0.65, ease: "back.out(1.4)",
+            scrollTrigger: { trigger: ".cert-grid", start: "top 82%", toggleActions: "play none none none" } });
+      });
+
+      /* ── Mobile: cards slide up with stagger ── */
+      mm.add("(max-width: 767px)", () => {
+        gsap.fromTo(".cert-card",
+          { opacity: 0, y: 35 },
+          { opacity: 1, y: 0, stagger: 0.1, duration: 0.55, ease: "power3.out",
+            scrollTrigger: { trigger: ".cert-grid", start: "top 85%", toggleActions: "play none none none" } });
+      });
+
     }, sec);
     return () => ctx.revert();
   }, []);
@@ -30,10 +46,10 @@ export function Certifications() {
     <section ref={sec} id="certifications" className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"
       style={{ background: "var(--bg)" }}>
       <div className="max-w-6xl mx-auto">
-        <div className="cert-header opacity-0 mb-14">
-          <p className="section-label mb-3">Credentials</p>
-          <h2 className="font-black tracking-tight leading-none"
-            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)" }}>
+        <div className="cert-header mb-14">
+          <p className="cert-label section-label mb-3" style={{ opacity: 0 }}>Credentials</p>
+          <h2 className="cert-title font-black tracking-tight leading-none"
+            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
             Certifications
           </h2>
         </div>

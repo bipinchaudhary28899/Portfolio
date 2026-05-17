@@ -16,6 +16,20 @@ export function Contact() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
+  // Pre-fill from "Order Package" buttons in the Freelance section
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { message } = (e as CustomEvent<{ message: string }>).detail;
+      setForm((f) => ({ ...f, message }));
+      // Small delay so the scroll lands before we steal focus
+      setTimeout(() => {
+        document.querySelector<HTMLTextAreaElement>("#contact textarea")?.focus();
+      }, 600);
+    };
+    window.addEventListener("prefill-contact", handler);
+    return () => window.removeEventListener("prefill-contact", handler);
+  }, []);
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(".contact-header",

@@ -33,6 +33,7 @@ export const projects = [
     tech: ["Angular", "Node.js", "AWS S3", "Lambda", "FFmpeg", "MongoDB", "Redis"],
     liveUrl: "https://stream-sphere-blru.vercel.app/home",
     githubUrl: "https://github.com/bipinchaudhary28899/StreamSphere",
+    image: "/images/StreamSphere.png",
   },
   {
     id: 2,
@@ -42,6 +43,7 @@ export const projects = [
     tech: ["Next.js", "PostgreSQL", "Supabase", "Vercel", "WhatsApp API", "Zod", "JWT"],
     liveUrl: "https://www.chaudharydentalcare.com/",
     githubUrl: "https://github.com/bipinchaudhary28899/DentalConnect",
+    image: "/images/DentalCare.png",
   },
   {
     id: 3,
@@ -51,6 +53,7 @@ export const projects = [
     tech: ["React.js", "Socket.io", "Node.js", "MongoDB", "Whisper API", "Zod", "JWT"],
     liveUrl: "https://argumint-frontend.vercel.app/",
     githubUrl: "https://github.com/bipinchaudhary28899/Argumint",
+    image: "/images/Argumint.png",
   }
 ];
 
@@ -261,5 +264,6 @@ export const navLinks = [
   { label: "Skills",      href: "#skills" },
   { label: "Education",   href: "#education" },
   { label: "Open Source", href: "#opensource" },
+  { label: "Hire Me",     href: "#freelance" },
   { label: "Contact",     href: "#contact" },
 ];

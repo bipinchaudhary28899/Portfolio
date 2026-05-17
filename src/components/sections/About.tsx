@@ -12,20 +12,47 @@ export function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const enter = (el: string, y = 32) =>
-        gsap.fromTo(el, { opacity: 0, y }, { opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" } });
+      const mm = gsap.matchMedia();
 
-      enter(".about-header");
+      /* ── shared: header ── */
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: ".about-header", start: "top 85%", toggleActions: "play none none none" },
+      });
+      tl.fromTo(".about-label",  { opacity: 0, x: -24 },        { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" })
+        .fromTo(".about-title",  { opacity: 0, y: 44, skewY: 2 }, { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out" }, "-=0.2");
+
+      /* ── stat counter animation ── */
       gsap.fromTo(".stat-item",
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, stagger: 0.1, duration: 0.65, ease: "power3.out",
+        { opacity: 0, y: 40, scale: 0.88 },
+        { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.6, ease: "back.out(1.5)",
           scrollTrigger: { trigger: ".stat-grid", start: "top 85%", toggleActions: "play none none none" } });
-      enter(".about-bio-block");
-      gsap.fromTo(".achieve-item",
-        { opacity: 0, x: 30 },
-        { opacity: 1, x: 0, stagger: 0.12, duration: 0.65, ease: "power3.out",
-          scrollTrigger: { trigger: ".achieve-list", start: "top 85%", toggleActions: "play none none none" } });
+
+      /* ── desktop: bio from left, achievements from right ── */
+      mm.add("(min-width: 768px)", () => {
+        gsap.fromTo(".about-bio-block",
+          { opacity: 0, x: -50 },
+          { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
+            scrollTrigger: { trigger: ".about-body", start: "top 85%", toggleActions: "play none none none" } });
+
+        gsap.fromTo(".achieve-item",
+          { opacity: 0, x: 50 },
+          { opacity: 1, x: 0, stagger: 0.12, duration: 0.65, ease: "power3.out",
+            scrollTrigger: { trigger: ".achieve-list", start: "top 85%", toggleActions: "play none none none" } });
+      });
+
+      /* ── mobile: everything slides up ── */
+      mm.add("(max-width: 767px)", () => {
+        gsap.fromTo(".about-bio-block",
+          { opacity: 0, y: 36 },
+          { opacity: 1, y: 0, duration: 0.65, ease: "power3.out",
+            scrollTrigger: { trigger: ".about-bio-block", start: "top 88%", toggleActions: "play none none none" } });
+
+        gsap.fromTo(".achieve-item",
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, stagger: 0.1, duration: 0.55, ease: "power3.out",
+            scrollTrigger: { trigger: ".achieve-list", start: "top 88%", toggleActions: "play none none none" } });
+      });
+
     }, sec);
     return () => ctx.revert();
   }, []);
@@ -36,10 +63,10 @@ export function About() {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="about-header mb-14 opacity-0">
-          <p className="section-label mb-3">About</p>
-          <h2 className="font-black tracking-tight leading-none"
-            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)" }}>
+        <div className="about-header mb-14">
+          <p className="about-label section-label mb-3" style={{ opacity: 0 }}>About</p>
+          <h2 className="about-title font-black tracking-tight leading-none"
+            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
             Who I am
           </h2>
         </div>
@@ -61,7 +88,7 @@ export function About() {
         </div>
 
         {/* Bio + achievements */}
-        <div className="grid md:grid-cols-2 gap-12 items-start">
+        <div className="about-body grid md:grid-cols-2 gap-12 items-start">
           <div className="about-bio-block opacity-0">
             <p className="text-base sm:text-lg leading-relaxed" style={{ color: "var(--fg-dim)" }}>
               {personalInfo.bio}
