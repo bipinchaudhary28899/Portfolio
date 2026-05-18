@@ -86,6 +86,45 @@ const WHAT_I_BUILD = [
   "AI integrations (OpenAI, LangChain, custom models)",
 ];
 
+const WORK_PROCESS = [
+  {
+    step: "01",
+    title: "Requirement Gathering",
+    description:
+      "Client purchases the project and shares all requirements, references, branding details, content, and feature expectations.",
+  },
+  {
+    step: "02",
+    title: "Planning & Wireframing",
+    description:
+      "I analyze the requirements, finalize the project structure, and create wireframes or UI concepts for approval.",
+  },
+  {
+    step: "03",
+    title: "Design & Development",
+    description:
+      "I develop the website/application with responsive design, required features, animations, integrations, and optimizations.",
+  },
+  {
+    step: "04",
+    title: "Review & Feedback",
+    description:
+      "Client reviews the delivered work and shares feedback or revision requests if needed.",
+  },
+  {
+    step: "05",
+    title: "Revisions & Final Delivery",
+    description:
+      "I implement the requested revisions, perform final testing, and deliver the completed project files/live deployment.",
+  },
+  {
+    step: "06",
+    title: "Deployment & Support",
+    description:
+      "I assist with deployment, hosting setup, bug fixes, and post-delivery support if included in the package.",
+  },
+];
+
 const FAQS = [
   {
     q: "How do I know which package is right for me?",
@@ -418,19 +457,75 @@ export function FreelanceServices() {
           </div>
         </div>
 
-        {/* ── FAQ ── */}
-        <div ref={faqRef}>
-          <h3
-            className="faq-heading text-lg font-bold mb-6"
-            style={{ color: "var(--fg)", opacity: 0 }}
-          >
-            Frequently Asked Questions
-          </h3>
-          <div className="flex flex-col gap-3">
-            {FAQS.map((f) => (
-              <FaqItem key={f.q} q={f.q} a={f.a} />
-            ))}
+        {/* ── FAQ + How I Work ── */}
+        <div ref={faqRef} className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+
+          {/* Left — FAQ */}
+          <div>
+            <h3
+              className="faq-heading text-lg font-bold mb-6"
+              style={{ color: "var(--fg)", opacity: 0 }}
+            >
+              Frequently Asked Questions
+            </h3>
+            <div className="flex flex-col gap-3">
+              {FAQS.map((f) => (
+                <FaqItem key={f.q} q={f.q} a={f.a} />
+              ))}
+            </div>
           </div>
+
+          {/* Right — How I Work */}
+          <div>
+            <h3
+              className="faq-heading text-lg font-bold mb-6"
+              style={{ color: "var(--fg)", opacity: 0 }}
+            >
+              How I Work
+            </h3>
+            <p className="faq-item text-xs mb-6 leading-relaxed" style={{ color: "var(--fg-dim)" }}>
+              Bipin works on your project following the steps below.
+              Revisions may occur after the delivery date.
+            </p>
+            <div className="relative flex flex-col">
+              {/* vertical connector line */}
+              <div
+                className="absolute left-[19px] top-6 bottom-6 w-px"
+                style={{ background: "linear-gradient(180deg, var(--grad-a), var(--grad-b))", opacity: 0.25 }}
+              />
+              {WORK_PROCESS.map((step, i) => (
+                <div
+                  key={step.step}
+                  className="faq-item relative flex gap-4 pb-6 last:pb-0"
+                >
+                  {/* step badge */}
+                  <div
+                    className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-xs font-black"
+                    style={{
+                      background: i === 0
+                        ? "linear-gradient(135deg,var(--grad-a),var(--grad-b))"
+                        : "var(--card)",
+                      border: "1.5px solid",
+                      borderColor: i === 0 ? "transparent" : "var(--border)",
+                      color: i === 0 ? "#fff" : "var(--accent)",
+                    }}
+                  >
+                    {step.step}
+                  </div>
+                  {/* content */}
+                  <div className="flex flex-col gap-1 pt-1.5">
+                    <span className="text-sm font-bold" style={{ color: "var(--fg)" }}>
+                      {step.title}
+                    </span>
+                    <p className="text-xs leading-relaxed" style={{ color: "var(--fg-dim)" }}>
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
 
         {/* ── Bottom CTA ── */}
