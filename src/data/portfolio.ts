@@ -127,7 +127,7 @@ export const education = [
     highlights: [
       "Graduated with 78.6% aggregate",
       "Built first full-stack projects during coursework",
-      "Solved 300+ DSA problems on LeetCode",
+      "Solved 350+ DSA problems on LeetCode",
     ],
   },
 ];
@@ -140,7 +140,7 @@ export const codingPlatforms = [
     url: "https://leetcode.com/u/bkumar28899/",
     stat: "350+",
     statLabel: "Problems Solved",
-    badge: "300+ Solved",
+    badge: "350+ Solved",
     color: "#FFA116",
     description: "Focus on arrays, dynamic programming, graphs, trees, and system design patterns.",
   },

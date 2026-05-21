@@ -13,7 +13,7 @@ const PACKAGES = [
   {
     tier: "BASIC",
     name: "Starter Website",
-    price: "$200",
+    price: "₹10K Onwards",
     delivery: "5 Days",
     description: "A fast, responsive website that looks professional and gets you online quickly.",
     highlight: false,
@@ -26,12 +26,12 @@ const PACKAGES = [
       { label: "E-commerce",             value: false  },
       { label: "Source Code Included",   value: true   },
     ],
-    extra: "Extra fast: 3 days for +$30",
+    extra: "Extra fast: 3 days for +₹2,500",
   },
   {
     tier: "STANDARD",
     name: "Full-Stack App",
-    price: "$450",
+    price: "₹40K Onwards",
     delivery: "10 Days",
     description: "A fully functional web app your users can sign up for, log in, and actually use.",
     highlight: true,
@@ -44,12 +44,12 @@ const PACKAGES = [
       { label: "E-commerce",             value: false  },
       { label: "Source Code Included",   value: true   },
     ],
-    extra: "Extra fast: 6 days for +$100",
+    extra: "Extra fast: 6 days for +₹8,000",
   },
   {
     tier: "PREMIUM",
     name: "Production System",
-    price: "$950",
+    price: "₹80K Onwards",
     delivery: "21 Days",
     description: "A production-ready SaaS platform built to scale, monetize, and grow with your business.",
     highlight: false,
@@ -62,19 +62,19 @@ const PACKAGES = [
       { label: "E-commerce (20 products)", value: true   },
       { label: "Source Code Included",     value: true   },
     ],
-    extra: "Extra fast: 14 days for +$200",
+    extra: "Extra fast: 14 days for +₹17,000",
   },
 ];
 
 const ADDONS = [
-  { label: "Additional Page",          price: "+$25",  note: "+1 day"  },
-  { label: "Additional Revision",      price: "+$15",  note: "+1 day"  },
-  { label: "Additional Plugin",        price: "+$20",  note: "+1 day"  },
-  { label: "Payment Integration",      price: "+$40",  note: "+2 days" },
-  { label: "E-commerce Functionality", price: "+$155", note: "+3 days" },
-  { label: "Speed Optimization",       price: "+$60",  note: "+1 day"  },
-  { label: "UI/UX Design",             price: "+$100", note: "+2 days" },
-  { label: "3 Month Support",          price: "+$300", note: "ongoing" },
+  { label: "Additional Page",          price: "+₹2,000",  note: "+1 day"  },
+  { label: "Additional Revision",      price: "+₹800",    note: "+1 day"  },
+  { label: "Additional Plugin",        price: "+₹1,200",  note: "+1 day"  },
+  { label: "Payment Integration",      price: "+₹3,500",  note: "+2 days" },
+  { label: "E-commerce Functionality", price: "+₹12,000", note: "+3 days" },
+  { label: "Speed Optimization",       price: "+₹5,000",  note: "+1 day"  },
+  { label: "UI/UX Design",             price: "+₹8,000",  note: "+2 days" },
+  { label: "3 Month Support",          price: "+₹25,000", note: "ongoing" },
 ];
 
 const WHAT_I_BUILD = [
@@ -132,7 +132,7 @@ const FAQS = [
   },
   {
     q: "Do I need to have a design ready before ordering?",
-    a: "No — you can choose whether you have Figma/XD designs, rough wireframes, a reference site, or nothing at all. UI/UX design is also available as an add-on (+$100).",
+    a: "No — you can choose whether you have Figma/XD designs, rough wireframes, a reference site, or nothing at all. UI/UX design is also available as an add-on (+₹8,500).",
   },
   {
     q: "What tech stack do you use?",
@@ -144,7 +144,7 @@ const FAQS = [
   },
   {
     q: "What happens if I need changes after delivery?",
-    a: "Each package includes revisions. Beyond that, additional revisions are +$15 each, or opt for the 3-Month Support add-on (+$300) for ongoing fixes and technical help.",
+    a: "Each package includes revisions. Beyond that, additional revisions are +₹800 each, or opt for the 3-Month Support add-on (+₹25,000) for ongoing fixes and technical help.",
   },
   {
     q: "How do you handle communication during the project?",
