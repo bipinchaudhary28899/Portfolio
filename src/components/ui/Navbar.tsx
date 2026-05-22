@@ -5,19 +5,24 @@ import { gsap } from "gsap";
 import { Menu, X } from "lucide-react";
 import { navLinks, personalInfo } from "@/data/portfolio";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { useLoadingComplete } from "@/context/LoadingContext";
 
 export function Navbar() {
   const ref                     = useRef<HTMLElement>(null);
   const [open, setOpen]         = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  const loadingComplete = useLoadingComplete();
+
+  /* Fade in only after the loading screen has exited */
   useEffect(() => {
-    /* Fade-in only — no Y transform so position:fixed stays stable on mobile */
+    if (!loadingComplete) return;
+    /* No Y transform — keeps position:fixed stable on mobile */
     gsap.fromTo(ref.current,
       { opacity: 0 },
       { opacity: 1, duration: 0.7, ease: "power2.out", delay: 0.2 },
     );
-  }, []);
+  }, [loadingComplete]);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 30);

@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ArrowDown, Download } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/icons";
 import { personalInfo } from "@/data/portfolio";
+import { useLoadingComplete } from "@/context/LoadingContext";
 
 export function Hero() {
   const sec    = useRef<HTMLElement>(null);
@@ -18,7 +19,12 @@ export function Hero() {
   const bot    = useRef<HTMLDivElement>(null);
   const scr    = useRef<HTMLButtonElement>(null);
 
+  const loadingComplete = useLoadingComplete();
+
+  /* Only start the entrance animation after the loading screen has exited */
   useEffect(() => {
+    if (!loadingComplete) return;
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
       tl
@@ -37,7 +43,7 @@ export function Hero() {
       });
     }, sec);
     return () => ctx.revert();
-  }, []);
+  }, [loadingComplete]);
 
   return (
     <section
