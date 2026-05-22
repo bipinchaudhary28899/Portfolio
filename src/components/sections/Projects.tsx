@@ -197,7 +197,7 @@ function MobileProjects() {
     <section className="block md:hidden py-14" style={{ background: "var(--bg)" }}>
 
       {/* Header */}
-      <div className="flex items-end justify-between mb-5 px-5">
+      <div className="proj-mob-hd flex items-end justify-between mb-5 px-5" style={{ opacity: 0 }}>
         <div>
           <p className="section-label mb-2">Work</p>
           <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Selected Projects</h2>
@@ -367,7 +367,7 @@ export function Projects() {
         gsap.fromTo(headRef.current,
           { opacity: 0, y: 28 },
           { opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
-            scrollTrigger: { trigger: section, start: "top 80%", toggleActions: "play none none none" } });
+            scrollTrigger: { trigger: section, start: "top 37%", toggleActions: "play none none none" } });
 
         /* Images: scale + fade in from slightly small when section pins */
         gsap.fromTo(
@@ -399,6 +399,17 @@ export function Projects() {
           },
         });
 
+      });
+      return () => ctx.revert();
+    });
+
+    /* ── Mobile: animate header + image cards + accordion rows ── */
+    mm.add("(max-width: 767px)", () => {
+      const ctx = gsap.context(() => {
+        gsap.fromTo(".proj-mob-hd",
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
+            scrollTrigger: { trigger: ".proj-mob-hd", start: "top 60%", toggleActions: "play none none none" } });
       });
       return () => ctx.revert();
     });

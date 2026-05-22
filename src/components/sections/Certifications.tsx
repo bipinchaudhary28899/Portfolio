@@ -17,7 +17,7 @@ export function Certifications() {
 
       /* ── Header ── */
       const htl = gsap.timeline({
-        scrollTrigger: { trigger: ".cert-header", start: "top 85%", toggleActions: "play none none none" },
+        scrollTrigger: { trigger: ".cert-header", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
       });
       htl.fromTo(".cert-label",  { opacity: 0, x: -24 },         { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" })
          .fromTo(".cert-title",  { opacity: 0, y: 44, skewY: 2 }, { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out" }, "-=0.2");
@@ -27,7 +27,7 @@ export function Certifications() {
         gsap.fromTo(".cert-card",
           { opacity: 0, y: 55, scale: 0.88 },
           { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: 0.65, ease: "back.out(1.4)",
-            scrollTrigger: { trigger: ".cert-grid", start: "top 82%", toggleActions: "play none none none" } });
+            scrollTrigger: { trigger: ".cert-grid", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
       });
 
       /* ── Mobile: cards slide up with stagger ── */
@@ -35,7 +35,7 @@ export function Certifications() {
         gsap.fromTo(".cert-card",
           { opacity: 0, y: 35 },
           { opacity: 1, y: 0, stagger: 0.1, duration: 0.55, ease: "power3.out",
-            scrollTrigger: { trigger: ".cert-grid", start: "top 85%", toggleActions: "play none none none" } });
+            scrollTrigger: { trigger: ".cert-grid", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
       });
 
     }, sec);

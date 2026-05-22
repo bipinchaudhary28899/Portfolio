@@ -130,7 +130,7 @@ function MobileExperience() {
     <section className="block md:hidden py-14 px-5" style={{ background: "var(--bg-alt)" }}>
 
       {/* Header */}
-      <div className="mb-6">
+      <div className="exp-mob-hd mb-6" style={{ opacity: 0 }}>
         <p className="section-label mb-2">Career</p>
         <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Work Experience</h2>
       </div>
@@ -142,8 +142,8 @@ function MobileExperience() {
           return (
             <div
               key={exp.id}
-              className="rounded-2xl overflow-hidden"
-              style={{ background: "var(--card)", border: "1.5px solid var(--border)" }}
+              className="exp-mob-card rounded-2xl overflow-hidden"
+              style={{ background: "var(--card)", border: "1.5px solid var(--border)", opacity: 0 }}
             >
               {/* ── Collapsed header — always visible ── */}
               <button
@@ -252,6 +252,21 @@ export function Experience() {
     ───────────────────────────────────────────────────────────────────── */
     mm.add("(min-width: 768px)", () => {
       const ctx = gsap.context(() => {
+
+        /* ── Desktop header: Career label + title + dots ── */
+        gsap.fromTo(".exp-hd-label",
+          { opacity: 0, x: -24 },
+          { opacity: 1, x: 0, duration: 0.6, ease: "power3.out",
+            scrollTrigger: { trigger: desktopRef.current, start: "top 37%", toggleActions: "play none none none" } });
+        gsap.fromTo(".exp-hd-title",
+          { opacity: 0, y: 44, skewY: 2 },
+          { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out",
+            scrollTrigger: { trigger: desktopRef.current, start: "top 37%", toggleActions: "play none none none" } });
+        gsap.fromTo(".exp-hd-dots",
+          { opacity: 0, x: 24 },
+          { opacity: 1, x: 0, duration: 0.6, ease: "power3.out",
+            scrollTrigger: { trigger: desktopRef.current, start: "top 37%", toggleActions: "play none none none" } });
+
         const n = experiences.length;          // 5
         const transitions = n - 1;             // 4 slides
         // Each card gets 1.8× the viewport height of scroll room
@@ -313,13 +328,13 @@ export function Experience() {
         gsap.fromTo(".exp-mob-hd",
           { opacity: 0, y: 24 },
           { opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
-            scrollTrigger: { trigger: ".exp-mob-hd", start: "top 85%", toggleActions: "play none none none" } },
+            scrollTrigger: { trigger: ".exp-mob-hd", start: "top 60%", toggleActions: "play none none none" } },
         );
         gsap.utils.toArray<HTMLElement>(".exp-mob-card").forEach((el) => {
           gsap.fromTo(el,
             { opacity: 0, y: 36 },
             { opacity: 1, y: 0, duration: 0.65, ease: "power3.out",
-              scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" } },
+              scrollTrigger: { trigger: el, start: "top 60%", toggleActions: "play none none none" } },
           );
         });
       });
@@ -347,17 +362,17 @@ export function Experience() {
           className="flex-shrink-0 flex items-end justify-between px-16 pt-20 pb-10"
         >
           <div>
-            <p className="section-label mb-3">Career</p>
+            <p className="exp-hd-label section-label mb-3" style={{ opacity: 0 }}>Career</p>
             <h2
-              className="font-black tracking-tight leading-none"
-              style={{ fontSize: "clamp(2.4rem,5vw,5rem)", color: "var(--fg)" }}
+              className="exp-hd-title font-black tracking-tight leading-none"
+              style={{ fontSize: "clamp(2.4rem,5vw,5rem)", color: "var(--fg)", opacity: 0 }}
             >
               Work Experience
             </h2>
           </div>
 
           {/* Pill progress indicator */}
-          <div className="flex items-center gap-2">
+          <div className="exp-hd-dots flex items-center gap-2" style={{ opacity: 0 }}>
             {experiences.map((_, i) => (
               <div
                 key={i}

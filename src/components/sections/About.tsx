@@ -16,7 +16,7 @@ export function About() {
 
       /* ── shared: header ── */
       const tl = gsap.timeline({
-        scrollTrigger: { trigger: ".about-header", start: "top 85%", toggleActions: "play none none none" },
+        scrollTrigger: { trigger: ".about-header", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
       });
       tl.fromTo(".about-label",  { opacity: 0, x: -24 },        { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" })
         .fromTo(".about-title",  { opacity: 0, y: 44, skewY: 2 }, { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out" }, "-=0.2");
@@ -25,19 +25,19 @@ export function About() {
       gsap.fromTo(".stat-item",
         { opacity: 0, y: 40, scale: 0.88 },
         { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.6, ease: "back.out(1.5)",
-          scrollTrigger: { trigger: ".stat-grid", start: "top 85%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ".stat-grid", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── desktop: bio from left, achievements from right ── */
       mm.add("(min-width: 768px)", () => {
         gsap.fromTo(".about-bio-block",
           { opacity: 0, x: -50 },
           { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
-            scrollTrigger: { trigger: ".about-body", start: "top 85%", toggleActions: "play none none none" } });
+            scrollTrigger: { trigger: ".about-body", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
         gsap.fromTo(".achieve-item",
           { opacity: 0, x: 50 },
           { opacity: 1, x: 0, stagger: 0.12, duration: 0.65, ease: "power3.out",
-            scrollTrigger: { trigger: ".achieve-list", start: "top 85%", toggleActions: "play none none none" } });
+            scrollTrigger: { trigger: ".achieve-list", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
       });
 
       /* ── mobile: everything slides up ── */
@@ -45,12 +45,12 @@ export function About() {
         gsap.fromTo(".about-bio-block",
           { opacity: 0, y: 36 },
           { opacity: 1, y: 0, duration: 0.65, ease: "power3.out",
-            scrollTrigger: { trigger: ".about-bio-block", start: "top 88%", toggleActions: "play none none none" } });
+            scrollTrigger: { trigger: ".about-bio-block", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
         gsap.fromTo(".achieve-item",
           { opacity: 0, y: 30 },
           { opacity: 1, y: 0, stagger: 0.1, duration: 0.55, ease: "power3.out",
-            scrollTrigger: { trigger: ".achieve-list", start: "top 88%", toggleActions: "play none none none" } });
+            scrollTrigger: { trigger: ".achieve-list", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
       });
 
     }, sec);

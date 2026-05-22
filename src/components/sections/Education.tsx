@@ -145,7 +145,7 @@ export function Education() {
           { opacity: 0, y: 28 },
           {
             opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
-            scrollTrigger: { trigger: ".edu-hd-desktop", start: "top 85%", toggleActions: "play none none none" },
+            scrollTrigger: { trigger: ".edu-hd-desktop", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
           },
         );
 
@@ -156,7 +156,7 @@ export function Education() {
             { opacity: 0, x: -24 },
             {
               opacity: 1, x: 0, duration: 0.55, ease: "power2.out",
-              scrollTrigger: { trigger: el, start: "top 83%", toggleActions: "play none none none" },
+              scrollTrigger: { trigger: el, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
             },
           );
         });
@@ -168,7 +168,7 @@ export function Education() {
             { opacity: 0, x: 45 },
             {
               opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
-              scrollTrigger: { trigger: el, start: "top 83%", toggleActions: "play none none none" },
+              scrollTrigger: { trigger: el, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
             },
           );
         });
@@ -181,7 +181,7 @@ export function Education() {
             {
               scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2.5)",
               delay: i * 0.05,
-              scrollTrigger: { trigger: el, start: "top 83%", toggleActions: "play none none none" },
+              scrollTrigger: { trigger: el, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
             },
           );
         });
@@ -193,7 +193,7 @@ export function Education() {
             { scaleX: 0, transformOrigin: "left center" },
             {
               scaleX: 1, duration: 0.4, ease: "power2.out",
-              scrollTrigger: { trigger: el, start: "top 83%", toggleActions: "play none none none" },
+              scrollTrigger: { trigger: el, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
             },
           );
         });
@@ -217,7 +217,7 @@ export function Education() {
           { opacity: 0, y: 24 },
           {
             opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
-            scrollTrigger: { trigger: ".edu-hd-mobile", start: "top 85%", toggleActions: "play none none none" },
+            scrollTrigger: { trigger: ".edu-hd-mobile", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
           },
         );
 
@@ -227,7 +227,7 @@ export function Education() {
             { opacity: 0, y: 35 },
             {
               opacity: 1, y: 0, duration: 0.65, ease: "power3.out",
-              scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+              scrollTrigger: { trigger: el, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
             },
           );
         });
@@ -238,7 +238,7 @@ export function Education() {
             { scale: 0, opacity: 0 },
             {
               scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)",
-              scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+              scrollTrigger: { trigger: el, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
             },
           );
         });

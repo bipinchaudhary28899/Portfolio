@@ -16,7 +16,7 @@ export function Skills() {
 
       /* ── Header ── */
       const htl = gsap.timeline({
-        scrollTrigger: { trigger: ".skills-header", start: "top 85%", toggleActions: "play none none none" },
+        scrollTrigger: { trigger: ".skills-header", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
       });
       htl.fromTo(".skills-label", { opacity: 0, x: -24 },         { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" })
          .fromTo(".skills-title", { opacity: 0, y: 44, skewY: 2 }, { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out" }, "-=0.2");
@@ -27,7 +27,7 @@ export function Skills() {
         gsap.fromTo(".skill-cat",
           { opacity: 0, y: 55, scale: 0.93 },
           { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.65, ease: "power3.out",
-            scrollTrigger: { trigger: ".skills-grid", start: "top 82%", toggleActions: "play none none none" },
+            scrollTrigger: { trigger: ".skills-grid", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
             onComplete() {
               // After cards are visible, stagger each row of skill tags
               gsap.fromTo(".skill-tag",
@@ -42,7 +42,7 @@ export function Skills() {
         gsap.fromTo(".skill-cat",
           { opacity: 0, y: 40 },
           { opacity: 1, y: 0, stagger: 0.1, duration: 0.55, ease: "power3.out",
-            scrollTrigger: { trigger: ".skills-grid", start: "top 85%", toggleActions: "play none none none" },
+            scrollTrigger: { trigger: ".skills-grid", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
             onComplete() {
               gsap.fromTo(".skill-tag",
                 { opacity: 0, y: 10 },

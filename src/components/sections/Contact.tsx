@@ -35,17 +35,17 @@ export function Contact() {
       gsap.fromTo(".contact-header",
         { opacity: 0, y: 30 },
         { opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: ".contact-header", start: "top 85%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ".contact-header", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       gsap.fromTo(".contact-left",
         { opacity: 0, x: -40 },
         { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: ".contact-body", start: "top 85%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ".contact-body", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       gsap.fromTo(".contact-right",
         { opacity: 0, x: 40 },
         { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: ".contact-body", start: "top 85%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ".contact-body", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
     }, sec);
     return () => ctx.revert();
   }, []);

@@ -452,53 +452,53 @@ export function FreelanceServices() {
         gsap.fromTo(target,
           { opacity: 0, y: 44, skewY: 2 },
           { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out", delay,
-            scrollTrigger: { trigger, start: "top bottom", toggleActions: "play none none none" } });
+            scrollTrigger: { trigger, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 1. Header ── */
       gsap.fromTo(labelRef.current,
         { opacity: 0, x: -30 },
         { opacity: 1, x: 0, duration: 0.6, ease: "power3.out",
-          scrollTrigger: { trigger: labelRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: labelRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       titleAnim(titleRef.current, titleRef.current);
 
       gsap.fromTo(descRef.current,
         { opacity: 0, y: 22 },
         { opacity: 1, y: 0, duration: 0.65, ease: "power3.out", delay: 0.15,
-          scrollTrigger: { trigger: descRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: descRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 2. "What I build" panel ── */
       gsap.fromTo(buildRef.current,
         { opacity: 0, x: -50 },
         { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: buildRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: buildRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       gsap.fromTo(
         buildRef.current?.querySelectorAll(".build-item") ?? [],
         { opacity: 0, x: -24 },
         { opacity: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "power2.out",
-          scrollTrigger: { trigger: buildRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: buildRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 3. Package cards — desktop ── */
       gsap.fromTo(
         cardsRef.current?.querySelectorAll(".pkg-card") ?? [],
         { opacity: 0, y: 80, scale: 0.92 },
         { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.14, ease: "power3.out",
-          scrollTrigger: { trigger: cardsRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: cardsRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 4. Package accordion cards — mobile ── */
       gsap.fromTo(
         mobileCardsRef.current?.querySelectorAll(".mob-pkg-card") ?? [],
         { opacity: 0, y: 50, scale: 0.96 },
         { opacity: 1, y: 0, scale: 1, duration: 0.65, stagger: 0.13, ease: "power3.out",
-          scrollTrigger: { trigger: mobileCardsRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: mobileCardsRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 5. Add-ons heading (same title animation) ── */
       gsap.fromTo(
         addonsRef.current?.querySelector(".addons-icon") ?? null,
         { opacity: 0, x: -16 },
         { opacity: 1, x: 0, duration: 0.5, ease: "power3.out",
-          scrollTrigger: { trigger: addonsRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: addonsRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
       titleAnim(
         addonsRef.current?.querySelector(".addons-heading h3") ?? null,
         addonsRef.current,
@@ -509,7 +509,7 @@ export function FreelanceServices() {
         addonsRef.current?.querySelectorAll(".addon-tile") ?? [],
         { opacity: 0, scale: 0.78, y: 28 },
         { opacity: 1, scale: 1, y: 0, duration: 0.55, stagger: 0.055, ease: "back.out(1.4)",
-          scrollTrigger: { trigger: addonsRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: addonsRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 7. FAQ + How I Work headings — both get same title animation ── */
       (faqRef.current?.querySelectorAll(".faq-heading") ?? []).forEach((el, i) => {
@@ -521,27 +521,27 @@ export function FreelanceServices() {
         faqRef.current?.querySelectorAll(".faq-item") ?? [],
         { opacity: 0, x: 40 },
         { opacity: 1, x: 0, duration: 0.55, stagger: 0.08, ease: "power3.out",
-          scrollTrigger: { trigger: faqRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: faqRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 9. Work-process connector line — draw downward ── */
       gsap.fromTo(
         faqRef.current?.querySelector(".work-line") ?? null,
         { scaleY: 0, transformOrigin: "top center" },
         { scaleY: 1, duration: 1.2, ease: "power2.inOut",
-          scrollTrigger: { trigger: faqRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: faqRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 10. Bottom CTA container ── */
       gsap.fromTo(ctaRef.current,
         { opacity: 0, scale: 0.94, y: 40 },
         { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: ctaRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ctaRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 11. CTA internals — stagger children ── */
       gsap.fromTo(
         ctaRef.current?.querySelectorAll(".cta-child") ?? [],
         { opacity: 0, y: 22 },
         { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: "power3.out",
-          scrollTrigger: { trigger: ctaRef.current, start: "top bottom", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ctaRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
     }, sectionRef);
 

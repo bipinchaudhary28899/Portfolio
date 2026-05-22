@@ -17,7 +17,7 @@ export function FreelanceBanner() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapRef.current,
-          start: "top 82%",
+          start: () => window.innerWidth < 768 ? "top 60%" : "top bottom",
           toggleActions: "play none none none",
         },
       });

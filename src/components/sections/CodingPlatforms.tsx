@@ -17,7 +17,7 @@ export function CodingPlatforms() {
 
       /* ── Header ── */
       const htl = gsap.timeline({
-        scrollTrigger: { trigger: ".cp-header", start: "top 85%", toggleActions: "play none none none" },
+        scrollTrigger: { trigger: ".cp-header", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
       });
       htl.fromTo(".cp-label",  { opacity: 0, x: -24 },         { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" })
          .fromTo(".cp-title",  { opacity: 0, y: 44, skewY: 2 }, { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out" }, "-=0.2");
@@ -26,14 +26,14 @@ export function CodingPlatforms() {
       gsap.fromTo(".cp-card",
         { opacity: 0, y: 65, scale: 0.9 },
         { opacity: 1, y: 0, scale: 1, stagger: 0.13, duration: 0.7, ease: "power3.out",
-          scrollTrigger: { trigger: ".cp-grid", start: "top 82%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ".cp-grid", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── Stat numbers pop in with slight delay after cards ── */
       gsap.fromTo(".cp-stat",
         { opacity: 0, y: 18, scale: 0.8 },
         { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.55, ease: "back.out(1.5)",
           delay: 0.55,
-          scrollTrigger: { trigger: ".cp-grid", start: "top 82%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ".cp-grid", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
     }, sec);
     return () => ctx.revert();

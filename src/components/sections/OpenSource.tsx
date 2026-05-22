@@ -24,7 +24,7 @@ export function OpenSource() {
 
       /* ── Header ── */
       const htl = gsap.timeline({
-        scrollTrigger: { trigger: ".os-header", start: "top 85%", toggleActions: "play none none none" },
+        scrollTrigger: { trigger: ".os-header", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
       });
       htl.fromTo(".os-label",  { opacity: 0, x: -24 },         { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" })
          .fromTo(".os-title",  { opacity: 0, y: 44, skewY: 2 }, { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out" }, "-=0.2");
@@ -33,7 +33,7 @@ export function OpenSource() {
       gsap.fromTo(".os-stat",
         { opacity: 0, scale: 0.75, y: 20 },
         { opacity: 1, scale: 1, y: 0, stagger: 0.1, duration: 0.5, ease: "back.out(1.6)",
-          scrollTrigger: { trigger: ".os-stats", start: "top 88%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ".os-stats", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── Desktop: alternating left / right card entrances ── */
       mm.add("(min-width: 768px)", () => {
@@ -41,7 +41,7 @@ export function OpenSource() {
           gsap.fromTo(card,
             { opacity: 0, x: i % 2 === 0 ? -60 : 60, y: 20 },
             { opacity: 1, x: 0, y: 0, duration: 0.7, ease: "power3.out",
-              scrollTrigger: { trigger: card, start: "top 88%", toggleActions: "play none none none" } });
+              scrollTrigger: { trigger: card, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
         });
       });
 
@@ -50,7 +50,7 @@ export function OpenSource() {
         gsap.fromTo(".os-card",
           { opacity: 0, y: 45 },
           { opacity: 1, y: 0, stagger: 0.13, duration: 0.6, ease: "power3.out",
-            scrollTrigger: { trigger: ".os-list", start: "top 85%", toggleActions: "play none none none" } });
+            scrollTrigger: { trigger: ".os-list", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
       });
 
     }, sec);
