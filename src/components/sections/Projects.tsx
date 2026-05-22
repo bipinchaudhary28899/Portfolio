@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -189,13 +189,160 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
   );
 }
 
+/* ── Mobile projects — image cards on top + accordion detail ─────────────── */
+function MobileProjects() {
+  const [open, setOpen] = useState<number | null>(null);
+
+  return (
+    <section className="block md:hidden py-14" style={{ background: "var(--bg)" }}>
+
+      {/* Header */}
+      <div className="flex items-end justify-between mb-5 px-5">
+        <div>
+          <p className="section-label mb-2">Work</p>
+          <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Selected Projects</h2>
+        </div>
+        <a href="https://github.com/bipinchaudhary28899" target="_blank" rel="noopener noreferrer"
+          className="text-xs font-medium pb-1" style={{ color: "var(--accent)" }}>
+          GitHub →
+        </a>
+      </div>
+
+      {/* ── Horizontally scrollable image cards ─────────────────────────── */}
+      <div
+        className="flex gap-3 overflow-x-auto pb-2 px-5"
+        style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+      >
+        {projects.map((p, i) => (
+          <button
+            key={p.id}
+            onClick={() => setOpen(open === i ? null : i)}
+            className="flex-shrink-0 rounded-xl overflow-hidden text-left"
+            style={{
+              width:  "52vw",
+              border: open === i
+                ? "2px solid var(--accent)"
+                : "1.5px solid var(--border)",
+              background: "var(--card)",
+              transition: "border-color 0.2s ease",
+            }}
+          >
+            <Image
+              src={p.image}
+              alt={p.title}
+              width={400} height={225}
+              className="w-full h-auto block"
+              sizes="52vw"
+            />
+            <div className="px-3 py-2 flex items-center justify-between gap-2">
+              <p className="text-xs font-bold truncate" style={{ color: "var(--fg)" }}>
+                {p.title}
+              </p>
+              <span
+                className="font-mono text-xs flex-shrink-0"
+                style={{ color: "var(--accent)" }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* ── Accordion detail rows ────────────────────────────────────────── */}
+      <div className="flex flex-col gap-2 px-5 mt-4">
+        {projects.map((p, i) => {
+          const isOpen = open === i;
+          return (
+            <div
+              key={p.id}
+              className="rounded-2xl overflow-hidden"
+              style={{
+                background:  "var(--card)",
+                border: isOpen
+                  ? "1.5px solid var(--accent)"
+                  : "1.5px solid var(--border)",
+                transition: "border-color 0.2s ease",
+              }}
+            >
+              {/* Collapsed row */}
+              <button
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+                onClick={() => setOpen(isOpen ? null : i)}
+              >
+                <span className="font-mono text-xs flex-shrink-0" style={{ color: "var(--accent)" }}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="flex-1 text-sm font-bold truncate" style={{ color: "var(--fg)" }}>
+                  {p.title}
+                </p>
+
+                {/* Links */}
+                <div className="flex items-center gap-2 flex-shrink-0"
+                  onClick={e => e.stopPropagation()}>
+                  {p.githubUrl !== "#" && (
+                    <a href={p.githubUrl} target="_blank" rel="noopener noreferrer"
+                      className="p-1" style={{ color: "var(--muted)" }}>
+                      <GithubIcon width={14} height={14} />
+                    </a>
+                  )}
+                  {p.liveUrl !== "#" && (
+                    <a href={p.liveUrl} target="_blank" rel="noopener noreferrer"
+                      className="p-1" style={{ color: "var(--accent)" }}>
+                      <ExternalLink size={14} />
+                    </a>
+                  )}
+                </div>
+
+                {/* Chevron */}
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                  style={{
+                    flexShrink: 0, color: "var(--muted)",
+                    transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.25s ease",
+                  }}>
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
+                    strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+
+              {/* Expandable content */}
+              <div style={{
+                display: "grid",
+                gridTemplateRows: isOpen ? "1fr" : "0fr",
+                transition: "grid-template-rows 0.3s ease",
+              }}>
+                <div style={{ overflow: "hidden" }}>
+                  <div className="flex flex-col gap-3 px-4 pb-4"
+                    style={{ borderTop: "1px solid var(--border)" }}>
+                    <p className="text-xs leading-relaxed pt-3" style={{ color: "var(--fg-dim)" }}>
+                      {p.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {p.tech.map(t => (
+                        <span key={t} className="text-xs px-2 py-1 rounded-full"
+                          style={{ background: "var(--bg)", color: "var(--muted)" }}>
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 /* ── Section ─────────────────────────────────────────────────────────────── */
 export function Projects() {
   const desktopSec  = useRef<HTMLElement>(null);
   const trackRef    = useRef<HTMLDivElement>(null);
   const headRef     = useRef<HTMLDivElement>(null);
-  const mobileHdRef = useRef<HTMLDivElement>(null);
-  const mobileCards = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     /* Keep track top-padding in sync with the sticky header height */
@@ -256,24 +403,6 @@ export function Projects() {
       return () => ctx.revert();
     });
 
-    /* ── Mobile: staggered cards ── */
-    mm.add("(max-width: 767px)", () => {
-      const ctx = gsap.context(() => {
-        gsap.fromTo(mobileHdRef.current,
-          { opacity: 0, y: 28 },
-          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
-            scrollTrigger: { trigger: mobileHdRef.current, start: "top 85%", toggleActions: "play none none none" } });
-
-        gsap.fromTo(
-          mobileCards.current?.querySelectorAll(".proj-card") ?? [],
-          { opacity: 0, y: 50, scale: 0.97 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.65, stagger: 0.15, ease: "power3.out",
-            scrollTrigger: { trigger: mobileCards.current, start: "top 85%", toggleActions: "play none none none" } }
-        );
-      });
-      return () => ctx.revert();
-    });
-
     return () => {
       mm.revert();
       window.removeEventListener("resize", syncPadding);
@@ -313,22 +442,8 @@ export function Projects() {
         </div>
       </section>
 
-      {/* ── Mobile ── */}
-      <section className="block md:hidden py-20 px-5" style={{ background: "var(--bg)" }}>
-        <div ref={mobileHdRef} className="mb-10 opacity-0">
-          <p className="section-label mb-2">Work</p>
-          <h2 className="text-3xl font-bold" style={{ color: "var(--fg)" }}>Selected Projects</h2>
-        </div>
-        <div ref={mobileCards} className="flex flex-col gap-6">
-          {projects.map((p, i) => <ProjectCard key={p.id} p={p} i={i} />)}
-        </div>
-        <div className="mt-8">
-          <a href="https://github.com/bipinchaudhary28899" target="_blank" rel="noopener noreferrer"
-            className="text-sm font-medium" style={{ color: "var(--accent)" }}>
-            All on GitHub →
-          </a>
-        </div>
-      </section>
+      {/* ── Mobile accordion ── */}
+      <MobileProjects />
     </div>
   );
 }

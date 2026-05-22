@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { skills } from "@/data/portfolio";
@@ -56,51 +56,103 @@ export function Skills() {
   }, []);
 
   const categories = Object.entries(skills);
+  const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <section ref={sec} id="skills" className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"
-      style={{ background: "var(--bg)" }}>
-      <div className="max-w-6xl mx-auto">
+    <>
+      {/* ══ DESKTOP ══════════════════════════════════════════════════════════ */}
+      <section ref={sec} id="skills" className="hidden md:block py-36 px-12 lg:px-20"
+        style={{ background: "var(--bg)" }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="skills-header mb-14">
+            <p className="skills-label section-label mb-3" style={{ opacity: 0 }}>Stack</p>
+            <h2 className="skills-title font-black tracking-tight leading-none"
+              style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
+              Skills & Tools
+            </h2>
+          </div>
+          <div className="skills-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {categories.map(([cat, items]) => (
+              <div key={cat} className="skill-cat opacity-0 rounded-2xl border p-6"
+                style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+                <div className="flex items-center gap-2 mb-5">
+                  <span className="w-1.5 h-5 rounded-full"
+                    style={{ background: "linear-gradient(180deg,var(--grad-a),var(--grad-b))" }} />
+                  <h3 className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--fg)" }}>{cat}</h3>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {items.map((skill) => (
+                    <div key={skill}
+                      className="skill-tag text-sm py-1.5 px-3 rounded-lg border transition-all duration-200 cursor-default"
+                      style={{ borderColor: "var(--border)", color: "var(--fg-dim)", background: "var(--bg-alt)", opacity: 0 }}
+                      onMouseEnter={e => {
+                        (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,101,53,.45)";
+                        (e.currentTarget as HTMLElement).style.color = "var(--fg)";
+                      }}
+                      onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
+                        (e.currentTarget as HTMLElement).style.color = "var(--fg-dim)";
+                      }}>
+                      {skill}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        <div className="skills-header mb-14">
-          <p className="skills-label section-label mb-3" style={{ opacity: 0 }}>Stack</p>
-          <h2 className="skills-title font-black tracking-tight leading-none"
-            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
-            Skills & Tools
-          </h2>
+      {/* ══ MOBILE — single-viewport tab layout ══════════════════════════════ */}
+      <section id="skills" className="block md:hidden py-14 px-5"
+        style={{ background: "var(--bg)" }}>
+
+        {/* Header */}
+        <div className="mb-6">
+          <p className="section-label mb-2">Stack</p>
+          <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Skills & Tools</h2>
         </div>
 
-        <div className="skills-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {categories.map(([cat, items]) => (
-            <div key={cat} className="skill-cat opacity-0 rounded-2xl border p-6"
-              style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-              <div className="flex items-center gap-2 mb-5">
-                <span className="w-1.5 h-5 rounded-full"
-                  style={{ background: "linear-gradient(180deg,var(--grad-a),var(--grad-b))" }} />
-                <h3 className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--fg)" }}>{cat}</h3>
-              </div>
-              <div className="flex flex-col gap-2">
-                {items.map((skill) => (
-                  <div key={skill}
-                    className="skill-tag text-sm py-1.5 px-3 rounded-lg border transition-all duration-200 cursor-default"
-                    style={{ borderColor: "var(--border)", color: "var(--fg-dim)", background: "var(--bg-alt)", opacity: 0 }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,101,53,.45)";
-                      (e.currentTarget as HTMLElement).style.color = "var(--fg)";
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                      (e.currentTarget as HTMLElement).style.color = "var(--fg-dim)";
-                    }}>
-                    {skill}
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* Category tabs — horizontal scroll, no scrollbar */}
+        <div className="flex gap-2 overflow-x-auto pb-1 mb-5"
+          style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
+          {categories.map(([cat], i) => (
+            <button
+              key={cat}
+              onClick={() => setActiveTab(i)}
+              className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
+              style={i === activeTab ? {
+                background: "var(--accent)",
+                color:      "#fff",
+              } : {
+                background:  "var(--card)",
+                color:        "var(--muted)",
+                border:       "1px solid var(--border)",
+              }}
+            >
+              {cat}
+            </button>
           ))}
         </div>
 
-      </div>
-    </section>
+        {/* Active category skills — wrap tags */}
+        <div className="flex flex-wrap gap-2">
+          {categories[activeTab][1].map((skill) => (
+            <span
+              key={skill}
+              className="text-sm px-3 py-1.5 rounded-lg border"
+              style={{
+                borderColor: "var(--border)",
+                color:       "var(--fg-dim)",
+                background:  "var(--card)",
+              }}
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+
+      </section>
+    </>
   );
 }

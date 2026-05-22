@@ -122,6 +122,119 @@ function ExpCard({
   );
 }
 
+/* ── Mobile accordion (self-contained so it has its own state) ───────────── */
+function MobileExperience() {
+  const [open, setOpen] = useState<number | null>(null);
+
+  return (
+    <section className="block md:hidden py-14 px-5" style={{ background: "var(--bg-alt)" }}>
+
+      {/* Header */}
+      <div className="mb-6">
+        <p className="section-label mb-2">Career</p>
+        <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Work Experience</h2>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        {experiences.map((exp, i) => {
+          const accentColor = ACCENT_COLORS[i % ACCENT_COLORS.length];
+          const isOpen      = open === i;
+          return (
+            <div
+              key={exp.id}
+              className="rounded-2xl overflow-hidden"
+              style={{ background: "var(--card)", border: "1.5px solid var(--border)" }}
+            >
+              {/* ── Collapsed header — always visible ── */}
+              <button
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+                onClick={() => setOpen(isOpen ? null : i)}
+              >
+                {/* Accent dot */}
+                <span className="flex-shrink-0 w-2 h-2 rounded-full"
+                  style={{ background: accentColor }} />
+
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs" style={{ color: "var(--muted)" }}>
+                    {exp.company} · {exp.period}
+                  </p>
+                  <p className="text-sm font-bold truncate" style={{ color: "var(--fg)" }}>
+                    {exp.role}
+                  </p>
+                </div>
+
+                {/* Chevron */}
+                <svg
+                  width="16" height="16" viewBox="0 0 16 16" fill="none"
+                  style={{
+                    flexShrink: 0,
+                    color: "var(--muted)",
+                    transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.25s ease",
+                  }}
+                >
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
+                    strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+
+              {/* ── Expanded detail ── */}
+              <div
+                style={{
+                  display:    "grid",
+                  gridTemplateRows: isOpen ? "1fr" : "0fr",
+                  transition: "grid-template-rows 0.3s ease",
+                }}
+              >
+                <div style={{ overflow: "hidden" }}>
+                  <div className="px-4 pb-4 pt-1 flex flex-col gap-3"
+                    style={{ borderTop: "1px solid var(--border)" }}>
+
+                    {/* Achievements */}
+                    <ul className="flex flex-col gap-2 pt-2">
+                      {exp.achievements.map((a, j) => (
+                        <li key={j} className="flex items-start gap-2 text-xs leading-relaxed"
+                          style={{ color: "var(--fg-dim)" }}>
+                          <span className="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full"
+                            style={{ background: accentColor }} />
+                          {a}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Metrics */}
+                    <div className="flex flex-wrap gap-2">
+                      {exp.metrics.map((m, j) => (
+                        <div key={j} className="rounded-lg px-3 py-2"
+                          style={{ background: "var(--bg)" }}>
+                          <p className="text-sm font-black" style={{ color: accentColor }}>{m.value}</p>
+                          <p className="text-xs" style={{ color: "var(--muted)" }}>{m.label}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tech tags */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {exp.tech.map(t => (
+                        <span key={t} className="text-xs px-2 py-1 rounded-full"
+                          style={{ background: "var(--bg)", color: "var(--muted)" }}>
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 /* ── Section ──────────────────────────────────────────────────────────────── */
 export function Experience() {
   const desktopRef = useRef<HTMLElement>(null);
@@ -297,29 +410,8 @@ export function Experience() {
         </div>
       </section>
 
-      {/* ══ MOBILE ═══════════════════════════════════════════════════════════ */}
-      <section
-        className="block md:hidden py-20 px-5"
-        style={{ background: "var(--bg-alt)" }}
-      >
-        <div className="exp-mob-hd opacity-0 mb-10">
-          <p className="section-label mb-2">Career</p>
-          <h2 className="text-3xl font-bold" style={{ color: "var(--fg)" }}>
-            Work Experience
-          </h2>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          {experiences.map((exp, i) => (
-            /* On mobile the card is in normal flow so h-full doesn't apply;
-               the card will be auto-height which is correct here. */
-            <div key={exp.id} className="exp-mob-card opacity-0 rounded-2xl overflow-hidden"
-              style={{ background: "var(--card)" }}>
-              <ExpCard exp={exp} index={i} />
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* ══ MOBILE — compact accordion rows ═════════════════════════════════ */}
+      <MobileExperience />
 
     </div>
   );

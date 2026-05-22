@@ -192,6 +192,160 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   );
 }
 
+/* ── Mobile Package Accordion ───────────────────────────────────────────── */
+function MobilePackages() {
+  const [open, setOpen] = useState<number | null>(null);
+
+  return (
+    <div className="flex flex-col gap-3">
+      {PACKAGES.map((pkg, i) => {
+        const isOpen = open === i;
+        return (
+          <div
+            key={pkg.tier}
+            className="mob-pkg-card rounded-2xl overflow-hidden"
+            style={{
+              background: "var(--card)",
+              border:     `1.5px solid ${pkg.highlight ? "var(--accent)" : "var(--border)"}`,
+              boxShadow:  pkg.highlight ? "0 0 32px rgba(255,101,53,0.14)" : "none",
+            }}
+          >
+            {/* ── Always-visible top (mirrors desktop card top) ── */}
+            <button
+              className="w-full text-left px-5 pt-5 pb-4"
+              onClick={() => setOpen(isOpen ? null : i)}
+            >
+              {/* MOST POPULAR banner */}
+              {pkg.highlight && (
+                <div className="flex justify-center mb-3 -mt-1">
+                  <span
+                    className="text-xs font-bold px-4 py-1 rounded-full"
+                    style={{
+                      background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))",
+                      color: "#fff",
+                    }}
+                  >
+                    MOST POPULAR
+                  </span>
+                </div>
+              )}
+
+              {/* Tier + name */}
+              <p className="text-xs font-mono font-semibold tracking-widest mb-0.5"
+                style={{ color: "var(--accent)" }}>
+                {pkg.tier}
+              </p>
+              <h3 className="text-xl font-black mb-2" style={{ color: "var(--fg)" }}>
+                {pkg.name}
+              </h3>
+
+              {/* Description */}
+              <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--fg-dim)" }}>
+                {pkg.description}
+              </p>
+
+              {/* Price row */}
+              <div className="flex items-end gap-4">
+                <span className="text-3xl font-black leading-none" style={{ color: "var(--fg)" }}>
+                  {pkg.price}
+                </span>
+                <div className="flex flex-col gap-0.5 mb-0.5">
+                  <span className="text-xs flex items-center gap-1" style={{ color: "var(--fg-dim)" }}>
+                    <Clock size={11} /> {pkg.delivery} delivery
+                  </span>
+                  <span className="text-xs" style={{ color: "var(--muted)" }}>{pkg.extra}</span>
+                </div>
+              </div>
+
+              {/* Expand/collapse hint */}
+              <div className="flex items-center justify-center gap-1.5 mt-4 pt-3"
+                style={{ borderTop: "1px solid var(--border)" }}>
+                <span className="text-xs font-semibold" style={{ color: "var(--accent)" }}>
+                  {isOpen ? "Hide details" : "View features & order"}
+                </span>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"
+                  style={{
+                    color: "var(--accent)",
+                    transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.25s ease",
+                  }}
+                >
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
+                    strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </button>
+
+            {/* ── Expandable: features + order button ── */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateRows: isOpen ? "1fr" : "0fr",
+                transition: "grid-template-rows 0.3s ease",
+              }}
+            >
+              <div style={{ overflow: "hidden" }}>
+                <div
+                  className="px-5 pb-5 flex flex-col gap-3"
+                  style={{ borderTop: "1px solid var(--border)" }}
+                >
+                  {/* Features */}
+                  <ul className="flex flex-col gap-2.5 pt-3">
+                    {pkg.features.map((f) => (
+                      <li key={f.label} className="flex items-center gap-2.5 text-sm">
+                        {f.value === false ? (
+                          <span
+                            className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: "var(--bg)" }}
+                          >
+                            <span style={{ color: "var(--border)", fontSize: 15, lineHeight: 1 }}>–</span>
+                          </span>
+                        ) : (
+                          <span
+                            className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}
+                          >
+                            <Check size={9} color="#fff" strokeWidth={3} />
+                          </span>
+                        )}
+                        <span style={{ color: f.value === false ? "var(--muted)" : "var(--fg-dim)" }}>
+                          {f.label}
+                          {typeof f.value === "string" && (
+                            <span className="font-semibold ml-1" style={{ color: "var(--fg)" }}>
+                              ×{f.value}
+                            </span>
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Order button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      scrollToContact(`${pkg.name} (${pkg.tier})`);
+                    }}
+                    className="mt-1 w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-opacity hover:opacity-85 cursor-pointer"
+                    style={
+                      pkg.highlight
+                        ? { background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))", color: "#fff" }
+                        : { border: "1px solid var(--border)", color: "var(--fg)", background: "transparent" }
+                    }
+                  >
+                    Order Package
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ── Package Card ───────────────────────────────────────────────────────── */
 function PackageCard({ pkg }: { pkg: (typeof PACKAGES)[0] }) {
   return (
@@ -279,88 +433,115 @@ function PackageCard({ pkg }: { pkg: (typeof PACKAGES)[0] }) {
 
 /* ── Section ─────────────────────────────────────────────────────────────── */
 export function FreelanceServices() {
-  const sectionRef  = useRef<HTMLElement>(null);
-  const labelRef    = useRef<HTMLParagraphElement>(null);
-  const titleRef    = useRef<HTMLHeadingElement>(null);
-  const descRef     = useRef<HTMLParagraphElement>(null);
-  const buildRef    = useRef<HTMLDivElement>(null);
-  const cardsRef    = useRef<HTMLDivElement>(null);
-  const addonsRef   = useRef<HTMLDivElement>(null);
-  const faqRef      = useRef<HTMLDivElement>(null);
-  const ctaRef      = useRef<HTMLDivElement>(null);
+  const sectionRef      = useRef<HTMLElement>(null);
+  const labelRef        = useRef<HTMLParagraphElement>(null);
+  const titleRef        = useRef<HTMLHeadingElement>(null);
+  const descRef         = useRef<HTMLParagraphElement>(null);
+  const buildRef        = useRef<HTMLDivElement>(null);
+  const cardsRef        = useRef<HTMLDivElement>(null);
+  const mobileCardsRef  = useRef<HTMLDivElement>(null);
+  const addonsRef       = useRef<HTMLDivElement>(null);
+  const faqRef          = useRef<HTMLDivElement>(null);
+  const ctaRef          = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
 
-      /* ── 1. Header — each child staggers in from different axes ── */
+      /* Shared title animation — used for every section heading */
+      const titleAnim = (target: Element | null, trigger: Element | null, delay = 0) =>
+        gsap.fromTo(target,
+          { opacity: 0, y: 44, skewY: 2 },
+          { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out", delay,
+            scrollTrigger: { trigger, start: "top bottom", toggleActions: "play none none none" } });
+
+      /* ── 1. Header ── */
       gsap.fromTo(labelRef.current,
         { opacity: 0, x: -30 },
         { opacity: 1, x: 0, duration: 0.6, ease: "power3.out",
-          scrollTrigger: { trigger: labelRef.current, start: "top 88%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: labelRef.current, start: "top bottom", toggleActions: "play none none none" } });
 
-      gsap.fromTo(titleRef.current,
-        { opacity: 0, y: 44, skewY: 2 },
-        { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out",
-          scrollTrigger: { trigger: titleRef.current, start: "top 90%", toggleActions: "play none none none" } });
+      titleAnim(titleRef.current, titleRef.current);
 
       gsap.fromTo(descRef.current,
         { opacity: 0, y: 22 },
-        { opacity: 1, y: 0, duration: 0.65, ease: "power3.out", delay: 0.1,
-          scrollTrigger: { trigger: descRef.current, start: "top 90%", toggleActions: "play none none none" } });
+        { opacity: 1, y: 0, duration: 0.65, ease: "power3.out", delay: 0.15,
+          scrollTrigger: { trigger: descRef.current, start: "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 2. "What I build" panel — slide from left, items stagger ── */
+      /* ── 2. "What I build" panel ── */
       gsap.fromTo(buildRef.current,
         { opacity: 0, x: -50 },
         { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: buildRef.current, start: "top 87%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: buildRef.current, start: "top bottom", toggleActions: "play none none none" } });
 
       gsap.fromTo(
         buildRef.current?.querySelectorAll(".build-item") ?? [],
         { opacity: 0, x: -24 },
         { opacity: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "power2.out",
-          scrollTrigger: { trigger: buildRef.current, start: "top 85%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: buildRef.current, start: "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 3. Package cards — fly up + scale in with stagger ── */
+      /* ── 3. Package cards — desktop ── */
       gsap.fromTo(
         cardsRef.current?.querySelectorAll(".pkg-card") ?? [],
         { opacity: 0, y: 80, scale: 0.92 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.14,
-          ease: "power3.out",
-          scrollTrigger: { trigger: cardsRef.current, start: "top 85%", toggleActions: "play none none none" } });
+        { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.14, ease: "power3.out",
+          scrollTrigger: { trigger: cardsRef.current, start: "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 4. Add-on tiles — pop in with back ease + stagger ── */
+      /* ── 4. Package accordion cards — mobile ── */
+      gsap.fromTo(
+        mobileCardsRef.current?.querySelectorAll(".mob-pkg-card") ?? [],
+        { opacity: 0, y: 50, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.65, stagger: 0.13, ease: "power3.out",
+          scrollTrigger: { trigger: mobileCardsRef.current, start: "top bottom", toggleActions: "play none none none" } });
+
+      /* ── 5. Add-ons heading (same title animation) ── */
+      gsap.fromTo(
+        addonsRef.current?.querySelector(".addons-icon") ?? null,
+        { opacity: 0, x: -16 },
+        { opacity: 1, x: 0, duration: 0.5, ease: "power3.out",
+          scrollTrigger: { trigger: addonsRef.current, start: "top bottom", toggleActions: "play none none none" } });
+      titleAnim(
+        addonsRef.current?.querySelector(".addons-heading h3") ?? null,
+        addonsRef.current,
+      );
+
+      /* ── 6. Add-on tiles ── */
       gsap.fromTo(
         addonsRef.current?.querySelectorAll(".addon-tile") ?? [],
         { opacity: 0, scale: 0.78, y: 28 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.55, stagger: 0.055,
-          ease: "back.out(1.4)",
-          scrollTrigger: { trigger: addonsRef.current, start: "top 88%", toggleActions: "play none none none" } });
+        { opacity: 1, scale: 1, y: 0, duration: 0.55, stagger: 0.055, ease: "back.out(1.4)",
+          scrollTrigger: { trigger: addonsRef.current, start: "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 5. Add-ons heading ── */
-      gsap.fromTo(
-        addonsRef.current?.querySelector(".addons-heading") ?? null,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, ease: "power3.out",
-          scrollTrigger: { trigger: addonsRef.current, start: "top 88%", toggleActions: "play none none none" } });
+      /* ── 7. FAQ + How I Work headings — both get same title animation ── */
+      (faqRef.current?.querySelectorAll(".faq-heading") ?? []).forEach((el, i) => {
+        titleAnim(el, faqRef.current, i * 0.15);
+      });
 
-      /* ── 6. FAQ items — slide in from right, staggered ── */
+      /* ── 8. FAQ items + work-process rows — slide from right ── */
       gsap.fromTo(
         faqRef.current?.querySelectorAll(".faq-item") ?? [],
         { opacity: 0, x: 40 },
         { opacity: 1, x: 0, duration: 0.55, stagger: 0.08, ease: "power3.out",
-          scrollTrigger: { trigger: faqRef.current, start: "top 88%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: faqRef.current, start: "top bottom", toggleActions: "play none none none" } });
 
+      /* ── 9. Work-process connector line — draw downward ── */
       gsap.fromTo(
-        faqRef.current?.querySelector(".faq-heading") ?? null,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, ease: "power3.out",
-          scrollTrigger: { trigger: faqRef.current, start: "top 90%", toggleActions: "play none none none" } });
+        faqRef.current?.querySelector(".work-line") ?? null,
+        { scaleY: 0, transformOrigin: "top center" },
+        { scaleY: 1, duration: 1.2, ease: "power2.inOut",
+          scrollTrigger: { trigger: faqRef.current, start: "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 7. Bottom CTA — scale up from slightly small ── */
+      /* ── 10. Bottom CTA container ── */
       gsap.fromTo(ctaRef.current,
         { opacity: 0, scale: 0.94, y: 40 },
         { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: ctaRef.current, start: "top 90%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ctaRef.current, start: "top bottom", toggleActions: "play none none none" } });
+
+      /* ── 11. CTA internals — stagger children ── */
+      gsap.fromTo(
+        ctaRef.current?.querySelectorAll(".cta-child") ?? [],
+        { opacity: 0, y: 22 },
+        { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: "power3.out",
+          scrollTrigger: { trigger: ctaRef.current, start: "top bottom", toggleActions: "play none none none" } });
 
     }, sectionRef);
 
@@ -374,7 +555,7 @@ export function FreelanceServices() {
       className="py-24 px-5 sm:px-10"
       style={{ background: "var(--bg)" }}
     >
-      <div className="max-w-6xl mx-auto flex flex-col gap-16">
+      <div className="max-w-6xl mx-auto flex flex-col gap-8 sm:gap-16">
 
         {/* ── Header ── */}
         <div>
@@ -425,18 +606,25 @@ export function FreelanceServices() {
           </div>
         </div>
 
-        {/* ── Package Cards ── */}
-        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* ── Package Cards — desktop only ── */}
+        <div ref={cardsRef} className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {PACKAGES.map((pkg) => (
             <PackageCard key={pkg.tier} pkg={pkg} />
           ))}
         </div>
 
+        {/* ── Package Accordion — mobile only ── */}
+        <div ref={mobileCardsRef} className="block sm:hidden">
+          <MobilePackages />
+        </div>
+
         {/* ── Add-ons ── */}
         <div ref={addonsRef}>
-          <div className="addons-heading flex items-center gap-2 mb-6" style={{ opacity: 0 }}>
-            <Package size={16} style={{ color: "var(--accent)" }} />
-            <h3 className="text-lg font-bold" style={{ color: "var(--fg)" }}>Add-on Services</h3>
+          <div className="addons-heading flex items-center gap-2 mb-6">
+            <span className="addons-icon" style={{ opacity: 0, display: "flex" }}>
+              <Package size={16} style={{ color: "var(--accent)" }} />
+            </span>
+            <h3 className="text-lg font-bold" style={{ color: "var(--fg)", opacity: 0 }}>Add-on Services</h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {ADDONS.map((a) => (
@@ -490,7 +678,7 @@ export function FreelanceServices() {
             <div className="relative flex flex-col">
               {/* vertical connector line */}
               <div
-                className="absolute left-[19px] top-6 bottom-6 w-px"
+                className="work-line absolute left-[19px] top-6 bottom-6 w-px"
                 style={{ background: "linear-gradient(180deg, var(--grad-a), var(--grad-b))", opacity: 0.25 }}
               />
               {WORK_PROCESS.map((step, i) => (
@@ -534,15 +722,15 @@ export function FreelanceServices() {
           className="rounded-2xl border p-8 sm:p-10 text-center flex flex-col items-center gap-5"
           style={{ borderColor: "var(--border)", background: "var(--card)", opacity: 0 }}
         >
-          <p className="section-label">Ready to build something?</p>
-          <h3 className="text-2xl sm:text-3xl font-black" style={{ color: "var(--fg)" }}>
+          <p className="cta-child section-label" style={{ opacity: 0 }}>Ready to build something?</p>
+          <h3 className="cta-child text-2xl sm:text-3xl font-black" style={{ color: "var(--fg)", opacity: 0 }}>
             Let's work together
           </h3>
-          <p className="max-w-md text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
+          <p className="cta-child max-w-md text-sm leading-relaxed" style={{ color: "var(--fg-dim)", opacity: 0 }}>
             Choose a package above or drop me a message directly — happy to discuss
             your project, scope, and timeline before you commit.
           </p>
-          <div className="flex flex-wrap gap-3 justify-center">
+          <div className="cta-child flex flex-wrap gap-3 justify-center" style={{ opacity: 0 }}>
             {PACKAGES.map((pkg) => (
               <button
                 key={pkg.tier}
