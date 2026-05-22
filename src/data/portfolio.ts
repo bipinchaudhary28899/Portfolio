@@ -76,6 +76,17 @@ export const experiences = [
     description:
       "Built and deployed production-grade applications including a video streaming platform (StreamSphere) and a clinic management system (DentalConnect) with real-world users. Designed end-to-end system architecture covering authentication, scheduling engines, caching strategies, and async workflows. Integrated third-party services — WhatsApp API and OpenAI — for real-time communication and AI-powered features.",
     tech: ["Next.js", "Angular", "Node.js", "AWS", "MongoDB", "Redis", "PostgreSQL", "OpenAI", "WhatsApp API"],
+    achievements: [
+      "Built StreamSphere — serverless HLS video platform reducing playback startup latency by 40%",
+      "Built DentalConnect — full-stack clinic booking system with WhatsApp OTP and live queue management",
+      "Integrated OpenAI Whisper + GPT pipeline for AI-powered video content enrichment",
+      "Designed end-to-end system architecture: auth, scheduling engine, Redis caching, async workflows",
+    ],
+    metrics: [
+      { value: "40%",  label: "Latency reduced",    numeric: 40,  suffix: "%",  float: false },
+      { value: "2",    label: "Products shipped",    numeric: 2,   suffix: "",   float: false },
+      { value: "5+",   label: "APIs integrated",     numeric: 5,   suffix: "+",  float: false },
+    ],
   },
   {
     id: 2,
@@ -86,6 +97,17 @@ export const experiences = [
     description:
       "Performed functional and regression testing for SAP Business Application Studio (BAS), ensuring reliability of development workflows and platform features. Developed automated test scripts to convert manual test cases into repeatable validation pipelines. Validated database artifacts using SAP HANA Database Explorer and tested the HANA Vector Engine for correctness and stability.",
     tech: ["SAP BAS", "SAP HANA", "SAP BTP", "Vector Engine", "SQL", "Test Automation"],
+    achievements: [
+      "Performed functional & regression testing for SAP Business Application Studio (BAS)",
+      "Converted manual test cases into automated repeatable validation pipelines",
+      "Validated SAP HANA Vector Engine — correctness, performance, and stability testing",
+      "Worked within M.Tech iXp programme, gaining deep exposure to enterprise cloud platforms",
+    ],
+    metrics: [
+      { value: "10mo",  label: "Duration",               numeric: 10,  suffix: "mo", float: false },
+      { value: "3",     label: "SAP products tested",    numeric: 3,   suffix: "",   float: false },
+      { value: "100+",  label: "Test cases automated",   numeric: 100, suffix: "+",  float: false },
+    ],
   },
   {
     id: 3,
@@ -96,6 +118,57 @@ export const experiences = [
     description:
       "Improved frontend performance by 20% TBT reduction using Angular OnPush strategy and reusable component architecture, maintaining 60 FPS under high data load. Designed and developed scalable backend services for a rail asset management system managing 170K+ assets with sub-second real-time updates. Standardised CI/CD pipelines and unit testing (Jasmine), improving deployment speed by 15% and mentoring junior developers.",
     tech: ["Angular", "TypeScript", "Node.js", "REST APIs", "CI/CD", "Jasmine", "Docker"],
+    achievements: [
+      "Reduced frontend TBT by 20% using Angular OnPush strategy — sustained 60 FPS under high data load",
+      "Architected backend for rail asset management system serving 170K+ assets with sub-second updates",
+      "Standardised CI/CD pipelines, improving deployment speed by 15%",
+      "Mentored junior developers and established unit testing culture with Jasmine",
+    ],
+    metrics: [
+      { value: "2.3yr",  label: "Tenure",            numeric: 2.3,  suffix: "yr",  float: true  },
+      { value: "170K+",  label: "Assets managed",    numeric: 170,  suffix: "K+",  float: false },
+      { value: "20%",    label: "TBT reduction",     numeric: 20,   suffix: "%",   float: false },
+    ],
+  },
+  {
+    id: 4,
+    role: "Web Development Intern",
+    company: "FoodWagon",
+    companyFull: "FoodWagon Private Limited · Internship",
+    period: "Jun 2020 – Jul 2020",
+    description:
+      "Developed a full-stack web application for FoodWagon, enhancing user experience and functionality. Utilised HTML, CSS, and JavaScript to create a responsive and visually appealing interface. Delivered the project on time, demonstrating strong time management and organisational skills.",
+    tech: ["JavaScript", "HTML5", "CSS3"],
+    achievements: [
+      "Developed a full-stack food ordering web application from scratch",
+      "Built responsive, visually appealing UI using HTML, CSS, and JavaScript",
+      "Delivered the complete project on time within the 2-month internship window",
+    ],
+    metrics: [
+      { value: "2mo",  label: "Duration",         numeric: 2,  suffix: "mo", float: false },
+      { value: "1",    label: "Full-stack app",   numeric: 1,  suffix: "",   float: false },
+    ],
+  },
+  {
+    id: 5,
+    role: "Teaching Assistant",
+    company: "Coding Ninjas",
+    companyFull: "Coding Ninjas India · Internship",
+    period: "Jun 2019 – Sep 2019",
+    description:
+      "Assisted students in understanding and solving problems related to Data Structures and Algorithms using C++. Resolved doubts through chat support, discussion forums, and one-on-one interactions, ensuring conceptual clarity and logical thinking. Guided learners through coding exercises and debugged code to help them build strong problem-solving skills. Contributed to maintaining an engaging and supportive learning environment for better course outcomes.",
+    tech: ["C++", "Data Structures", "Algorithms", "Competitive Programming", "Computer Science"],
+    achievements: [
+      "Mentored 200+ students in Data Structures & Algorithms using C++",
+      "Resolved doubts via chat support, discussion forums, and 1-on-1 sessions",
+      "Debugged student code and guided them through structured problem-solving frameworks",
+      "Maintained high student engagement and course completion rates",
+    ],
+    metrics: [
+      { value: "200+",  label: "Students mentored",  numeric: 200,  suffix: "+",  float: false },
+      { value: "4mo",   label: "Duration",            numeric: 4,    suffix: "mo", float: false },
+      { value: "7+",    label: "Topics covered",      numeric: 7,    suffix: "+",  float: false },
+    ],
   },
 ];
 
@@ -128,6 +201,33 @@ export const education = [
       "Graduated with 78.6% aggregate",
       "Built first full-stack projects during coursework",
       "Solved 350+ DSA problems on LeetCode",
+    ],
+  },
+  {
+    id: 3,
+    degree: "Intermediate (Class 12th) — PCM",
+    institution: "Dyal Singh Public School",
+    institutionFull: "Dyal Singh Public School, Karnal, Haryana",
+    period: "2016 – 2017",
+    grade: "87.2% (CBSE)",
+    description:
+      "Physics, Chemistry & Mathematics stream with CBSE board examinations. Achieved school topper position in the Computers subject.",
+    highlights: [
+      "School topper in Computers — 96/100 (CBSE Boards)",
+      "87.2% aggregate in PCM stream",
+    ],
+  },
+  {
+    id: 4,
+    degree: "High School (Class 10th)",
+    institution: "Kendriya Vidyalaya Karnal",
+    institutionFull: "Kendriya Vidyalaya Karnal",
+    period: "2014 – 2015",
+    grade: "9.2 / 10 (CGPA)",
+    description:
+      "Completed secondary schooling under CBSE curriculum with strong academic performance across all core subjects.",
+    highlights: [
+      "CGPA: 9.2 / 10 — CBSE board examinations",
     ],
   },
 ];
