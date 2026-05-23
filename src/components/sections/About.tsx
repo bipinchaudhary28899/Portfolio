@@ -65,7 +65,7 @@ export function About() {
         {/* Header */}
         <div className="about-header mb-14">
           <p className="about-label section-label mb-3" style={{ opacity: 0 }}>About</p>
-          <h2 className="about-title font-black tracking-tight leading-none"
+          <h2 className="about-title heading-accent font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
             Who I am
           </h2>
@@ -75,7 +75,15 @@ export function About() {
         <div className="stat-grid grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16">
           {personalInfo.stats.map((s) => (
             <div key={s.label} className="stat-item opacity-0 rounded-2xl p-6 border"
-              style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+              style={{
+                background: "var(--card)",
+                borderColor: "var(--border)",
+                backgroundImage: `
+                  linear-gradient(180deg, rgba(255,255,255,0.03) 0px, transparent 1px),
+                  linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 55%)
+                `,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.4), 0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.055)",
+              }}>
               <span className="block font-black tracking-tight leading-none mb-1 gradient-text"
                 style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}>
                 {s.value}
@@ -97,7 +105,13 @@ export function About() {
           <div className="achieve-list flex flex-col gap-4">
             {personalInfo.achievements.map((a, i) => (
               <div key={i} className="achieve-item opacity-0 flex gap-4 items-start p-5 rounded-xl border"
-                style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+                style={{
+                  background: "var(--card)",
+                  borderColor: "var(--border)",
+                  backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.018) 0%, transparent 50%)",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.35), 0 8px 20px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.05)",
+                  borderLeft: "2px solid rgba(255,101,53,0.35)",
+                }}>
                 <span className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
                   style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}>
                   {i + 1}

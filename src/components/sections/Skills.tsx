@@ -16,7 +16,7 @@ export function Skills() {
 
       /* ── Header ── */
       const htl = gsap.timeline({
-        scrollTrigger: { trigger: ".skills-header", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
+        scrollTrigger: { trigger: ".skills-header", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom+=180", toggleActions: "play none none none" },
       });
       htl.fromTo(".skills-label", { opacity: 0, x: -24 },         { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" })
          .fromTo(".skills-title", { opacity: 0, y: 44, skewY: 2 }, { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out" }, "-=0.2");
@@ -27,7 +27,7 @@ export function Skills() {
         gsap.fromTo(".skill-cat",
           { opacity: 0, y: 55, scale: 0.93 },
           { opacity: 1, y: 0, scale: 1, stagger: 0.1, duration: 0.65, ease: "power3.out",
-            scrollTrigger: { trigger: ".skills-grid", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" },
+            scrollTrigger: { trigger: ".skills-grid", start: "top bottom+=180", toggleActions: "play none none none" },
             onComplete() {
               // After cards are visible, stagger each row of skill tags
               gsap.fromTo(".skill-tag",
@@ -66,7 +66,7 @@ export function Skills() {
         <div className="max-w-6xl mx-auto">
           <div className="skills-header mb-14">
             <p className="skills-label section-label mb-3" style={{ opacity: 0 }}>Stack</p>
-            <h2 className="skills-title font-black tracking-tight leading-none"
+            <h2 className="skills-title heading-accent font-black tracking-tight leading-none"
               style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
               Skills & Tools
             </h2>
@@ -74,7 +74,15 @@ export function Skills() {
           <div className="skills-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {categories.map(([cat, items]) => (
               <div key={cat} className="skill-cat opacity-0 rounded-2xl border p-6"
-                style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+                style={{
+                  background: "var(--card)",
+                  borderColor: "var(--border)",
+                  backgroundImage: `
+                    linear-gradient(180deg, rgba(255,255,255,0.028) 0px, transparent 1px),
+                    linear-gradient(135deg, rgba(255,255,255,0.018) 0%, transparent 55%)
+                  `,
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.42), 0 12px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
+                }}>
                 <div className="flex items-center gap-2 mb-5">
                   <span className="w-1.5 h-5 rounded-full"
                     style={{ background: "linear-gradient(180deg,var(--grad-a),var(--grad-b))" }} />
@@ -86,12 +94,18 @@ export function Skills() {
                       className="skill-tag text-sm py-1.5 px-3 rounded-lg border transition-all duration-200 cursor-default"
                       style={{ borderColor: "var(--border)", color: "var(--fg-dim)", background: "var(--bg-alt)", opacity: 0 }}
                       onMouseEnter={e => {
-                        (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,101,53,.45)";
-                        (e.currentTarget as HTMLElement).style.color = "var(--fg)";
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "rgba(255,101,53,.45)";
+                        el.style.color = "var(--fg)";
+                        el.style.boxShadow = "0 0 0 1px rgba(255,101,53,0.12), 0 0 14px rgba(255,101,53,0.13)";
+                        el.style.background = "rgba(255,101,53,0.05)";
                       }}
                       onMouseLeave={e => {
-                        (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                        (e.currentTarget as HTMLElement).style.color = "var(--fg-dim)";
+                        const el = e.currentTarget as HTMLElement;
+                        el.style.borderColor = "var(--border)";
+                        el.style.color = "var(--fg-dim)";
+                        el.style.boxShadow = "none";
+                        el.style.background = "var(--bg-alt)";
                       }}>
                       {skill}
                     </div>

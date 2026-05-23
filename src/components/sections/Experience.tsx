@@ -15,6 +15,20 @@ const ACCENTS = [
   "linear-gradient(135deg,#e879f9,#a855f7)",
 ];
 const ACCENT_COLORS = ["var(--accent)", "#6366f1", "#10b981", "#f59e0b", "#e879f9"];
+const ACCENT_GLOWS  = [
+  "rgba(255,101,53,0.07)",
+  "rgba(99,102,241,0.07)",
+  "rgba(16,185,129,0.07)",
+  "rgba(245,158,11,0.07)",
+  "rgba(232,121,249,0.07)",
+];
+const ACCENT_METRIC_BG = [
+  "rgba(255,101,53,0.06)",
+  "rgba(99,102,241,0.06)",
+  "rgba(16,185,129,0.06)",
+  "rgba(245,158,11,0.06)",
+  "rgba(232,121,249,0.06)",
+];
 
 /* ── Card ─────────────────────────────────────────────────────────────────── */
 function ExpCard({
@@ -24,7 +38,10 @@ function ExpCard({
   exp: (typeof experiences)[0];
   index: number;
 }) {
-  const accentColor = ACCENT_COLORS[index % ACCENT_COLORS.length];
+  const accentColor   = ACCENT_COLORS[index % ACCENT_COLORS.length];
+  const accentGlow    = ACCENT_GLOWS[index % ACCENT_GLOWS.length];
+  const accentMetric  = ACCENT_METRIC_BG[index % ACCENT_METRIC_BG.length];
+  const accentGrad    = ACCENTS[index % ACCENTS.length];
 
   return (
     /*
@@ -33,9 +50,36 @@ function ExpCard({
     */
     <div
       className="rounded-2xl overflow-hidden w-full h-full flex flex-col"
-      style={{ background: "var(--card)" }}
+      style={{
+        background: "var(--card)",
+        /* Cinematic layered background: inner light-source gradient + top glass line */
+        backgroundImage: `
+          linear-gradient(180deg, rgba(255,255,255,0.032) 0px, transparent 1px),
+          linear-gradient(135deg, rgba(255,255,255,0.022) 0%, transparent 50%)
+        `,
+      }}
     >
-      <div className="p-7 sm:p-9 flex flex-col gap-6 flex-1">
+      {/* Colored left border strip — pulls the accent color up to card level */}
+      <div style={{
+        position: "absolute",
+        top: 0, left: 0, bottom: 0,
+        width: 3,
+        borderRadius: "9999px 0 0 9999px",
+        background: accentGrad,
+        opacity: 0.9,
+        pointerEvents: "none",
+      }} />
+
+      {/* Ambient colored glow behind card content */}
+      <div style={{
+        position: "absolute",
+        top: 0, left: 0, right: 0, bottom: 0,
+        borderRadius: "1rem",
+        background: `radial-gradient(ellipse 80% 50% at 0% 0%, ${accentGlow}, transparent 65%)`,
+        pointerEvents: "none",
+      }} />
+
+      <div className="p-7 sm:p-9 flex flex-col gap-6 flex-1" style={{ position: "relative" }}>
 
         {/* Header */}
         <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -85,7 +129,10 @@ function ExpCard({
               <div
                 key={j}
                 className="rounded-xl px-4 py-3 flex-1 sm:flex-none"
-                style={{ background: "var(--bg)" }}
+                style={{
+                  background: `linear-gradient(135deg, ${accentMetric} 0%, var(--bg) 100%)`,
+                  border: `1px solid ${accentGlow.replace("0.07", "0.18")}`,
+                }}
               >
                 <p
                   className="text-xl font-black tabular-nums"

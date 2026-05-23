@@ -71,14 +71,14 @@ body {
   position: relative; /* required for overflow-x: hidden to work on iOS Safari */
 }
 
-/* Film grain overlay */
+/* Film grain overlay — bumped to 0.045 for a more filmic look */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.025;
+  opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
 }
@@ -116,9 +116,43 @@ body::after {
 /* ── Grid background ───────────────────────────────── */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(255,101,53,.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,101,53,.028) 1px, transparent 1px);
+    linear-gradient(rgba(255,101,53,.042) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,101,53,.042) 1px, transparent 1px);
   background-size: 64px 64px;
+}
+
+/* ── Cinematic card surface — inner light-source gradient + top highlight ── */
+.card-cinematic {
+  background-image:
+    /* top-edge glass highlight */
+    linear-gradient(180deg, rgba(255,255,255,0.035) 0px, transparent 1px),
+    /* inner light source: top-left slightly lighter */
+    linear-gradient(135deg, rgba(255,255,255,0.028) 0%, transparent 55%);
+  box-shadow:
+    /* near shadow — tight and dark */
+    0 2px 8px rgba(0,0,0,0.45),
+    /* mid shadow — soft spread */
+    0 12px 32px rgba(0,0,0,0.35),
+    /* ambient — wide and very soft */
+    0 32px 72px rgba(0,0,0,0.22),
+    /* inner top highlight line */
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* ── Section heading accent bar ────────────────────── */
+.heading-accent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.heading-accent::before {
+  content: '';
+  flex-shrink: 0;
+  width: 3px;
+  height: 1.15em;
+  margin-top: 0.12em;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--grad-a), var(--grad-b));
 }
 
 /* ── Horizontal scroll track ───────────────────────── */

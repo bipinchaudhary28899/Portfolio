@@ -91,12 +91,26 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
         padding: "2rem 3rem",
         overflow: "hidden",
         background: "var(--bg)",
+        /* Cinematic: inner top-left light source */
+        backgroundImage: `
+          linear-gradient(180deg, rgba(255,255,255,0.018) 0px, transparent 1px),
+          linear-gradient(135deg, rgba(255,255,255,0.012) 0%, transparent 45%)
+        `,
       }}
     >
-      {/* Ghost number */}
+      {/* Always-visible left accent gradient line */}
+      <div style={{
+        position: "absolute",
+        top: 0, left: 0, bottom: 0,
+        width: 2,
+        background: "linear-gradient(180deg, var(--grad-a), var(--grad-b))",
+        opacity: 0.55,
+        pointerEvents: "none",
+      }} />
+      {/* Ghost number — more visible, gradient-tinted watermark */}
       <span
-        className="absolute bottom-8 right-10 font-black font-mono pointer-events-none select-none"
-        style={{ fontSize: "clamp(6rem,11vw,11rem)", lineHeight: 1, opacity: 0.04, color: "var(--fg)" }}
+        className="absolute bottom-8 right-10 font-black font-mono pointer-events-none select-none gradient-text"
+        style={{ fontSize: "clamp(6rem,11vw,11rem)", lineHeight: 1, opacity: 0.08 }}
       >
         {num}
       </span>
@@ -150,8 +164,9 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
           style={{
             flex: "1 1 0%",
             minWidth: 0,
+            position: "relative",
             borderColor: "var(--border)",
-            boxShadow: "0 20px 56px rgba(0,0,0,0.4)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.5), 0 20px 56px rgba(0,0,0,0.4), 0 40px 80px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.06)",
           }}
         >
           <Image
@@ -162,10 +177,19 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
             className="w-full h-auto block"
             sizes="(min-width: 768px) 58vw"
           />
-          {/* Hover gloss */}
+          {/* Cinematic bottom vignette — blends image into panel bg */}
+          <div
+            className="absolute inset-x-0 bottom-0 pointer-events-none"
+            style={{
+              height: "38%",
+              background: "linear-gradient(to top, rgba(7,7,15,0.72) 0%, transparent 100%)",
+              borderRadius: "0 0 0.75rem 0.75rem",
+            }}
+          />
+          {/* Hover top-left gloss */}
           <div
             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-xl"
-            style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 55%)" }}
+            style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%)" }}
           />
         </div>
       </div>

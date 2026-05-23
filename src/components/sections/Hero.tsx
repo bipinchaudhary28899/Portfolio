@@ -55,9 +55,17 @@ export function Hero() {
       {/* Grid */}
       <div className="absolute inset-0 grid-bg pointer-events-none" />
 
-      {/* Radial glow */}
+      {/* Radial glow — top-center orange */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 70% 50% at 50% -8%,rgba(255,101,53,.14),transparent 65%)" }} />
+        style={{ background: "radial-gradient(ellipse 70% 50% at 50% -8%,rgba(255,101,53,.18),transparent 65%)" }} />
+
+      {/* Ambient orb — bottom-right cool indigo, creates stage depth */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 55% 45% at 95% 105%,rgba(99,102,241,.09),transparent 65%)" }} />
+
+      {/* Ambient orb — bottom-left very faint warm */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 40% 35% at -5% 110%,rgba(255,159,28,.06),transparent 60%)" }} />
 
       {/* Top accent line */}
       <div ref={lineRef} className="accent-line absolute top-0 left-0 right-0" style={{ transformOrigin: "left" }} />
