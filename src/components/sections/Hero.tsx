@@ -6,6 +6,7 @@ import { ArrowDown, Download } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/icons";
 import { personalInfo } from "@/data/portfolio";
 import { useLoadingComplete } from "@/context/LoadingContext";
+import { ViewCounter } from "@/components/ui/ViewCounter";
 
 export function Hero() {
   const sec    = useRef<HTMLElement>(null);
@@ -141,6 +142,7 @@ export function Hero() {
             </a>
           ))}
           <span className="hidden sm:block text-xs" style={{ color: "var(--muted)" }}>{personalInfo.location}</span>
+          <ViewCounter />
         </div>
 
         <button ref={scr} onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
