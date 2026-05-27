@@ -15,13 +15,24 @@ export default function LoadingWrapper({ children }: LoadingWrapperProps) {
   const [loading, setLoading] = useState(true);
   const contentRef            = useRef<HTMLDivElement>(null);
 
+  /* Disable browser scroll restoration so it never jumps mid-page on reload */
+  useEffect(() => {
+    if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
   const handleComplete = useCallback(() => {
+    /* Force back to top before revealing content */
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     setLoading(false);
   }, []);
 
   /* Fade the page in once the loading screen has exited */
   useEffect(() => {
     if (!loading && contentRef.current) {
+      /* Second guard: ensure we're at the top even if scroll happened during fade */
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       contentRef.current.style.opacity = "1";
     }
   }, [loading]);
