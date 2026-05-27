@@ -126,6 +126,12 @@ function Dot({ pal }: { pal: Pal }) {
   );
 }
 
+/* ── Extract start year from period string ────────────────────────────────── */
+function startYear(period: string): string {
+  const m = period.match(/\d{4}/);
+  return m ? m[0] : "";
+}
+
 /* ── Main section ─────────────────────────────────────────────────────────── */
 export function Experience() {
   const secRef = useRef<HTMLElement>(null);
@@ -222,16 +228,35 @@ export function Experience() {
                   <div className="hidden md:grid items-center"
                     style={{ gridTemplateColumns: "1fr 48px 1fr" }}>
 
-                    <div className="pr-10">
-                      {!cardRight && <ExpCard exp={exp} pal={pal} side="left" />}
+                    {/* Left cell: card or year */}
+                    <div className="pr-10 flex items-center justify-end overflow-hidden">
+                      {!cardRight
+                        ? <ExpCard exp={exp} pal={pal} side="left" />
+                        : <span
+                            className="gradient-text font-black font-mono select-none pointer-events-none w-full text-right"
+                            style={{ fontSize: "clamp(5rem,9vw,9rem)", lineHeight: 1, opacity: 0.13 }}
+                          >
+                            {startYear(exp.period)}
+                          </span>
+                      }
                     </div>
 
+                    {/* Center dot */}
                     <div className="flex justify-center">
                       <Dot pal={pal} />
                     </div>
 
-                    <div className="pl-10">
-                      {cardRight && <ExpCard exp={exp} pal={pal} side="right" />}
+                    {/* Right cell: card or year */}
+                    <div className="pl-10 flex items-center justify-start overflow-hidden">
+                      {cardRight
+                        ? <ExpCard exp={exp} pal={pal} side="right" />
+                        : <span
+                            className="gradient-text font-black font-mono select-none pointer-events-none w-full"
+                            style={{ fontSize: "clamp(5rem,9vw,9rem)", lineHeight: 1, opacity: 0.13 }}
+                          >
+                            {startYear(exp.period)}
+                          </span>
+                      }
                     </div>
                   </div>
 

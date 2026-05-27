@@ -80,15 +80,15 @@ export function Certifications() {
           </h2>
         </div>
 
-        <div className="cert-grid grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="cert-grid grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-5">
           {certifications.map((cert) => (
             <div key={cert.id}
-              className="cert-card opacity-0 group rounded-2xl border flex flex-col relative overflow-hidden transition-transform duration-300 hover:-translate-y-2 cursor-pointer"
+              className="cert-card opacity-0 group rounded-xl sm:rounded-2xl border flex flex-col relative overflow-hidden transition-transform duration-300 hover:-translate-y-1.5 sm:hover:-translate-y-2 cursor-pointer"
               style={{ background: "var(--card)", borderColor: "var(--border)" }}
               onClick={() => setPreview(cert)}>
 
               {/* Top accent */}
-              <div className="absolute top-0 left-0 right-0 h-0.5 z-10" style={{ background: cert.color, opacity: 0.8 }} />
+              <div className="absolute top-0 left-0 right-0 h-[2px] z-10" style={{ background: cert.color }} />
 
               {/* Certificate thumbnail */}
               <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
@@ -96,43 +96,43 @@ export function Certifications() {
                   src={cert.image}
                   alt={cert.title}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 {/* Zoom hint overlay */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: "rgba(0,0,0,0.45)" }}>
-                  <ZoomIn size={28} color="#fff" />
+                  style={{ background: "rgba(0,0,0,0.5)" }}>
+                  <ZoomIn size={16} color="#fff" className="sm:hidden" />
+                  <ZoomIn size={28} color="#fff" className="hidden sm:block" />
                 </div>
               </div>
 
-              {/* Card body */}
-              <div className="p-5 flex flex-col gap-3 flex-1">
-                {/* Title */}
+              {/* Card body — compact on mobile, full on sm+ */}
+              <div className="p-2.5 sm:p-5 flex flex-col gap-1.5 sm:gap-3 flex-1">
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold leading-snug mb-1" style={{ color: "var(--fg)" }}>
+                  <h3 className="text-[10px] sm:text-sm font-semibold leading-snug line-clamp-2 mb-0.5 sm:mb-1" style={{ color: "var(--fg)" }}>
                     {cert.title}
                   </h3>
-                  <p className="text-xs" style={{ color: "var(--muted)" }}>
+                  <p className="text-[9px] sm:text-xs" style={{ color: "var(--muted)" }}>
                     {cert.issuer} · {cert.date}
                   </p>
                 </div>
 
                 {/* Skills */}
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1">
                   {cert.skills.map((s) => (
-                    <span key={s} className="text-xs px-2 py-0.5 rounded-full"
+                    <span key={s} className="text-[9px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full"
                       style={{ background: `${cert.color}18`, color: cert.color }}>
                       {s}
                     </span>
                   ))}
                 </div>
 
-                {/* External link */}
+                {/* External link — desktop only */}
                 {cert.credentialUrl !== "#" && (
                   <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 text-xs font-medium mt-1 w-fit transition-opacity hover:opacity-70"
+                    className="hidden sm:flex items-center gap-1.5 text-xs font-medium mt-1 w-fit transition-opacity hover:opacity-70"
                     style={{ color: cert.color }}>
                     <ExternalLink size={11} /> View credential
                   </a>

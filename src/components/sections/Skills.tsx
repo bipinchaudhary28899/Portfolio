@@ -57,6 +57,18 @@ export function Skills() {
 
   const categories = Object.entries(skills);
   const [activeTab, setActiveTab] = useState(0);
+  const tabsRef    = useRef<HTMLDivElement>(null);
+
+  /* Scroll the active tab pill into view when activeTab changes */
+  useEffect(() => {
+    const container = tabsRef.current;
+    if (!container) return;
+    const active = container.children[activeTab] as HTMLElement | undefined;
+    if (active) active.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [activeTab]);
+
+  const goPrev = () => setActiveTab((t) => Math.max(0, t - 1));
+  const goNext = () => setActiveTab((t) => Math.min(categories.length - 1, t + 1));
 
   return (
     <>
@@ -127,26 +139,67 @@ export function Skills() {
           <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Skills & Tools</h2>
         </div>
 
-        {/* Category tabs — horizontal scroll, no scrollbar */}
-        <div className="flex gap-2 overflow-x-auto pb-1 mb-5"
-          style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
-          {categories.map(([cat], i) => (
-            <button
-              key={cat}
-              onClick={() => setActiveTab(i)}
-              className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
-              style={i === activeTab ? {
-                background: "var(--accent)",
-                color:      "#fff",
-              } : {
-                background:  "var(--card)",
-                color:        "var(--muted)",
-                border:       "1px solid var(--border)",
-              }}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Category tabs — horizontal scroll with < > nav arrows */}
+        <div className="flex items-center gap-2 mb-5">
+
+          {/* Prev arrow */}
+          <button
+            onClick={goPrev}
+            disabled={activeTab === 0}
+            className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200"
+            style={{
+              background:   activeTab === 0 ? "var(--card)" : "var(--accent)",
+              color:        activeTab === 0 ? "var(--muted)" : "#fff",
+              border:       "1px solid var(--border)",
+              opacity:      activeTab === 0 ? 0.4 : 1,
+            }}
+            aria-label="Previous category"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M7.5 2L4 6l3.5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
+          {/* Scrollable pill row */}
+          <div ref={tabsRef} className="flex gap-2 overflow-x-auto pb-1 flex-1"
+            style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
+            {categories.map(([cat], i) => (
+              <button
+                key={cat}
+                onClick={() => setActiveTab(i)}
+                className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
+                style={i === activeTab ? {
+                  background: "var(--accent)",
+                  color:      "#fff",
+                } : {
+                  background: "var(--card)",
+                  color:      "var(--muted)",
+                  border:     "1px solid var(--border)",
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Next arrow */}
+          <button
+            onClick={goNext}
+            disabled={activeTab === categories.length - 1}
+            className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200"
+            style={{
+              background: activeTab === categories.length - 1 ? "var(--card)" : "var(--accent)",
+              color:      activeTab === categories.length - 1 ? "var(--muted)" : "#fff",
+              border:     "1px solid var(--border)",
+              opacity:    activeTab === categories.length - 1 ? 0.4 : 1,
+            }}
+            aria-label="Next category"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M4.5 2L8 6l-3.5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
         </div>
 
         {/* Active category skills — wrap tags */}
