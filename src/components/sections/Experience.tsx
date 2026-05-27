@@ -3,478 +3,341 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 import { experiences } from "@/data/portfolio";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ACCENTS = [
-  "linear-gradient(135deg,var(--grad-a),var(--grad-b))",
-  "linear-gradient(135deg,#6366f1,#8b5cf6)",
-  "linear-gradient(135deg,#10b981,#059669)",
-  "linear-gradient(135deg,#f59e0b,#f97316)",
-  "linear-gradient(135deg,#e879f9,#a855f7)",
-];
-const ACCENT_COLORS = ["var(--accent)", "#6366f1", "#10b981", "#f59e0b", "#e879f9"];
-const ACCENT_GLOWS  = [
-  "rgba(255,101,53,0.07)",
-  "rgba(99,102,241,0.07)",
-  "rgba(16,185,129,0.07)",
-  "rgba(245,158,11,0.07)",
-  "rgba(232,121,249,0.07)",
-];
-const ACCENT_METRIC_BG = [
-  "rgba(255,101,53,0.06)",
-  "rgba(99,102,241,0.06)",
-  "rgba(16,185,129,0.06)",
-  "rgba(245,158,11,0.06)",
-  "rgba(232,121,249,0.06)",
+/* ── Orange-only palette — consistent with site accent ───────────────────── */
+const PALETTE = [
+  { accent: "#ff6535", bg: "rgba(255,101,53,0.10)",  glow: "rgba(255,101,53,0.20)",  border: "rgba(255,101,53,0.30)"  },
+  { accent: "#f97316", bg: "rgba(249,115,22,0.10)",  glow: "rgba(249,115,22,0.20)",  border: "rgba(249,115,22,0.30)"  },
+  { accent: "#fb923c", bg: "rgba(251,146,60,0.10)",  glow: "rgba(251,146,60,0.20)",  border: "rgba(251,146,60,0.30)"  },
+  { accent: "#ea580c", bg: "rgba(234,88,12,0.10)",   glow: "rgba(234,88,12,0.20)",   border: "rgba(234,88,12,0.30)"   },
+  { accent: "#ff8c5a", bg: "rgba(255,140,90,0.10)",  glow: "rgba(255,140,90,0.20)",  border: "rgba(255,140,90,0.30)"  },
 ];
 
-/* ── Card ─────────────────────────────────────────────────────────────────── */
-function ExpCard({
-  exp,
-  index,
-}: {
-  exp: (typeof experiences)[0];
-  index: number;
-}) {
-  const accentColor   = ACCENT_COLORS[index % ACCENT_COLORS.length];
-  const accentGlow    = ACCENT_GLOWS[index % ACCENT_GLOWS.length];
-  const accentMetric  = ACCENT_METRIC_BG[index % ACCENT_METRIC_BG.length];
-  const accentGrad    = ACCENTS[index % ACCENTS.length];
+const TL_GRADIENT = "linear-gradient(to bottom, #ff6535 0%, #f97316 25%, #fb923c 50%, #ea580c 75%, #ff8c5a 100%)";
 
+type Pal = (typeof PALETTE)[number];
+
+/* ── Company logo ─────────────────────────────────────────────────────────── */
+function CompanyLogo({ src, company, pal }: { src: string; company: string; pal: Pal }) {
+  if (!src) {
+    /* Self-Employed fallback — initials badge */
+    return (
+      <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black"
+        style={{ background: pal.bg, border: `1px solid ${pal.border}`, color: pal.accent }}>
+        {company.slice(0, 2).toUpperCase()}
+      </div>
+    );
+  }
   return (
-    /*
-      h-full + flex-col: card fills its absolute wrapper completely so no
-      lower-z-index card can peek through the transparent gap below.
-    */
+    <div className="shrink-0 w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center"
+      style={{ background: "#fff", border: `1px solid ${pal.border}`, padding: 4 }}>
+      <Image src={src} alt={company} width={32} height={32} style={{ objectFit: "contain", width: "100%", height: "100%" }} />
+    </div>
+  );
+}
+
+/* ── Desktop card ─────────────────────────────────────────────────────────── */
+function ExpCard({ exp, pal, side }: { exp: (typeof experiences)[0]; pal: Pal; side: "left" | "right" }) {
+  return (
     <div
-      className="rounded-2xl overflow-hidden w-full h-full flex flex-col"
+      className="exp-card relative rounded-2xl overflow-hidden flex flex-col gap-5 p-6 sm:p-8"
       style={{
         background: "var(--card)",
-        /* Cinematic layered background: inner light-source gradient + top glass line */
-        backgroundImage: `
-          linear-gradient(180deg, rgba(255,255,255,0.032) 0px, transparent 1px),
-          linear-gradient(135deg, rgba(255,255,255,0.022) 0%, transparent 50%)
-        `,
+        border: `1px solid ${pal.border}`,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.4), 0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.055)",
       }}
     >
-      {/* Colored left border strip — pulls the accent color up to card level */}
-      <div style={{
-        position: "absolute",
-        top: 0, left: 0, bottom: 0,
-        width: 3,
-        borderRadius: "9999px 0 0 9999px",
-        background: accentGrad,
-        opacity: 0.9,
-        pointerEvents: "none",
-      }} />
+      {/* Top accent bar */}
+      <div className="absolute top-0 left-0 right-0 h-[2px]"
+        style={{ background: `linear-gradient(to right, ${pal.accent}, transparent)` }} />
 
-      {/* Ambient colored glow behind card content */}
-      <div style={{
-        position: "absolute",
-        top: 0, left: 0, right: 0, bottom: 0,
-        borderRadius: "1rem",
-        background: `radial-gradient(ellipse 80% 50% at 0% 0%, ${accentGlow}, transparent 65%)`,
-        pointerEvents: "none",
-      }} />
-
-      <div className="p-7 sm:p-9 flex flex-col gap-6 flex-1" style={{ position: "relative" }}>
-
-        {/* Header */}
-        <div className="flex items-start justify-between gap-3 flex-wrap">
-          <div>
-            <p className="section-label mb-1.5">{exp.company}</p>
-            <h3
-              className="text-2xl sm:text-3xl font-black leading-tight"
-              style={{ color: "var(--fg)" }}
-            >
-              {exp.role}
-            </h3>
-          </div>
-          <span
-            className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold mt-1"
-            style={{ background: "rgba(255,101,53,.1)", color: "var(--accent)" }}
-          >
-            {exp.period}
-          </span>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px" style={{ background: "var(--border)" }} />
-
-        {/* Two-column body: achievements + metrics — flex-1 so it expands */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 flex-1">
-
-          {/* Achievements */}
-          <ul className="sm:col-span-2 flex flex-col gap-3">
-            {exp.achievements.map((ach, j) => (
-              <li
-                key={j}
-                className="flex items-start gap-3 text-sm leading-relaxed"
-                style={{ color: "var(--fg-dim)" }}
-              >
-                <span
-                  className="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full"
-                  style={{ background: accentColor }}
-                />
-                {ach}
-              </li>
-            ))}
-          </ul>
-
-          {/* Metrics */}
-          <div className="flex sm:flex-col gap-3">
-            {exp.metrics.map((m, j) => (
-              <div
-                key={j}
-                className="rounded-xl px-4 py-3 flex-1 sm:flex-none"
-                style={{
-                  background: `linear-gradient(135deg, ${accentMetric} 0%, var(--bg) 100%)`,
-                  border: `1px solid ${accentGlow.replace("0.07", "0.18")}`,
-                }}
-              >
-                <p
-                  className="text-xl font-black tabular-nums"
-                  style={{ color: accentColor }}
-                >
-                  {m.value}
-                </p>
-                <p className="text-xs" style={{ color: "var(--muted)" }}>
-                  {m.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Tech tags — pinned to bottom */}
-        <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
-          {exp.tech.map((t) => (
-            <span
-              key={t}
-              className="text-xs px-2.5 py-1 rounded-full"
-              style={{
-                color:      "var(--muted)",
-                background: "var(--bg)",
-              }}
-            >
-              {t}
+      {/* Header: logo + company pill + role + period */}
+      <div className="relative flex items-start gap-3">
+        <CompanyLogo src={exp.logo} company={exp.company} pal={pal} />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+              style={{ background: pal.bg, color: pal.accent, border: `1px solid ${pal.border}` }}>
+              {exp.company}
             </span>
-          ))}
+            <span className="text-xs font-medium px-3 py-1 rounded-full shrink-0"
+              style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
+              {exp.period}
+            </span>
+          </div>
+          <h3 className="text-xl sm:text-2xl font-black leading-tight mt-2" style={{ color: "var(--fg)" }}>
+            {exp.role}
+          </h3>
         </div>
+      </div>
 
+      {/* Divider */}
+      <div className="h-px" style={{ background: `linear-gradient(to right, ${pal.border}, transparent)` }} />
+
+      {/* Achievements */}
+      <ul className="relative flex flex-col gap-2.5">
+        {exp.achievements.map((a, j) => (
+          <li key={j} className="exp-ach flex items-start gap-3 text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
+            <span className="mt-[7px] shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: pal.accent }} />
+            {a}
+          </li>
+        ))}
+      </ul>
+
+      {/* Metrics */}
+      <div className="relative flex flex-wrap gap-2">
+        {exp.metrics.map((m, j) => (
+          <div key={j} className="flex-1 min-w-[80px] rounded-xl px-3 py-2.5 text-center"
+            style={{ background: pal.bg, border: `1px solid ${pal.border}` }}>
+            <p className="text-lg font-black tabular-nums leading-none mb-0.5" style={{ color: pal.accent }}>{m.value}</p>
+            <p className="text-[11px] leading-tight" style={{ color: "var(--muted)" }}>{m.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Tech pills */}
+      <div className="relative flex flex-wrap gap-1.5">
+        {exp.tech.map((t) => (
+          <span key={t} className="text-[11px] px-2.5 py-1 rounded-full"
+            style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
+            {t}
+          </span>
+        ))}
       </div>
     </div>
   );
 }
 
-/* ── Mobile accordion (self-contained so it has its own state) ───────────── */
-function MobileExperience() {
-  const [open, setOpen] = useState<number | null>(null);
-
+/* ── Timeline dot ─────────────────────────────────────────────────────────── */
+function Dot({ pal }: { pal: Pal }) {
   return (
-    <section className="block md:hidden py-14 px-5" style={{ background: "var(--bg-alt)" }}>
-
-      {/* Header */}
-      <div className="exp-mob-hd mb-6" style={{ opacity: 0 }}>
-        <p className="section-label mb-2">Career</p>
-        <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Work Experience</h2>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        {experiences.map((exp, i) => {
-          const accentColor = ACCENT_COLORS[i % ACCENT_COLORS.length];
-          const isOpen      = open === i;
-          return (
-            <div
-              key={exp.id}
-              className="exp-mob-card rounded-2xl overflow-hidden"
-              style={{ background: "var(--card)", border: "1.5px solid var(--border)", opacity: 0 }}
-            >
-              {/* ── Collapsed header — always visible ── */}
-              <button
-                className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
-                onClick={() => setOpen(isOpen ? null : i)}
-              >
-                {/* Accent dot */}
-                <span className="flex-shrink-0 w-2 h-2 rounded-full"
-                  style={{ background: accentColor }} />
-
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs" style={{ color: "var(--muted)" }}>
-                    {exp.company} · {exp.period}
-                  </p>
-                  <p className="text-sm font-bold truncate" style={{ color: "var(--fg)" }}>
-                    {exp.role}
-                  </p>
-                </div>
-
-                {/* Chevron */}
-                <svg
-                  width="16" height="16" viewBox="0 0 16 16" fill="none"
-                  style={{
-                    flexShrink: 0,
-                    color: "var(--muted)",
-                    transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-                    transition: "transform 0.25s ease",
-                  }}
-                >
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
-                    strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-
-              {/* ── Expanded detail ── */}
-              <div
-                style={{
-                  display:    "grid",
-                  gridTemplateRows: isOpen ? "1fr" : "0fr",
-                  transition: "grid-template-rows 0.3s ease",
-                }}
-              >
-                <div style={{ overflow: "hidden" }}>
-                  <div className="px-4 pb-4 pt-1 flex flex-col gap-3"
-                    style={{ borderTop: "1px solid var(--border)" }}>
-
-                    {/* Achievements */}
-                    <ul className="flex flex-col gap-2 pt-2">
-                      {exp.achievements.map((a, j) => (
-                        <li key={j} className="flex items-start gap-2 text-xs leading-relaxed"
-                          style={{ color: "var(--fg-dim)" }}>
-                          <span className="mt-1.5 flex-shrink-0 w-1.5 h-1.5 rounded-full"
-                            style={{ background: accentColor }} />
-                          {a}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Metrics */}
-                    <div className="flex flex-wrap gap-2">
-                      {exp.metrics.map((m, j) => (
-                        <div key={j} className="rounded-lg px-3 py-2"
-                          style={{ background: "var(--bg)" }}>
-                          <p className="text-sm font-black" style={{ color: accentColor }}>{m.value}</p>
-                          <p className="text-xs" style={{ color: "var(--muted)" }}>{m.label}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Tech tags */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {exp.tech.map(t => (
-                        <span key={t} className="text-xs px-2 py-1 rounded-full"
-                          style={{ background: "var(--bg)", color: "var(--muted)" }}>
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          );
-        })}
-      </div>
-    </section>
+    <div className="exp-dot relative flex items-center justify-center" style={{ width: 24, height: 24 }}>
+      <div className="absolute rounded-full"
+        style={{ inset: -6, background: `radial-gradient(circle, ${pal.glow}, transparent 70%)` }} />
+      <div className="absolute rounded-full"
+        style={{ inset: -3, border: `1px solid ${pal.border}` }} />
+      <div className="relative rounded-full z-10"
+        style={{ width: 12, height: 12, background: pal.accent, boxShadow: `0 0 8px ${pal.glow}, 0 0 20px ${pal.glow}` }} />
+    </div>
   );
 }
 
-/* ── Section ──────────────────────────────────────────────────────────────── */
+/* ── Main section ─────────────────────────────────────────────────────────── */
 export function Experience() {
-  const desktopRef = useRef<HTMLElement>(null);
-  const [activeIdx, setActiveIdx] = useState(0);
+  const secRef = useRef<HTMLElement>(null);
+  const [openMobile, setOpenMobile] = useState<number | null>(0);
 
   useEffect(() => {
-    const mm = gsap.matchMedia();
+    const ctx = gsap.context(() => {
 
-    /* ─────────────────────────────────────────────────────────────────────
-       DESKTOP  ≥ 768 px
-       Pin the section for (n-1) × SCROLL_PER_CARD px of scroll.
-       A scrubbed GSAP timeline slides each successive card (yPercent 100→0).
-       We use window.innerHeight in px (not vh strings) so GSAP's pin-spacer
-       height is always exact, preventing the next section from jumping early.
-    ───────────────────────────────────────────────────────────────────── */
-    mm.add("(min-width: 768px)", () => {
-      const ctx = gsap.context(() => {
+      /* Header */
+      gsap.fromTo(".exp-label",
+        { opacity: 0, x: -24 },
+        { opacity: 1, x: 0, duration: 0.5, ease: "power3.out",
+          scrollTrigger: { trigger: ".exp-header", start: "top 82%", toggleActions: "play none none none" } });
+      gsap.fromTo(".exp-title",
+        { opacity: 0, y: 44, skewY: 2 },
+        { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out",
+          scrollTrigger: { trigger: ".exp-header", start: "top 82%", toggleActions: "play none none none" } });
 
-        /* ── Desktop header: Career label + title + dots ── */
-        gsap.fromTo(".exp-hd-label",
-          { opacity: 0, x: -24 },
-          { opacity: 1, x: 0, duration: 0.6, ease: "power3.out",
-            scrollTrigger: { trigger: desktopRef.current, start: "top 37%", toggleActions: "play none none none" } });
-        gsap.fromTo(".exp-hd-title",
-          { opacity: 0, y: 44, skewY: 2 },
-          { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out",
-            scrollTrigger: { trigger: desktopRef.current, start: "top 37%", toggleActions: "play none none none" } });
-        gsap.fromTo(".exp-hd-dots",
-          { opacity: 0, x: 24 },
-          { opacity: 1, x: 0, duration: 0.6, ease: "power3.out",
-            scrollTrigger: { trigger: desktopRef.current, start: "top 37%", toggleActions: "play none none none" } });
+      /* Timeline line scrub */
+      gsap.fromTo(".tl-line-fill",
+        { scaleY: 0 },
+        { scaleY: 1, ease: "none", transformOrigin: "top center",
+          scrollTrigger: { trigger: ".exp-timeline", start: "top 75%", end: "bottom 25%", scrub: 0.6 } });
 
-        const n = experiences.length;          // 5
-        const transitions = n - 1;             // 4 slides
-        // Each card gets 1.8× the viewport height of scroll room
-        // — slow enough to feel deliberate, fast enough to stay engaging.
-        const scrollPerCard = Math.round(window.innerHeight * 1.8);
-        const totalScroll   = transitions * scrollPerCard;
+      /* Per-entry animations */
+      gsap.utils.toArray<HTMLElement>(".exp-entry").forEach((el, i) => {
+        const fromRight = i % 2 !== 0;
 
-        /* Push cards 1…n-1 below the fold before the pin starts */
-        for (let i = 1; i < n; i++) {
-          gsap.set(`.exp-card-${i}`, { yPercent: 100 });
-        }
+        gsap.fromTo(el.querySelector(".exp-dot"),
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.5)",
+            scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
 
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger:           desktopRef.current,
-            start:             "top top",
-            end:               `+=${totalScroll}`,   // exact px — no vh ambiguity
-            pin:               true,
-            scrub:             1.5,
-            anticipatePin:     1,
-            invalidateOnRefresh: true,               // recalculate on resize/refresh
-            onUpdate(self) {
-              const idx = Math.min(
-                Math.floor(self.progress * n),
-                n - 1,
-              );
-              setActiveIdx(idx);
-            },
-          },
-        });
+        gsap.fromTo(el.querySelector(".exp-card"),
+          { opacity: 0, x: fromRight ? 70 : -70, y: 12 },
+          { opacity: 1, x: 0, y: 0, duration: 0.85, ease: "power3.out", delay: 0.08,
+            scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
 
-        for (let i = 1; i < n; i++) {
-          tl.to(
-            `.exp-card-${i}`,
-            { yPercent: 0, ease: "none", duration: 1 },
-            i - 1,
-          );
-        }
-
-        // Force a refresh after first paint so the pin-spacer height
-        // is computed against the fully-rendered layout (fixes "next
-        // section jumps early" caused by stale measurements).
-        const rafId = requestAnimationFrame(() => {
-          ScrollTrigger.refresh();
-        });
-        return () => cancelAnimationFrame(rafId);
-
-      }, desktopRef);
-
-      return () => ctx.revert();
-    });
-
-    /* ─────────────────────────────────────────────────────────────────────
-       MOBILE  < 768 px
-       No pin — just simple staggered card reveals on scroll.
-    ───────────────────────────────────────────────────────────────────── */
-    mm.add("(max-width: 767px)", () => {
-      const ctx = gsap.context(() => {
-        gsap.fromTo(".exp-mob-hd",
-          { opacity: 0, y: 24 },
-          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
-            scrollTrigger: { trigger: ".exp-mob-hd", start: "top 60%", toggleActions: "play none none none" } },
-        );
-        gsap.utils.toArray<HTMLElement>(".exp-mob-card").forEach((el) => {
-          gsap.fromTo(el,
-            { opacity: 0, y: 36 },
-            { opacity: 1, y: 0, duration: 0.65, ease: "power3.out",
-              scrollTrigger: { trigger: el, start: "top 60%", toggleActions: "play none none none" } },
-          );
-        });
+        gsap.fromTo(el.querySelectorAll(".exp-ach"),
+          { opacity: 0, x: -14 },
+          { opacity: 1, x: 0, stagger: 0.07, duration: 0.45, ease: "power2.out", delay: 0.3,
+            scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
       });
-      return () => ctx.revert();
-    });
 
-    return () => mm.revert();
+    }, secRef);
+    return () => ctx.revert();
   }, []);
 
   return (
-    <div id="experience">
+    <section
+      ref={secRef}
+      id="experience"
+      className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"
+      style={{ background: "var(--bg-alt)" }}
+    >
+      <div className="max-w-6xl mx-auto">
 
-      {/* ══ DESKTOP ══════════════════════════════════════════════════════════ */}
-      <section
-        ref={desktopRef}
-        className="hidden md:flex flex-col"
-        style={{
-          height:     "100vh",
-          background: "var(--bg-alt)",
-          overflow:   "hidden",
-        }}
-      >
-        {/* ── Top bar: title + dot-progress ─────────────────────────────── */}
-        <div
-          className="flex-shrink-0 flex items-end justify-between px-16 pt-20 pb-10"
-        >
-          <div>
-            <p className="exp-hd-label section-label mb-3" style={{ opacity: 0 }}>Career</p>
-            <h2
-              className="exp-hd-title font-black tracking-tight leading-none"
-              style={{ fontSize: "clamp(2.4rem,5vw,5rem)", color: "var(--fg)", opacity: 0 }}
-            >
-              Work Experience
-            </h2>
-          </div>
-
-          {/* Pill progress indicator */}
-          <div className="exp-hd-dots flex items-center gap-2" style={{ opacity: 0 }}>
-            {experiences.map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  height:       8,
-                  width:        i === activeIdx ? 28 : 8,
-                  borderRadius: 9999,
-                  background:   i === activeIdx ? "var(--accent)" : "var(--border)",
-                  transition:   "all 0.35s ease",
-                }}
-              />
-            ))}
-          </div>
+        {/* Header */}
+        <div className="exp-header mb-20">
+          <p className="exp-label section-label mb-3" style={{ opacity: 0 }}>Career</p>
+          <h2 className="exp-title font-black tracking-tight leading-none"
+            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
+            Work Experience
+          </h2>
         </div>
 
-        {/* ── Cards stack — fixed height so card doesn't touch the title ── */}
-        <div
-          className="relative mx-auto w-full"
-          style={{
-            maxWidth:  "54rem",
-            padding:   "0 2.5rem 3rem",
-            /* Cards take exactly what's left after the header,
-               never stretching into the title's breathing room. */
-            height:    "calc(100vh - 10rem - 5rem)", /* 100vh - pt-20 - pb-10 approx */
-            overflow:  "hidden",
-          }}
-        >
-          {experiences.map((exp, i) => (
-            /*
-              Each wrapper fills the container exactly (inset-0 + padding).
-              h-full is NOT needed here because position:absolute + inset
-              already stretches it — but the ExpCard inside must be h-full
-              so no transparent gap shows through to lower-z cards.
-            */
-            <div
-              key={exp.id}
-              className={`exp-card-${i}`}
-              style={{
-                position: "absolute",
-                top:      0,
-                left:     "2.5rem",
-                right:    "2.5rem",
-                bottom:   "2.5rem",
-                zIndex:   i + 1,
-              }}
-            >
-              <ExpCard exp={exp} index={i} />
-            </div>
-          ))}
+        {/* Timeline */}
+        <div className="exp-timeline relative">
+
+          {/* Desktop center line */}
+          <div className="absolute hidden md:block top-0 bottom-0"
+            style={{ left: "50%", transform: "translateX(-50%)", width: 1, background: "var(--border)" }}>
+            <div className="tl-line-fill absolute inset-0"
+              style={{ background: TL_GRADIENT, transformOrigin: "top center" }} />
+          </div>
+
+          {/* Mobile left line */}
+          <div className="absolute block md:hidden top-0 bottom-0"
+            style={{ left: 11, width: 1, background: "var(--border)" }}>
+            <div className="tl-line-fill absolute inset-0"
+              style={{ background: TL_GRADIENT, transformOrigin: "top center" }} />
+          </div>
+
+          {/* Entries */}
+          <div className="flex flex-col" style={{ gap: "clamp(1.5rem, 5vw, 5rem)" }}>
+            {experiences.map((exp, i) => {
+              const pal       = PALETTE[i % PALETTE.length];
+              const cardRight = i % 2 !== 0;
+
+              return (
+                <div key={exp.id} className="exp-entry relative">
+
+                  {/* ── DESKTOP zigzag ── */}
+                  <div className="hidden md:grid items-center"
+                    style={{ gridTemplateColumns: "1fr 48px 1fr" }}>
+
+                    <div className="pr-10">
+                      {!cardRight && <ExpCard exp={exp} pal={pal} side="left" />}
+                    </div>
+
+                    <div className="flex justify-center">
+                      <Dot pal={pal} />
+                    </div>
+
+                    <div className="pl-10">
+                      {cardRight && <ExpCard exp={exp} pal={pal} side="right" />}
+                    </div>
+                  </div>
+
+                  {/* ── MOBILE accordion ── */}
+                  <div className="block md:hidden" style={{ paddingLeft: 36 }}>
+                    <div className="absolute" style={{ left: 0, top: 18 }}>
+                      <Dot pal={pal} />
+                    </div>
+
+                    <div className="rounded-2xl overflow-hidden"
+                      style={{
+                        border: `1px solid ${openMobile === i ? pal.border : "var(--border)"}`,
+                        background: "var(--card)",
+                        transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                        boxShadow: openMobile === i ? "0 2px 8px rgba(0,0,0,0.4), 0 12px 28px rgba(0,0,0,0.28)" : "none",
+                      }}>
+
+                      {/* Collapsed header */}
+                      <button
+                        className="w-full flex items-center gap-3 px-4 py-3 text-left"
+                        onClick={() => setOpenMobile(openMobile === i ? null : i)}
+                      >
+                        {/* Company logo / initials */}
+                        <div className="shrink-0 w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center"
+                          style={{ background: exp.logo ? "#fff" : pal.bg, border: `1px solid ${pal.border}`, padding: exp.logo ? 3 : 0 }}>
+                          {exp.logo ? (
+                            <Image src={exp.logo} alt={exp.company} width={26} height={26}
+                              style={{ objectFit: "contain", width: "100%", height: "100%" }} />
+                          ) : (
+                            <span className="text-[10px] font-black" style={{ color: pal.accent }}>
+                              {exp.company.slice(0, 2).toUpperCase()}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[11px] font-medium" style={{ color: "var(--muted)" }}>
+                            {exp.company} · {exp.period}
+                          </p>
+                          <p className="text-sm font-bold truncate leading-snug mt-0.5" style={{ color: "var(--fg)" }}>
+                            {exp.role}
+                          </p>
+                        </div>
+
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0"
+                          style={{
+                            color: "var(--muted)",
+                            transform: openMobile === i ? "rotate(180deg)" : "rotate(0deg)",
+                            transition: "transform 0.3s ease",
+                          }}>
+                          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
+                            strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </button>
+
+                      {/* Expandable body */}
+                      <div style={{
+                        display: "grid",
+                        gridTemplateRows: openMobile === i ? "1fr" : "0fr",
+                        transition: "grid-template-rows 0.35s cubic-bezier(0.4,0,0.2,1)",
+                      }}>
+                        <div style={{ overflow: "hidden" }}>
+                          <div className="px-4 pb-4 flex flex-col gap-3"
+                            style={{ borderTop: `1px solid ${pal.border}` }}>
+
+                            <ul className="flex flex-col gap-2 pt-3">
+                              {exp.achievements.map((a, j) => (
+                                <li key={j} className="flex items-start gap-2.5 text-xs leading-relaxed"
+                                  style={{ color: "var(--fg-dim)" }}>
+                                  <span className="mt-[6px] shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: pal.accent }} />
+                                  {a}
+                                </li>
+                              ))}
+                            </ul>
+
+                            <div className="flex flex-wrap gap-2">
+                              {exp.metrics.map((m, j) => (
+                                <div key={j} className="flex-1 min-w-[72px] rounded-xl px-2.5 py-2 text-center"
+                                  style={{ background: pal.bg, border: `1px solid ${pal.border}` }}>
+                                  <p className="text-sm font-black tabular-nums leading-none mb-0.5" style={{ color: pal.accent }}>{m.value}</p>
+                                  <p className="text-[10px] leading-tight" style={{ color: "var(--muted)" }}>{m.label}</p>
+                                </div>
+                              ))}
+                            </div>
+
+                            <div className="flex flex-wrap gap-1.5">
+                              {exp.tech.map((t) => (
+                                <span key={t} className="text-[10px] px-2 py-0.5 rounded-full"
+                                  style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </section>
-
-      {/* ══ MOBILE — compact accordion rows ═════════════════════════════════ */}
-      <MobileExperience />
-
-    </div>
+      </div>
+    </section>
   );
 }

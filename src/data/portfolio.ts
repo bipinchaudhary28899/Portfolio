@@ -73,6 +73,7 @@ export const experiences = [
     company: "Self-Employed",
     companyFull: "Independent Full-Stack Developer (Remote)",
     period: "Sept 2025 – Present",
+    logo: "",
     description:
       "Built and deployed production-grade applications including a video streaming platform (StreamSphere) and a clinic management system (DentalConnect) with real-world users. Designed end-to-end system architecture covering authentication, scheduling engines, caching strategies, and async workflows. Integrated third-party services — WhatsApp API and OpenAI — for real-time communication and AI-powered features.",
     tech: ["Next.js", "Angular", "Node.js", "AWS", "MongoDB", "Redis", "PostgreSQL", "OpenAI", "WhatsApp API"],
@@ -94,6 +95,7 @@ export const experiences = [
     company: "SAP Labs",
     companyFull: "SAP Labs — iXp Internship (M.Tech MNNIT Allahabad)",
     period: "Aug 2024 – Jun 2025",
+    logo: "/images/logos/sap-logo.png",
     description:
       "Performed functional and regression testing for SAP Business Application Studio (BAS), ensuring reliability of development workflows and platform features. Developed automated test scripts to convert manual test cases into repeatable validation pipelines. Validated database artifacts using SAP HANA Database Explorer and tested the HANA Vector Engine for correctness and stability.",
     tech: ["SAP BAS", "SAP HANA", "SAP BTP", "Vector Engine", "SQL", "Test Automation"],
@@ -115,6 +117,7 @@ export const experiences = [
     company: "Nagarro",
     companyFull: "Nagarro",
     period: "May 2021 – Sep 2023",
+    logo: "/images/logos/nagarro-logo.png",
     description:
       "Improved frontend performance by 20% TBT reduction using Angular OnPush strategy and reusable component architecture, maintaining 60 FPS under high data load. Designed and developed scalable backend services for a rail asset management system managing 170K+ assets with sub-second real-time updates. Standardised CI/CD pipelines and unit testing (Jasmine), improving deployment speed by 15% and mentoring junior developers.",
     tech: ["Angular", "TypeScript", "Node.js", "REST APIs", "CI/CD", "Jasmine", "Docker"],
@@ -136,6 +139,7 @@ export const experiences = [
     company: "FoodWagon",
     companyFull: "FoodWagon Private Limited · Internship",
     period: "Jun 2020 – Jul 2020",
+    logo: "/images/logos/Foodwagon-logo.png",
     description:
       "Developed a full-stack web application for FoodWagon, enhancing user experience and functionality. Utilised HTML, CSS, and JavaScript to create a responsive and visually appealing interface. Delivered the project on time, demonstrating strong time management and organisational skills.",
     tech: ["JavaScript", "HTML5", "CSS3"],
@@ -155,6 +159,7 @@ export const experiences = [
     company: "Coding Ninjas",
     companyFull: "Coding Ninjas India · Internship",
     period: "Jun 2019 – Sep 2019",
+    logo: "/images/logos/coding_ninjas_logo.png",
     description:
       "Assisted students in understanding and solving problems related to Data Structures and Algorithms using C++. Resolved doubts through chat support, discussion forums, and one-on-one interactions, ensuring conceptual clarity and logical thinking. Guided learners through coding exercises and debugged code to help them build strong problem-solving skills. Contributed to maintaining an engaging and supportive learning environment for better course outcomes.",
     tech: ["C++", "Data Structures", "Algorithms", "Competitive Programming", "Computer Science"],
@@ -314,6 +319,7 @@ export const certifications = [
     credentialUrl: "#",
     color: "#FF6611",
     skills: ["JavaScript", "Web Development"],
+    image: "/images/Certificates/JS_Mozilla.png",
   },
   {
     id: 2,
@@ -324,6 +330,7 @@ export const certifications = [
     credentialUrl: "#",
     color: "#F0672A",
     skills: ["Node.js", "Back-End Web Development"],
+    image: "/images/Certificates/Backend_Nodejs.png",
   },
   {
     id: 3,
@@ -334,6 +341,7 @@ export const certifications = [
     credentialUrl: "#",
     color: "#F0672A",
     skills: ["Front-End Development"],
+    image: "/images/Certificates/Frontend.png",
   },
   {
     id: 4,
@@ -344,6 +352,7 @@ export const certifications = [
     credentialUrl: "#",
     color: "#0088CC",
     skills: ["Core Java", "Data Structures", "AI"],
+    image: "/images/Certificates/Core_Java_with_AI.png",
   },
   {
     id: 5,
@@ -354,6 +363,40 @@ export const certifications = [
     credentialUrl: "#",
     color: "#F0672A",
     skills: ["C++", "Data Structures"],
+    image: "/images/Certificates/DS_in_C++.png",
+  },
+  {
+    id: 6,
+    title: "Java (Basic) Certificate",
+    issuer: "HackerRank",
+    date: "Sep 11, 2020",
+    credentialId: "417e976c4067",
+    credentialUrl: "https://www.hackerrank.com/certificates/417e976c4067",
+    color: "#00EA64",
+    skills: ["Java"],
+    image: "/images/Certificates/Java(Basic).png",
+  },
+  {
+    id: 7,
+    title: "Java (Intermediate) Certificate",
+    issuer: "HackerRank",
+    date: "Sep 15, 2020",
+    credentialId: "999df518f646",
+    credentialUrl: "https://www.hackerrank.com/certificates/999df518f646",
+    color: "#00EA64",
+    skills: ["Java"],
+    image: "/images/Certificates/Java(Intermediate).png",
+  },
+  {
+    id: 8,
+    title: "C++ (Basic) Certificate",
+    issuer: "HackerRank",
+    date: "Sep 15, 2020",
+    credentialId: "a0daf08a64c4",
+    credentialUrl: "https://www.hackerrank.com/certificates/a0daf08a64c4",
+    color: "#00EA64",
+    skills: ["C++"],
+    image: "/images/Certificates/C++(Basic).png",
   },
 ];
 
