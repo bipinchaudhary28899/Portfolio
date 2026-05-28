@@ -103,7 +103,7 @@ export function Contact() {
           {/* Left: info */}
           <div className="contact-left opacity-0 flex flex-col gap-8">
             <p className="text-base leading-relaxed" style={{ color: "var(--fg-dim)" }}>
-              Whether you have a project in mind, a role to fill, or just want to connect — my inbox is open.
+              Whether you have a project in mind, a role to fill, or just want to connect - my inbox is open.
             </p>
 
             <div className="flex flex-col gap-5">

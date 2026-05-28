@@ -7,7 +7,7 @@ export const personalInfo = {
   bio: "Full Stack Engineer with 3+ years of experience building scalable web systems across video streaming, enterprise analytics, and cloud-native applications. Improved video startup latency by 40% using HLS-based adaptive streaming, reduced database query latency by 30%, and enhanced UI performance by 20% through Angular rendering strategies. Strong in system design, distributed systems, and AI-powered features.",
   achievements: [
     "Improved video playback startup time by 40% via serverless HLS adaptive streaming (S3 → Lambda → FFmpeg)",
-    "Enhanced frontend performance by 20% TBT reduction using Angular OnPush strategy — 60 FPS under high data load",
+    "Enhanced frontend performance by 20% TBT reduction using Angular OnPush strategy - 60 FPS under high data load",
     "Architected a rail asset management backend serving 170K+ assets with sub-second real-time updates at Nagarro",
   ],
   stats: [
@@ -29,7 +29,7 @@ export const projects = [
     id: 1,
     title: "StreamSphere",
     description:
-      "Serverless video streaming platform with HLS adaptive bitrate (360p/720p), event-driven Redis caching, cursor-based infinite scroll, and an AI enrichment pipeline using Whisper + GPT — reducing playback startup time by 40% and feed latency by 30–40%.",
+      "Serverless video streaming platform with HLS adaptive bitrate (360p/720p), event-driven Redis caching, cursor-based infinite scroll, and an AI enrichment pipeline using Whisper + GPT - reducing playback startup time by 40% and feed latency by 30–40%.",
     tech: ["Angular", "Node.js", "AWS S3", "Lambda", "FFmpeg", "MongoDB", "Redis"],
     liveUrl: "https://stream-sphere-blru.vercel.app/home",
     githubUrl: "https://github.com/bipinchaudhary28899/StreamSphere",
@@ -75,11 +75,11 @@ export const experiences = [
     period: "Sept 2025 – Present",
     logo: "",
     description:
-      "Built and deployed production-grade applications including a video streaming platform (StreamSphere) and a clinic management system (DentalConnect) with real-world users. Designed end-to-end system architecture covering authentication, scheduling engines, caching strategies, and async workflows. Integrated third-party services — WhatsApp API and OpenAI — for real-time communication and AI-powered features.",
+      "Built and deployed production-grade applications including a video streaming platform (StreamSphere) and a clinic management system (DentalConnect) with real-world users. Designed end-to-end system architecture covering authentication, scheduling engines, caching strategies, and async workflows. Integrated third-party services - WhatsApp API and OpenAI - for real-time communication and AI-powered features.",
     tech: ["Next.js", "Angular", "Node.js", "AWS", "MongoDB", "Redis", "PostgreSQL", "OpenAI", "WhatsApp API"],
     achievements: [
-      "Built StreamSphere — serverless HLS video platform reducing playback startup latency by 40%",
-      "Built DentalConnect — full-stack clinic booking system with WhatsApp OTP and live queue management",
+      "Built StreamSphere - serverless HLS video platform reducing playback startup latency by 40%",
+      "Built DentalConnect - full-stack clinic booking system with WhatsApp OTP and live queue management",
       "Integrated OpenAI Whisper + GPT pipeline for AI-powered video content enrichment",
       "Designed end-to-end system architecture: auth, scheduling engine, Redis caching, async workflows",
     ],
@@ -93,7 +93,7 @@ export const experiences = [
     id: 2,
     role: "Graduate Research Engineer",
     company: "SAP Labs",
-    companyFull: "SAP Labs — iXp Internship (M.Tech MNNIT Allahabad)",
+    companyFull: "SAP Labs - iXp Internship (M.Tech MNNIT Allahabad)",
     period: "Aug 2024 – Jun 2025",
     logo: "/images/logos/sap-logo.png",
     description:
@@ -102,7 +102,7 @@ export const experiences = [
     achievements: [
       "Performed functional & regression testing for SAP Business Application Studio (BAS)",
       "Converted manual test cases into automated repeatable validation pipelines",
-      "Validated SAP HANA Vector Engine — correctness, performance, and stability testing",
+      "Validated SAP HANA Vector Engine - correctness, performance, and stability testing",
       "Worked within M.Tech iXp programme, gaining deep exposure to enterprise cloud platforms",
     ],
     metrics: [
@@ -122,7 +122,7 @@ export const experiences = [
       "Improved frontend performance by 20% TBT reduction using Angular OnPush strategy and reusable component architecture, maintaining 60 FPS under high data load. Designed and developed scalable backend services for a rail asset management system managing 170K+ assets with sub-second real-time updates. Standardised CI/CD pipelines and unit testing (Jasmine), improving deployment speed by 15% and mentoring junior developers.",
     tech: ["Angular", "TypeScript", "Node.js", "REST APIs", "CI/CD", "Jasmine", "Docker"],
     achievements: [
-      "Reduced frontend TBT by 20% using Angular OnPush strategy — sustained 60 FPS under high data load",
+      "Reduced frontend TBT by 20% using Angular OnPush strategy - sustained 60 FPS under high data load",
       "Architected backend for rail asset management system serving 170K+ assets with sub-second updates",
       "Standardised CI/CD pipelines, improving deployment speed by 15%",
       "Mentored junior developers and established unit testing culture with Jasmine",
@@ -180,7 +180,7 @@ export const experiences = [
 export const education = [
   {
     id: 1,
-    degree: "M.Tech — Computer Science & Engineering",
+    degree: "M.Tech - Computer Science & Engineering",
     institution: "MNNIT Allahabad",
     institutionFull: "Motilal Nehru National Institute of Technology, Allahabad",
     period: "Aug 2023 – Aug 2025",
@@ -195,7 +195,7 @@ export const education = [
   },
   {
     id: 2,
-    degree: "B.Tech — Computer Science & Engineering",
+    degree: "B.Tech - Computer Science & Engineering",
     institution: "BIET Jhansi",
     institutionFull: "Bundelkhand Institute of Engineering and Technology",
     period: "Aug 2017 – Aug 2021",
@@ -210,7 +210,7 @@ export const education = [
   },
   {
     id: 3,
-    degree: "Intermediate (Class 12th) — PCM",
+    degree: "Intermediate (Class 12th) - PCM",
     institution: "Dyal Singh Public School",
     institutionFull: "Dyal Singh Public School, Karnal, Haryana",
     period: "2016 – 2017",
@@ -218,7 +218,7 @@ export const education = [
     description:
       "Physics, Chemistry & Mathematics stream with CBSE board examinations. Achieved school topper position in the Computers subject.",
     highlights: [
-      "School topper in Computers — 96/100 (CBSE Boards)",
+      "School topper in Computers - 96/100 (CBSE Boards)",
       "87.2% aggregate in PCM stream",
     ],
   },
@@ -232,7 +232,7 @@ export const education = [
     description:
       "Completed secondary schooling under CBSE curriculum with strong academic performance across all core subjects.",
     highlights: [
-      "CGPA: 9.2 / 10 — CBSE board examinations",
+      "CGPA: 9.2 / 10 - CBSE board examinations",
     ],
   },
 ];
@@ -290,7 +290,7 @@ export const openSourceContributions = [
     language: "JavaScript",
     langColor: "#F7DF1E",
     description:
-      "Replaced hardcoded static milestone HTML with a JS-driven rendering engine — introduced a MILESTONES data layer, date-aware state classification, and live 60s re-render cycle. Merged after multi-round review with edge case handling for invalid dates, UTC normalisation, and DOM guard checks.",
+      "Replaced hardcoded static milestone HTML with a JS-driven rendering engine - introduced a MILESTONES data layer, date-aware state classification, and live 60s re-render cycle. Merged after multi-round review with edge case handling for invalid dates, UTC normalisation, and DOM guard checks.",
   },
   {
     id: 2,
@@ -305,7 +305,7 @@ export const openSourceContributions = [
     language: "React",
     langColor: "#61DAFB",
     description:
-      "Added animated skeleton loaders for Dashboard and Community pages, replacing plain text loading states with layout-matched shimmer rows and a smooth Framer Motion fade-in on data arrival — improving perceived performance across both desktop and mobile views.",
+      "Added animated skeleton loaders for Dashboard and Community pages, replacing plain text loading states with layout-matched shimmer rows and a smooth Framer Motion fade-in on data arrival - improving perceived performance across both desktop and mobile views.",
   },
 ];
 

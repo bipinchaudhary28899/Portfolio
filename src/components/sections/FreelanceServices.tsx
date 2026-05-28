@@ -132,7 +132,7 @@ const FAQS = [
   },
   {
     q: "Do I need to have a design ready before ordering?",
-    a: "No — you can choose whether you have Figma/XD designs, rough wireframes, a reference site, or nothing at all. UI/UX design is also available as an add-on (+₹8,500).",
+    a: "No - you can choose whether you have Figma/XD designs, rough wireframes, a reference site, or nothing at all. UI/UX design is also available as an add-on (+₹8,500).",
   },
   {
     q: "What tech stack do you use?",
@@ -572,7 +572,7 @@ export function FreelanceServices() {
             className="mt-3 max-w-xl text-sm leading-relaxed"
             style={{ color: "var(--fg-dim)", opacity: 0 }}
           >
-            Full-stack engineer available for client projects — from responsive landing pages
+            Full-stack engineer available for client projects - from responsive landing pages
             to production-grade SaaS platforms with real-time features and AI integrations.
           </p>
         </div>
@@ -727,7 +727,7 @@ export function FreelanceServices() {
             Let's work together
           </h3>
           <p className="cta-child max-w-md text-sm leading-relaxed" style={{ color: "var(--fg-dim)", opacity: 0 }}>
-            Choose a package above or drop me a message directly — happy to discuss
+            Choose a package above or drop me a message directly - happy to discuss
             your project, scope, and timeline before you commit.
           </p>
           <div className="cta-child flex flex-wrap gap-3 justify-center" style={{ opacity: 0 }}>

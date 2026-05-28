@@ -36,7 +36,7 @@ export function Footer() {
       style={{ borderColor: "var(--border)", background: "var(--bg)" }}
     >
       <p className="footer-copy text-sm" style={{ color: "var(--muted)", opacity: 0 }}>
-        © {new Date().getFullYear()} Bipin Kumar Chaudhary — Built with Next.js &amp; GSAP
+        © {new Date().getFullYear()} Bipin Kumar Chaudhary - Built with Next.js &amp; GSAP
       </p>
       <div className="flex items-center gap-5">
         <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub"
