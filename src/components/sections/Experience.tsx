@@ -33,9 +33,10 @@ function CompanyLogo({ src, company, pal }: { src: string; company: string; pal:
     );
   }
   return (
-    <div className="shrink-0 w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center"
-      style={{ background: "#fff", border: `1px solid ${pal.border}`, padding: 4 }}>
-      <Image src={src} alt={company} width={32} height={32} style={{ objectFit: "contain", width: "100%", height: "100%" }} />
+    <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+      style={{ background: "#ffffff", border: `1px solid ${pal.border}`, padding: 6 }}>
+      <Image src={src} alt={company} width={28} height={28}
+        style={{ objectFit: "contain", width: "100%", height: "100%", display: "block" }} />
     </div>
   );
 }
@@ -229,7 +230,7 @@ export function Experience() {
                     style={{ gridTemplateColumns: "1fr 48px 1fr" }}>
 
                     {/* Left cell: card or year */}
-                    <div className="pr-10 flex items-center justify-end overflow-hidden">
+                    <div className="pr-10 flex items-center justify-end">
                       {!cardRight
                         ? <ExpCard exp={exp} pal={pal} side="left" />
                         : <span
@@ -247,7 +248,7 @@ export function Experience() {
                     </div>
 
                     {/* Right cell: card or year */}
-                    <div className="pl-10 flex items-center justify-start overflow-hidden">
+                    <div className="pl-10 flex items-center justify-start">
                       {cardRight
                         ? <ExpCard exp={exp} pal={pal} side="right" />
                         : <span
@@ -280,11 +281,11 @@ export function Experience() {
                         onClick={() => setOpenMobile(openMobile === i ? null : i)}
                       >
                         {/* Company logo / initials */}
-                        <div className="shrink-0 w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center"
-                          style={{ background: exp.logo ? "#fff" : pal.bg, border: `1px solid ${pal.border}`, padding: exp.logo ? 3 : 0 }}>
+                        <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+                          style={{ background: exp.logo ? "#ffffff" : pal.bg, border: `1px solid ${pal.border}`, padding: exp.logo ? 5 : 0 }}>
                           {exp.logo ? (
-                            <Image src={exp.logo} alt={exp.company} width={26} height={26}
-                              style={{ objectFit: "contain", width: "100%", height: "100%" }} />
+                            <Image src={exp.logo} alt={exp.company} width={22} height={22}
+                              style={{ objectFit: "contain", width: "100%", height: "100%", display: "block" }} />
                           ) : (
                             <span className="text-[10px] font-black" style={{ color: pal.accent }}>
                               {exp.company.slice(0, 2).toUpperCase()}
