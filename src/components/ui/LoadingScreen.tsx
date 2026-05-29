@@ -11,7 +11,7 @@ interface LoadingScreenProps {
 
 export default function LoadingScreen({
   name = "Bipin Chaudhary",
-  role = "Full Stack Engineer",
+  role = "Full Stack AI Engineer",
   onComplete,
 }: LoadingScreenProps) {
   const screenRef   = useRef<HTMLDivElement>(null);

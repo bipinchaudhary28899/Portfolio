@@ -8,19 +8,9 @@ import { education } from "@/data/portfolio";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* Each entry gets its own accent gradient so all 4 look distinct */
-const ENTRY_ACCENTS = [
-  "linear-gradient(135deg,var(--grad-a),var(--grad-b))",        // orange
-  "linear-gradient(135deg,#6366f1,#8b5cf6)",                    // indigo-violet
-  "linear-gradient(135deg,#10b981,#059669)",                    // emerald
-  "linear-gradient(135deg,#f59e0b,#ef4444)",                    // amber-red
-];
-const ENTRY_DOT_SHADOWS = [
-  "0 0 12px rgba(255,101,53,.55)",
-  "0 0 12px rgba(99,102,241,.55)",
-  "0 0 12px rgba(16,185,129,.55)",
-  "0 0 12px rgba(245,158,11,.55)",
-];
+/* All entries use the active theme accent for consistent colour */
+const ENTRY_ACCENTS      = Array(4).fill("linear-gradient(135deg,var(--grad-a),var(--grad-b))");
+const ENTRY_DOT_SHADOWS  = Array(4).fill("0 0 12px var(--glow)");
 
 /* ── Card component ──────────────────────────────────────────────────────── */
 function EduCard({
@@ -319,7 +309,7 @@ export function Education() {
                   <GraduationCap
                     size={28}
                     color="var(--accent)"
-                    style={{ filter: "drop-shadow(0 0 8px rgba(255,101,53,.75))" }}
+                    style={{ filter: "drop-shadow(0 0 8px var(--accent))" }}
                   />
                 </div>
               </div>
@@ -447,7 +437,7 @@ export function Education() {
                 <GraduationCap
                   size={22}
                   color="var(--accent)"
-                  style={{ filter: "drop-shadow(0 0 7px rgba(255,101,53,.75))" }}
+                  style={{ filter: "drop-shadow(0 0 7px var(--accent))" }}
                 />
               </div>
             </div>

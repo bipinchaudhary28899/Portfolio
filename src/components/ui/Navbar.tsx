@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Menu, X } from "lucide-react";
 import { navLinks, personalInfo } from "@/data/portfolio";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { ThemePanel } from "@/components/ui/ThemePanel";
 import { useLoadingComplete } from "@/context/LoadingContext";
 
 export function Navbar() {
@@ -72,10 +72,10 @@ export function Navbar() {
 
         {/* Desktop right side */}
         <div className="hidden md:flex items-center gap-3">
-          <ThemeToggle />
+          <ThemePanel />
           <a
             href={personalInfo.resumeUrl}
-            download
+            download="Bipin_Resume.pdf"
             className="inline-flex items-center text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-85"
             style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))", color: "#fff" }}
           >
@@ -85,7 +85,7 @@ export function Navbar() {
 
         {/* Mobile right side */}
         <div className="md:hidden flex items-center gap-3">
-          <ThemeToggle />
+          <ThemePanel />
           <button
             className="p-1.5 rounded"
             style={{ color: "var(--fg-dim)" }}
@@ -110,7 +110,7 @@ export function Navbar() {
           ))}
           <a
             href={personalInfo.resumeUrl}
-            download
+            download="Bipin_Resume.pdf"
             className="mt-1 inline-flex items-center justify-center text-sm font-semibold px-4 py-2.5 rounded-lg"
             style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))", color: "#fff" }}
           >

@@ -71,7 +71,7 @@ export function FreelanceBanner() {
           className="rounded-2xl overflow-hidden border"
           style={{
             borderColor: "var(--border)",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
+            boxShadow: "var(--shadow-lg)",
           }}
         >
           <Image

@@ -55,17 +55,17 @@ export function Hero() {
       {/* Grid */}
       <div className="absolute inset-0 grid-bg pointer-events-none" />
 
-      {/* Radial glow — top-center orange */}
+      {/* Radial glow — top-center, theme accent colour */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 70% 50% at 50% -8%,rgba(255,101,53,.18),transparent 65%)" }} />
+        style={{ background: "radial-gradient(ellipse 70% 50% at 50% -8%, var(--glow), transparent 65%)" }} />
 
-      {/* Ambient orb — bottom-right cool indigo, creates stage depth */}
+      {/* Ambient orb — bottom-right, secondary accent */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 55% 45% at 95% 105%,rgba(99,102,241,.09),transparent 65%)" }} />
+        style={{ background: "radial-gradient(ellipse 55% 45% at 95% 105%, color-mix(in srgb, var(--accent2) 7%, transparent), transparent 65%)" }} />
 
-      {/* Ambient orb — bottom-left very faint warm */}
+      {/* Ambient orb — bottom-left, very faint accent */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 40% 35% at -5% 110%,rgba(255,159,28,.06),transparent 60%)" }} />
+        style={{ background: "radial-gradient(ellipse 40% 35% at -5% 110%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 60%)" }} />
 
       {/* Top accent line */}
       <div ref={lineRef} className="accent-line absolute top-0 left-0 right-0" style={{ transformOrigin: "left" }} />
@@ -117,7 +117,7 @@ export function Hero() {
           >
             View Work
           </button>
-          <a href={personalInfo.resumeUrl} download
+          <a href={personalInfo.resumeUrl} download="Bipin_Resume.pdf"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border transition-all hover:border-orange-500"
             style={{ border: "1px solid var(--border)", color: "var(--fg)" }}>
             <Download size={14} /> Resume

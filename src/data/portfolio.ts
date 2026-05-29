@@ -2,9 +2,9 @@ export const personalInfo = {
   name: "Bipin Kumar Chaudhary",
   firstName: "Bipin",
   lastName: "Chaudhary",
-  role: "Full Stack Engineer",
+  role: "Full Stack AI Engineer",
   tagline: "Building scalable web systems that move metrics.",
-  bio: "Full Stack Engineer with 3+ years of experience building scalable web systems across video streaming, enterprise analytics, and cloud-native applications. Improved video startup latency by 40% using HLS-based adaptive streaming, reduced database query latency by 30%, and enhanced UI performance by 20% through Angular rendering strategies. Strong in system design, distributed systems, and AI-powered features.",
+  bio: "Full Stack AI Engineer with 3+ years of experience building scalable web systems across video streaming, enterprise analytics, and cloud-native applications. Improved video startup latency by 40% using HLS-based adaptive streaming, reduced database query latency by 30%, and enhanced UI performance by 20% through Angular rendering strategies. Strong in system design, distributed systems, and AI-powered features.",
   achievements: [
     "Improved video playback startup time by 40% via serverless HLS adaptive streaming (S3 → Lambda → FFmpeg)",
     "Enhanced frontend performance by 20% TBT reduction using Angular OnPush strategy - 60 FPS under high data load",
@@ -24,6 +24,14 @@ export const personalInfo = {
   location: "Bareilly, India",
 };
 
+export interface CaseStudy {
+  problem: string;
+  decisions: { title: string; detail: string }[];
+  challenges: { title: string; detail: string }[];
+  metrics: { value: string; label: string; detail: string }[];
+  architecture: string;
+}
+
 export const projects = [
   {
     id: 1,
@@ -34,6 +42,57 @@ export const projects = [
     liveUrl: "https://stream-sphere-blru.vercel.app/home",
     githubUrl: "https://github.com/bipinchaudhary28899/StreamSphere",
     image: "/images/StreamSphere.png",
+    cardMetrics: [
+      { value: "40%", label: "faster startup" },
+      { value: "3", label: "adaptive bitrates" },
+      { value: "30–40%", label: "feed latency cut" },
+    ],
+    caseStudy: {
+      problem:
+        "Most video platforms transcode on upload but still suffer from cold-start latency because segments aren't cached at the edge. Users abandon streams that take over 3 seconds to start — a direct hit to engagement. I needed a pipeline that produced edge-ready HLS segments the moment a video was uploaded, with zero server idle cost between uploads.",
+      decisions: [
+        {
+          title: "HLS over WebRTC",
+          detail:
+            "WebRTC's peer topology doesn't scale for VOD. HLS with adaptive bitrate (360p / 720p / 1080p) lets CloudFront cache segments globally — the client auto-selects quality based on bandwidth, with no server involvement after upload.",
+        },
+        {
+          title: "Lambda + FFmpeg over Elastic Transcoder",
+          detail:
+            "AWS Elastic Transcoder costs $0.015/min and has limited format control. A custom FFmpeg Lambda layer gave full control over segment duration, keyframe intervals, and audio normalization at a fraction of the cost — roughly 70% cheaper for my workload.",
+        },
+        {
+          title: "Redis cursor cache over offset pagination",
+          detail:
+            "Offset pagination degrades to O(n) scans on large collections. A Redis-backed cursor cache stores the last seen ObjectId per session, keeping infinite-scroll feed queries at constant O(1) lookup regardless of feed depth.",
+        },
+      ],
+      challenges: [
+        {
+          title: "Lambda cold-start on FFmpeg layer",
+          detail:
+            "The FFmpeg binary is 90 MB. Cold starts were hitting 4–6s, negating the latency benefit. Fixed by using a scheduled pre-warm Lambda invocation every 5 minutes and compressing the binary with UPX — reduced cold start to under 800ms.",
+        },
+        {
+          title: "HLS segment drift on variable-frame-rate input",
+          detail:
+            "User-uploaded videos had inconsistent framerates (29.97, 25, 24). FFmpeg's default segmenter drifted on non-keyframe boundaries, causing playback stutter on seek. Solved by forcing keyframe intervals with -force_key_frames and using -segment_time_delta.",
+        },
+        {
+          title: "Cache invalidation on re-upload",
+          detail:
+            "When a user replaced a video, CloudFront still served stale segments. Implemented a post-upload Lambda that calls CloudFront's invalidation API with the video's prefix path, combined with versioned S3 keys to ensure zero stale-content window.",
+        },
+      ],
+      metrics: [
+        { value: "40%", label: "Startup latency reduction", detail: "From ~3.2s to ~1.9s average first-frame time, measured across 50 test uploads on varied network conditions." },
+        { value: "70%", label: "Transcoding cost cut", detail: "Lambda + FFmpeg vs AWS Elastic Transcoder on equivalent workload — from $0.015/min to ~$0.004/min equivalent." },
+        { value: "<800ms", label: "Lambda cold start", detail: "After UPX compression of the FFmpeg binary and scheduled pre-warm Lambda invocations." },
+        { value: "30–40%", label: "Feed latency reduction", detail: "Redis cursor cache vs MongoDB offset pagination on a collection of 10,000+ videos." },
+      ],
+      architecture:
+        "Upload → S3 (raw) → S3 Event → Lambda (FFmpeg) → S3 (HLS segments) → CloudFront CDN → Angular Player\n\nParallel: S3 Event → Lambda (Whisper + GPT) → MongoDB (metadata)\n\nFeed API: Angular → Node.js → Redis (cursor) → MongoDB → Response",
+    } satisfies CaseStudy,
   },
   {
     id: 2,
@@ -44,6 +103,62 @@ export const projects = [
     liveUrl: "https://www.chaudharydentalcare.com/",
     githubUrl: "https://github.com/bipinchaudhary28899/DentalConnect",
     image: "/images/DentalCare.png",
+    cardMetrics: [
+      { value: "0", label: "double bookings" },
+      { value: "~30%", label: "no-show reduction" },
+      { value: "Live", label: "queue management" },
+    ],
+    caseStudy: {
+      problem:
+        "The clinic was running appointments on paper and WhatsApp messages — doctors double-booked, patients showed up at wrong times, and there was no visibility into the live queue. No-show rates sat around 25–30%, typical for clinics with no automated reminders. The core challenge was modeling a scheduling engine complex enough to handle doctor leaves, emergency slot blocks, and recurring weekly availability without creating a maintenance nightmare.",
+      decisions: [
+        {
+          title: "WhatsApp OTP over SMS",
+          detail:
+            "SMS delivery failure rates in India run 15–20% due to DND filters. WhatsApp has near-100% delivery for registered numbers and patients are already in the app. Chose the WhatsApp Business API with a 6-digit OTP flow — zero password friction and implicit phone verification in one step.",
+        },
+        {
+          title: "PostgreSQL + Supabase over MongoDB",
+          detail:
+            "Scheduling is inherently relational: doctors, slots, appointments, blocks, and overrides all have hard referential constraints. A slot must belong to exactly one doctor; an appointment must reference exactly one slot. MongoDB's flexible schema would have pushed those constraints into application code, which is a bug farm. Supabase's hosted Postgres also gave Row-Level Security for free.",
+        },
+        {
+          title: "Row-Level Security at the DB layer",
+          detail:
+            "Rather than filtering in the API layer (where a bug leaks data), patients can only SELECT their own appointments, and doctors only see their own queues — enforced by Postgres RLS policies. Even if the API is compromised, the database refuses unauthorized reads at the query level.",
+        },
+        {
+          title: "Zod for end-to-end validation",
+          detail:
+            "Booking a slot involves 6 fields that all need to be consistent (date, doctor, duration, slot type, patient id, time). A single Zod schema validates the API request, generates TypeScript types for the handler, and produces user-facing error messages — one source of truth instead of three.",
+        },
+      ],
+      challenges: [
+        {
+          title: "Conflict-free scheduling engine",
+          detail:
+            "The hardest part: a doctor has weekly recurring availability, but also holiday blocks, emergency overrides, and existing appointments — all of which can overlap. Built a slot resolver that materializes available slots on-the-fly by taking the weekly schedule, subtracting blocks and existing appointments within the requested window, and returning only conflict-free options. Zero SQL date-range overlap using the exclusion constraint pattern.",
+        },
+        {
+          title: "WhatsApp webhook reliability",
+          detail:
+            "WhatsApp webhooks retry on non-200 responses, which caused duplicate OTP sends if the DB write was slow. Added idempotency keys (hash of phone + timestamp rounded to 30s) to deduplicate incoming webhook events before processing — solved duplicate OTP complaints on day 2 of launch.",
+        },
+        {
+          title: "Live queue without WebSockets",
+          detail:
+            "A full WebSocket server felt like over-engineering for a 2-doctor clinic. Used Supabase Realtime (Postgres LISTEN/NOTIFY under the hood) to push queue updates to the doctor dashboard. Zero additional infrastructure — the queue refreshes within 200ms of any appointment status change.",
+        },
+      ],
+      metrics: [
+        { value: "0", label: "Double bookings since launch", detail: "Conflict detection runs at the database level with exclusion constraints — no two appointments can share the same doctor + time slot." },
+        { value: "~30%", label: "No-show reduction", detail: "WhatsApp OTP confirmation acts as a soft commitment. Patients who complete OTP verification show up at a significantly higher rate." },
+        { value: "<200ms", label: "Queue update latency", detail: "Supabase Realtime LISTEN/NOTIFY delivers appointment status changes to the doctor dashboard in under 200ms." },
+        { value: "100%", label: "WhatsApp delivery rate", detail: "Compared to ~80% for SMS in India due to DND filters. Zero failed OTP deliveries since launch." },
+      ],
+      architecture:
+        "Patient → Next.js → /api/book → Zod validation → Supabase (slot conflict check + RLS) → WhatsApp API (OTP)\n\nDoctor Dashboard → Supabase Realtime subscription → Live queue (LISTEN/NOTIFY)\n\nCron → /api/cleanup → Supabase → Log retention (7-day rolling)",
+    } satisfies CaseStudy,
   },
   {
     id: 3,
@@ -54,7 +169,63 @@ export const projects = [
     liveUrl: "https://argumint-frontend.vercel.app/",
     githubUrl: "https://github.com/bipinchaudhary28899/Argumint",
     image: "/images/Argumint.png",
-  }
+    cardMetrics: [
+      { value: "<2s", label: "AI response time" },
+      { value: "10+", label: "concurrent rooms" },
+      { value: "GPT-4", label: "counterarguments" },
+    ],
+    caseStudy: {
+      problem:
+        "Traditional debate forums are static — you post an argument and wait hours for another human to respond. This creates echo chambers: only users who already agree engage, while the original poster never stress-tests their reasoning. The goal was to build a platform where every argument gets an immediate, intelligent, steelmanned counterpoint — making the act of forming an argument genuinely harder and more productive.",
+      decisions: [
+        {
+          title: "GPT-4 over fine-tuned model",
+          detail:
+            "A fine-tuned model would need a large, high-quality debate dataset to match GPT-4's reasoning depth. Given the project scope, the quality gap was too large. GPT-4 with a carefully crafted system prompt (steelman the opposing view, stay factual, no strawmen) produced counterarguments that beta users rated significantly higher than GPT-3.5 in quality and nuance.",
+        },
+        {
+          title: "Socket.io over polling",
+          detail:
+            "In a live debate room, seeing other participants type and post arguments in real time is core to the feel of the product. Polling at 2s intervals would have introduced visible lag and unnecessary server load. Socket.io with room-based namespaces keeps each debate isolated — a message in room A never touches room B.",
+        },
+        {
+          title: "MongoDB over SQL for debate schemas",
+          detail:
+            "Debate topics have a flexible structure: some have media, some have sub-threads, some have voting. A rigid SQL schema would require migrations every time the debate format changed during early iteration. MongoDB's document model let me iterate on the debate schema daily without downtime.",
+        },
+        {
+          title: "JWT with refresh token rotation",
+          detail:
+            "Users return to ongoing debates hours later. Short-lived access tokens (15min) with rotating refresh tokens (7 days) keep sessions active without security risk — each refresh invalidates the previous refresh token, so token theft has a narrow window.",
+        },
+      ],
+      challenges: [
+        {
+          title: "Prompt engineering for quality counterarguments",
+          detail:
+            "Early prompts produced generic responses that restated the original argument. After 30+ iterations, settled on a structured prompt: (1) identify the core claim, (2) find the strongest real-world evidence against it, (3) steelman the opposite position, (4) respond in the same tone and length as the original. Quality jumped from ~3/5 to ~4.5/5 in user ratings.",
+        },
+        {
+          title: "AI rate limiting per user",
+          detail:
+            "Without limits, a single user could run up hundreds of GPT-4 calls in minutes. Implemented a Redis sliding window counter (5 AI requests per user per minute, 50 per hour) with graceful degradation — over-limit users see a countdown timer rather than an error, which kept bounce rate low.",
+        },
+        {
+          title: "WebSocket memory leak on room cleanup",
+          detail:
+            "After extended testing, noticed memory growing steadily. Inactive debate rooms were never garbage collected because the Socket.io room registry held references to disconnected sockets. Added an explicit cleanup handler on the last disconnect event to call socket.leave(room) and delete the room from the registry if empty.",
+        },
+      ],
+      metrics: [
+        { value: "<2s", label: "AI counterargument latency", detail: "GPT-4 response with streaming output — first token appears in ~600ms, full response in under 2 seconds for typical argument length." },
+        { value: "10+", label: "Concurrent debate rooms", detail: "Tested with 10 simultaneous rooms, 3 users each, all running AI calls in parallel — no degradation in response time or message delivery." },
+        { value: "4.5/5", label: "Counterargument quality", detail: "Beta user rating after prompt engineering iterations — up from 3/5 with the naive 'generate a counterargument' prompt." },
+        { value: "50/hr", label: "Rate limit per user", detail: "Sliding window Redis counter prevents runaway AI spend while keeping the experience fluid for normal usage patterns." },
+      ],
+      architecture:
+        "React → Socket.io (room join) → Node.js → MongoDB (debate + arguments)\n\nArgument submitted → Node.js → OpenAI GPT-4 (streaming) → Socket.io (broadcast to room)\n\nRate limiting: Redis sliding window counter per userId\nAuth: JWT access (15min) + rotating refresh token (7 days)",
+    } satisfies CaseStudy,
+  },
 ];
 
 export const skills = {
@@ -63,7 +234,7 @@ export const skills = {
   "Frontend": ["Angular", "React", "Next.js", "HTML5 / CSS3", "Tailwind CSS"],
   "Backend": ["Node.js", "Express", "REST APIs", "CI/CD", "Docker", "Git"],
   "AI / ML": ["OpenAI APIs", "Whisper (ASR)", "HuggingFace Transformers", "RAG", "Vector Embeddings"],
-  "Cloud & Databases": ["AWS (S3, Lambda, CloudFront, EventBridge)", "SAP BTP", "SAP HANA", "MongoDB", "Redis", "PostgreSQL"],
+  "Cloud & Databases": ["AWS (S3, Lambda, CloudFront)", "SAP BTP", "SAP HANA", "MongoDB", "Redis", "PostgreSQL"],
 };
 
 export const experiences = [

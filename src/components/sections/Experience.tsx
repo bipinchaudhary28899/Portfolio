@@ -8,18 +8,19 @@ import { experiences } from "@/data/portfolio";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── Orange-only palette — consistent with site accent ───────────────────── */
-const PALETTE = [
-  { accent: "#ff6535", bg: "rgba(255,101,53,0.10)",  glow: "rgba(255,101,53,0.20)",  border: "rgba(255,101,53,0.30)"  },
-  { accent: "#f97316", bg: "rgba(249,115,22,0.10)",  glow: "rgba(249,115,22,0.20)",  border: "rgba(249,115,22,0.30)"  },
-  { accent: "#fb923c", bg: "rgba(251,146,60,0.10)",  glow: "rgba(251,146,60,0.20)",  border: "rgba(251,146,60,0.30)"  },
-  { accent: "#ea580c", bg: "rgba(234,88,12,0.10)",   glow: "rgba(234,88,12,0.20)",   border: "rgba(234,88,12,0.30)"   },
-  { accent: "#ff8c5a", bg: "rgba(255,140,90,0.10)",  glow: "rgba(255,140,90,0.20)",  border: "rgba(255,140,90,0.30)"  },
-];
+/* ── Theme-aware palette — follows the active CSS accent variables ─────────── */
+const PAL = {
+  accent: "var(--accent)",
+  bg:     "color-mix(in srgb, var(--accent) 12%, transparent)",
+  glow:   "color-mix(in srgb, var(--accent) 22%, transparent)",
+  border: "color-mix(in srgb, var(--accent) 32%, transparent)",
+};
+/* All entries use the same theme-aware palette */
+const PALETTE = Array(5).fill(PAL) as typeof PAL[];
 
-const TL_GRADIENT = "linear-gradient(to bottom, #ff6535 0%, #f97316 25%, #fb923c 50%, #ea580c 75%, #ff8c5a 100%)";
+const TL_GRADIENT = "linear-gradient(to bottom, var(--grad-a), var(--grad-b))";
 
-type Pal = (typeof PALETTE)[number];
+type Pal = typeof PAL;
 
 /* ── Company logo ─────────────────────────────────────────────────────────── */
 function CompanyLogo({ src, company, pal }: { src: string; company: string; pal: Pal }) {
@@ -49,7 +50,7 @@ function ExpCard({ exp, pal, side }: { exp: (typeof experiences)[0]; pal: Pal; s
       style={{
         background: "var(--card)",
         border: `1px solid ${pal.border}`,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.4), 0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.055)",
+        boxShadow: "var(--shadow-card), var(--inset-highlight)",
       }}
     >
       {/* Top accent bar */}
@@ -272,7 +273,7 @@ export function Experience() {
                         border: `1px solid ${openMobile === i ? pal.border : "var(--border)"}`,
                         background: "var(--card)",
                         transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-                        boxShadow: openMobile === i ? "0 2px 8px rgba(0,0,0,0.4), 0 12px 28px rgba(0,0,0,0.28)" : "none",
+                        boxShadow: openMobile === i ? "var(--shadow-card)" : "none",
                       }}>
 
                       {/* Collapsed header */}

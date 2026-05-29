@@ -1,47 +1,215 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════
-   EMBER  —  Design System
-   bg: deep navy-black  |  accent: vivid orange
+   Adaptive Theme Engine — 7 Time-Aware Palettes
+   Default (:root) = Evening / EMBER (backward-compat)
 ═══════════════════════════════════════════════════════ */
-:root {
-  --bg:        #07070f;
-  --bg-alt:    #0b0b18;
-  --card:      #0f0f1f;
-  --border:    #1c1c30;
-  --fg:        #e4e2f0;
-  --fg-dim:    #a8a6c4;
-  --muted:     #5e5e80;
-  --accent:    #ff6535;
-  --accent2:   #ff9f1c;
-  --glow:      rgba(255, 101, 53, 0.18);
-  --nav-bg:    rgba(7, 7, 15, 0.85);
-  --nav-bg-scrolled: rgba(7, 7, 15, 0.94);
-  --grad-a:    #ff6535;
-  --grad-b:    #ff9f1c;
+
+/* ── Defaults / Evening (5–8 PM) — EMBER dark orange ── */
+:root,
+[data-theme="evening"],
+[data-theme="dark"] {
+  --bg:               #07070f;
+  --bg-alt:           #0b0b18;
+  --card:             #0f0f1f;
+  --border:           #1c1c30;
+  --fg:               #e4e2f0;
+  --fg-dim:           #a8a6c4;
+  --muted:            #5e5e80;
+  --accent:           #ff6535;
+  --accent2:          #ff9f1c;
+  --glow:             rgba(255, 101, 53, 0.18);
+  --nav-bg:           rgba(7, 7, 15, 0.85);
+  --nav-bg-scrolled:  rgba(7, 7, 15, 0.94);
+  --grad-a:           #ff6535;
+  --grad-b:           #ff9f1c;
+  /* shadows — dark theme: deep blacks */
+  --shadow-sm:        0 1px 4px rgba(0,0,0,0.30), 0 4px 12px rgba(0,0,0,0.22);
+  --shadow-card:      0 2px 8px rgba(0,0,0,0.42), 0 12px 28px rgba(0,0,0,0.30);
+  --shadow-lg:        0 4px 16px rgba(0,0,0,0.52), 0 20px 56px rgba(0,0,0,0.42), 0 40px 80px rgba(0,0,0,0.24);
+  --inset-highlight:  inset 0 1px 0 rgba(255,255,255,0.06);
+  --shine-top:        rgba(255,255,255,0.035);
+  --shine-corner:     rgba(255,255,255,0.028);
 }
 
-/* ── Light theme ───────────────────────────────────── */
+/* ── Early Morning (4–7 AM) — Pre-dawn rose & lavender ── */
+[data-theme="early-morning"] {
+  --bg:               #09071a;
+  --bg-alt:           #0e0b24;
+  --card:             #14102e;
+  --border:           #26183e;
+  --fg:               #f4e8ff;
+  --fg-dim:           #c8aaee;
+  --muted:            #7e60a8;
+  --accent:           #e879a8;
+  --accent2:          #c084fc;
+  --glow:             rgba(232, 121, 168, 0.20);
+  --nav-bg:           rgba(9, 7, 26, 0.86);
+  --nav-bg-scrolled:  rgba(9, 7, 26, 0.96);
+  --grad-a:           #e879a8;
+  --grad-b:           #c084fc;
+  --shadow-sm:        0 1px 4px rgba(0,0,0,0.32), 0 4px 12px rgba(0,0,0,0.24);
+  --shadow-card:      0 2px 8px rgba(0,0,0,0.44), 0 12px 28px rgba(0,0,0,0.32);
+  --shadow-lg:        0 4px 16px rgba(0,0,0,0.54), 0 20px 56px rgba(0,0,0,0.44), 0 40px 80px rgba(0,0,0,0.26);
+  --inset-highlight:  inset 0 1px 0 rgba(255,255,255,0.06);
+  --shine-top:        rgba(255,255,255,0.04);
+  --shine-corner:     rgba(255,255,255,0.03);
+}
+
+/* ── Mid Morning (7–10 AM) — Sky blue, fresh & energetic ── */
+[data-theme="mid-morning"] {
+  --bg:               #f0f7ff;
+  --bg-alt:           #e0eef8;
+  --card:             #ffffff;
+  --border:           #b8d4ee;
+  --fg:               #0c2340;
+  --fg-dim:           #356090;
+  --muted:            #7aa0c4;
+  --accent:           #0078c8;
+  --accent2:          #00a8d8;
+  --glow:             rgba(0, 120, 200, 0.12);
+  --nav-bg:           rgba(240, 247, 255, 0.88);
+  --nav-bg-scrolled:  rgba(240, 247, 255, 0.97);
+  --grad-a:           #0078c8;
+  --grad-b:           #00a8d8;
+  /* shadows — light theme: soft greys */
+  --shadow-sm:        0 1px 3px rgba(0,0,0,0.07), 0 4px 10px rgba(0,0,0,0.05);
+  --shadow-card:      0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(0,0,0,0.09);
+  --shadow-lg:        0 4px 16px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.10), 0 32px 64px rgba(0,0,0,0.07);
+  --inset-highlight:  inset 0 1px 0 rgba(0,0,0,0.04);
+  --shine-top:        rgba(255,255,255,0.04);
+  --shine-corner:     rgba(255,255,255,0.03);
+}
+
+/* ── Late Morning (10 AM–12 PM) — Emerald, clean & productive ── */
+[data-theme="late-morning"] {
+  --bg:               #f3f9f5;
+  --bg-alt:           #e5f2ea;
+  --card:             #ffffff;
+  --border:           #b4d8c2;
+  --fg:               #0a2818;
+  --fg-dim:           #2e6845;
+  --muted:            #70a882;
+  --accent:           #0d9966;
+  --accent2:          #12bf80;
+  --glow:             rgba(13, 153, 102, 0.12);
+  --nav-bg:           rgba(243, 249, 245, 0.88);
+  --nav-bg-scrolled:  rgba(243, 249, 245, 0.97);
+  --grad-a:           #0d9966;
+  --grad-b:           #12bf80;
+  --shadow-sm:        0 1px 3px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+  --shadow-card:      0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-lg:        0 4px 16px rgba(0,0,0,0.07), 0 16px 40px rgba(0,0,0,0.09), 0 32px 64px rgba(0,0,0,0.06);
+  --inset-highlight:  inset 0 1px 0 rgba(0,0,0,0.04);
+  --shine-top:        rgba(255,255,255,0.04);
+  --shine-corner:     rgba(255,255,255,0.03);
+}
+
+/* ── Light (manual override) — Warm cream + original orange ── */
 [data-theme="light"] {
-  --bg:        #faf9f7;
-  --bg-alt:    #f0ede8;
-  --card:      #ffffff;
-  --border:    #e0dbd4;
-  --fg:        #1a1714;
-  --fg-dim:    #5a5550;
-  --muted:     #9e9890;
-  --accent:    #e8501e;
-  --accent2:   #e8900a;
-  --glow:      rgba(232, 80, 30, 0.12);
-  --nav-bg:    rgba(250, 249, 247, 0.82);
-  --nav-bg-scrolled: rgba(250, 249, 247, 0.96);
-  --grad-a:    #e8501e;
-  --grad-b:    #e8900a;
+  --bg:               #faf9f7;
+  --bg-alt:           #f0ede8;
+  --card:             #ffffff;
+  --border:           #e0dbd4;
+  --fg:               #1a1714;
+  --fg-dim:           #5a5550;
+  --muted:            #9e9890;
+  --accent:           #e8501e;
+  --accent2:          #e8900a;
+  --glow:             rgba(232, 80, 30, 0.12);
+  --nav-bg:           rgba(250, 249, 247, 0.85);
+  --nav-bg-scrolled:  rgba(250, 249, 247, 0.97);
+  --grad-a:           #e8501e;
+  --grad-b:           #e8900a;
+  --shadow-sm:        0 1px 3px rgba(0,0,0,0.07), 0 4px 10px rgba(0,0,0,0.05);
+  --shadow-card:      0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(0,0,0,0.09);
+  --shadow-lg:        0 4px 16px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.10), 0 32px 64px rgba(0,0,0,0.07);
+  --inset-highlight:  inset 0 1px 0 rgba(0,0,0,0.04);
+  --shine-top:        rgba(255,255,255,0.04);
+  --shine-corner:     rgba(255,255,255,0.03);
 }
 
-/* smooth theme transition — excludes transform/opacity so GSAP animations aren't affected */
+/* ── Afternoon (12–5 PM) — Warm amber sunlight ── */
+[data-theme="afternoon"] {
+  --bg:               #fef9f1;
+  --bg-alt:           #fdf1d8;
+  --card:             #ffffff;
+  --border:           #ecd898;
+  --fg:               #2a1804;
+  --fg-dim:           #7a4a10;
+  --muted:            #b87c30;
+  --accent:           #d97706;
+  --accent2:          #f59e0b;
+  --glow:             rgba(217, 119, 6, 0.14);
+  --nav-bg:           rgba(254, 249, 241, 0.88);
+  --nav-bg-scrolled:  rgba(254, 249, 241, 0.97);
+  --grad-a:           #d97706;
+  --grad-b:           #f59e0b;
+  --shadow-sm:        0 1px 3px rgba(0,0,0,0.07), 0 4px 10px rgba(139,90,0,0.06);
+  --shadow-card:      0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(139,90,0,0.09);
+  --shadow-lg:        0 4px 16px rgba(0,0,0,0.08), 0 16px 40px rgba(139,90,0,0.10), 0 32px 64px rgba(0,0,0,0.07);
+  --inset-highlight:  inset 0 1px 0 rgba(0,0,0,0.04);
+  --shine-top:        rgba(255,255,255,0.04);
+  --shine-corner:     rgba(255,255,255,0.03);
+}
+
+/* ── Night (8 PM–12 AM) — Indigo violet, elegant ── */
+[data-theme="night"] {
+  --bg:               #070716;
+  --bg-alt:           #0b0b1e;
+  --card:             #0f0f28;
+  --border:           #1a1a40;
+  --fg:               #e4e0ff;
+  --fg-dim:           #9c96d8;
+  --muted:            #5050a8;
+  --accent:           #7c8cff;
+  --accent2:          #b095ff;
+  --glow:             rgba(124, 140, 255, 0.18);
+  --nav-bg:           rgba(7, 7, 22, 0.86);
+  --nav-bg-scrolled:  rgba(7, 7, 22, 0.96);
+  --grad-a:           #7c8cff;
+  --grad-b:           #b095ff;
+  --shadow-sm:        0 1px 4px rgba(0,0,0,0.34), 0 4px 12px rgba(0,0,0,0.26);
+  --shadow-card:      0 2px 8px rgba(0,0,0,0.46), 0 12px 28px rgba(0,0,0,0.34);
+  --shadow-lg:        0 4px 16px rgba(0,0,0,0.56), 0 20px 56px rgba(0,0,0,0.46), 0 40px 80px rgba(0,0,0,0.28);
+  --inset-highlight:  inset 0 1px 0 rgba(255,255,255,0.07);
+  --shine-top:        rgba(255,255,255,0.04);
+  --shine-corner:     rgba(255,255,255,0.03);
+}
+
+/* ── Late Night (12–4 AM) — Cyber neon, ultra-dark ── */
+[data-theme="late-night"] {
+  --bg:               #020209;
+  --bg-alt:           #040413;
+  --card:             #07071e;
+  --border:           #0d0d30;
+  --fg:               #ccffee;
+  --fg-dim:           #60c898;
+  --muted:            #286048;
+  --accent:           #00e896;
+  --accent2:          #00c8ff;
+  --glow:             rgba(0, 232, 150, 0.20);
+  --nav-bg:           rgba(2, 2, 9, 0.90);
+  --nav-bg-scrolled:  rgba(2, 2, 9, 0.98);
+  --grad-a:           #00e896;
+  --grad-b:           #00c8ff;
+  --shadow-sm:        0 1px 4px rgba(0,0,0,0.50), 0 4px 12px rgba(0,0,0,0.40);
+  --shadow-card:      0 2px 8px rgba(0,0,0,0.60), 0 12px 28px rgba(0,0,0,0.50);
+  --shadow-lg:        0 4px 16px rgba(0,0,0,0.65), 0 20px 56px rgba(0,0,0,0.55), 0 40px 80px rgba(0,0,0,0.40);
+  --inset-highlight:  inset 0 1px 0 rgba(0,232,150,0.10);
+  --shine-top:        rgba(0,232,150,0.05);
+  --shine-corner:     rgba(0,200,255,0.03);
+}
+
+/* ── Smooth theme transitions ───────────────────────── */
+/* Transition colors but NOT transform/opacity (GSAP controls those) */
 *, *::before, *::after {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease;
+  transition:
+    background-color 0.5s ease,
+    border-color 0.5s ease,
+    color 0.4s ease,
+    fill 0.4s ease,
+    box-shadow 0.5s ease;
 }
 /* GSAP-animated elements: suppress theme transitions on properties GSAP controls */
 .gsap-animated { transition: none !important; }
@@ -90,7 +258,7 @@ body::after {
 ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
 
 /* ── Selection / Focus ─────────────────────────────── */
-::selection { background: rgba(255,101,53,.22); color: var(--fg); }
+::selection { background: var(--glow); color: var(--fg); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
 /* ── Typography helpers ────────────────────────────── */
@@ -113,30 +281,20 @@ body::after {
   color: var(--accent);
 }
 
-/* ── Grid background ───────────────────────────────── */
+/* ── Grid background — uses theme border color ─────── */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(255,101,53,.042) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,101,53,.042) 1px, transparent 1px);
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
-/* ── Cinematic card surface — inner light-source gradient + top highlight ── */
+/* ── Cinematic card surface — uses theme-aware shadow/shine vars ── */
 .card-cinematic {
   background-image:
-    /* top-edge glass highlight */
-    linear-gradient(180deg, rgba(255,255,255,0.035) 0px, transparent 1px),
-    /* inner light source: top-left slightly lighter */
-    linear-gradient(135deg, rgba(255,255,255,0.028) 0%, transparent 55%);
-  box-shadow:
-    /* near shadow — tight and dark */
-    0 2px 8px rgba(0,0,0,0.45),
-    /* mid shadow — soft spread */
-    0 12px 32px rgba(0,0,0,0.35),
-    /* ambient — wide and very soft */
-    0 32px 72px rgba(0,0,0,0.22),
-    /* inner top highlight line */
-    inset 0 1px 0 rgba(255,255,255,0.06);
+    linear-gradient(180deg, var(--shine-top) 0px, transparent 1px),
+    linear-gradient(135deg, var(--shine-corner) 0%, transparent 55%);
+  box-shadow: var(--shadow-lg), var(--inset-highlight);
 }
 
 /* ── Section heading accent bar ────────────────────── */

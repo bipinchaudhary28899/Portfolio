@@ -79,10 +79,10 @@ export function About() {
                 background: "var(--card)",
                 borderColor: "var(--border)",
                 backgroundImage: `
-                  linear-gradient(180deg, rgba(255,255,255,0.03) 0px, transparent 1px),
-                  linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 55%)
+                  linear-gradient(180deg, var(--shine-top) 0px, transparent 1px),
+                  linear-gradient(135deg, var(--shine-corner) 0%, transparent 55%)
                 `,
-                boxShadow: "0 2px 8px rgba(0,0,0,0.4), 0 12px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.055)",
+                boxShadow: "var(--shadow-card), var(--inset-highlight)",
               }}>
               <span className="block font-black tracking-tight leading-none mb-1 gradient-text"
                 style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}>
@@ -108,9 +108,9 @@ export function About() {
                 style={{
                   background: "var(--card)",
                   borderColor: "var(--border)",
-                  backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.018) 0%, transparent 50%)",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.35), 0 8px 20px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.05)",
-                  borderLeft: "2px solid rgba(255,101,53,0.35)",
+                  backgroundImage: "linear-gradient(135deg, var(--shine-corner) 0%, transparent 50%)",
+                  boxShadow: "var(--shadow-sm), var(--inset-highlight)",
+                  borderLeft: "2px solid var(--accent)",
                 }}>
                 <span className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
                   style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}>

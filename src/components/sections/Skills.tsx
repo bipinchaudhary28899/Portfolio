@@ -90,10 +90,10 @@ export function Skills() {
                   background: "var(--card)",
                   borderColor: "var(--border)",
                   backgroundImage: `
-                    linear-gradient(180deg, rgba(255,255,255,0.028) 0px, transparent 1px),
-                    linear-gradient(135deg, rgba(255,255,255,0.018) 0%, transparent 55%)
+                    linear-gradient(180deg, var(--shine-top) 0px, transparent 1px),
+                    linear-gradient(135deg, var(--shine-corner) 0%, transparent 55%)
                   `,
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.42), 0 12px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  boxShadow: "var(--shadow-card), var(--inset-highlight)",
                 }}>
                 <div className="flex items-center gap-2 mb-5">
                   <span className="w-1.5 h-5 rounded-full"
@@ -107,10 +107,10 @@ export function Skills() {
                       style={{ borderColor: "var(--border)", color: "var(--fg-dim)", background: "var(--bg-alt)", opacity: 0 }}
                       onMouseEnter={e => {
                         const el = e.currentTarget as HTMLElement;
-                        el.style.borderColor = "rgba(255,101,53,.45)";
+                        el.style.borderColor = "var(--accent)";
                         el.style.color = "var(--fg)";
-                        el.style.boxShadow = "0 0 0 1px rgba(255,101,53,0.12), 0 0 14px rgba(255,101,53,0.13)";
-                        el.style.background = "rgba(255,101,53,0.05)";
+                        el.style.boxShadow = "0 0 0 1px var(--glow), 0 0 14px var(--glow)";
+                        el.style.background = "var(--glow)";
                       }}
                       onMouseLeave={e => {
                         const el = e.currentTarget as HTMLElement;

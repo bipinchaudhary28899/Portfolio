@@ -207,7 +207,7 @@ function MobilePackages() {
             style={{
               background: "var(--card)",
               border:     `1.5px solid ${pkg.highlight ? "var(--accent)" : "var(--border)"}`,
-              boxShadow:  pkg.highlight ? "0 0 32px rgba(255,101,53,0.14)" : "none",
+              boxShadow:  pkg.highlight ? "0 0 32px var(--glow), var(--shadow-card)" : "var(--shadow-sm)",
             }}
           >
             {/* ── Always-visible top (mirrors desktop card top) ── */}
@@ -354,7 +354,7 @@ function PackageCard({ pkg }: { pkg: (typeof PACKAGES)[0] }) {
       style={{
         borderColor: pkg.highlight ? "var(--accent)" : "var(--border)",
         background: "var(--card)",
-        boxShadow: pkg.highlight ? "0 0 40px rgba(255,101,53,0.14)" : "none",
+        boxShadow: pkg.highlight ? "0 0 40px var(--glow), var(--shadow-card)" : "var(--shadow-sm)",
         opacity: 0,
       }}
     >

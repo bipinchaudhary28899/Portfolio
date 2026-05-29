@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/components/ui/icons";
 import { projects } from "@/data/portfolio";
+import { CaseStudyModal } from "./CaseStudyModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,7 +75,15 @@ function ProjectCard({ p, i }: { p: (typeof projects)[0]; i: number }) {
 }
 
 /* ── Desktop panel ───────────────────────────────────────────────────────── */
-function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
+function ProjectPanel({
+  p,
+  i,
+  onCaseStudy,
+}: {
+  p: (typeof projects)[0];
+  i: number;
+  onCaseStudy: () => void;
+}) {
   const num = String(i + 1).padStart(2, "0");
 
   return (
@@ -93,8 +102,8 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
         background: "var(--bg)",
         /* Cinematic: inner top-left light source */
         backgroundImage: `
-          linear-gradient(180deg, rgba(255,255,255,0.018) 0px, transparent 1px),
-          linear-gradient(135deg, rgba(255,255,255,0.012) 0%, transparent 45%)
+          linear-gradient(180deg, var(--shine-top) 0px, transparent 1px),
+          linear-gradient(135deg, var(--shine-corner) 0%, transparent 45%)
         `,
       }}
     >
@@ -120,7 +129,22 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
         <span className="font-mono text-xs tracking-widest" style={{ color: "var(--accent)" }}>
           {num} / {String(projects.length).padStart(2, "0")}
         </span>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          {/* Case Study button */}
+          <button
+            onClick={onCaseStudy}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all hover:scale-105"
+            style={{ border: "1px solid var(--accent)", color: "var(--accent)", background: "transparent" }}
+            onMouseEnter={e => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.background = "color-mix(in srgb, var(--accent) 12%, transparent)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.background = "transparent";
+            }}
+          >
+            Case Study →
+          </button>
           {p.githubUrl !== "#" && (
             <a href={p.githubUrl} target="_blank" rel="noopener noreferrer"
               className="p-2 rounded-lg border transition-all hover:scale-110"
@@ -156,6 +180,25 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
           <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
             {p.description}
           </p>
+
+          {/* Metric pills */}
+          {"cardMetrics" in p && Array.isArray(p.cardMetrics) && (
+            <div className="flex flex-wrap gap-2">
+              {(p.cardMetrics as { value: string; label: string }[]).map((m) => (
+                <div
+                  key={m.label}
+                  className="flex items-baseline gap-1.5 px-3 py-1.5 rounded-full border"
+                  style={{
+                    borderColor: "color-mix(in srgb, var(--accent) 30%, transparent)",
+                    background:  "color-mix(in srgb, var(--accent) 8%, transparent)",
+                  }}
+                >
+                  <span className="text-sm font-black gradient-text leading-none">{m.value}</span>
+                  <span className="text-xs" style={{ color: "var(--fg-dim)" }}>{m.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Right: full landscape screenshot, no cropping */}
@@ -166,7 +209,7 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
             minWidth: 0,
             position: "relative",
             borderColor: "var(--border)",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.5), 0 20px 56px rgba(0,0,0,0.4), 0 40px 80px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.06)",
+            boxShadow: "var(--shadow-lg), var(--inset-highlight)",
           }}
         >
           <Image
@@ -177,19 +220,10 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
             className="w-full h-auto block"
             sizes="(min-width: 768px) 58vw"
           />
-          {/* Cinematic bottom vignette — blends image into panel bg */}
-          <div
-            className="absolute inset-x-0 bottom-0 pointer-events-none"
-            style={{
-              height: "38%",
-              background: "linear-gradient(to top, rgba(7,7,15,0.72) 0%, transparent 100%)",
-              borderRadius: "0 0 0.75rem 0.75rem",
-            }}
-          />
           {/* Hover top-left gloss */}
           <div
             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-xl"
-            style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%)" }}
+            style={{ background: "linear-gradient(135deg, var(--shine-corner) 0%, transparent 50%)" }}
           />
         </div>
       </div>
@@ -213,143 +247,215 @@ function ProjectPanel({ p, i }: { p: (typeof projects)[0]; i: number }) {
   );
 }
 
-/* ── Mobile projects — image cards on top + accordion detail ─────────────── */
-function MobileProjects() {
+/* ── Mobile projects — full cards with expand + case study ───────────────── */
+function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => void }) {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
     <section className="block md:hidden py-14" style={{ background: "var(--bg)" }}>
 
       {/* Header */}
-      <div className="proj-mob-hd flex items-end justify-between mb-5 px-5" style={{ opacity: 0 }}>
+      <div className="proj-mob-hd flex items-end justify-between mb-6 px-5" style={{ opacity: 0 }}>
         <div>
           <p className="section-label mb-2">Work</p>
           <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Selected Projects</h2>
         </div>
-        <a href="https://github.com/bipinchaudhary28899" target="_blank" rel="noopener noreferrer"
-          className="text-xs font-medium pb-1" style={{ color: "var(--accent)" }}>
+        <a
+          href="https://github.com/bipinchaudhary28899"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs font-medium pb-1"
+          style={{ color: "var(--accent)" }}
+        >
           GitHub →
         </a>
       </div>
 
-      {/* ── Horizontally scrollable image cards ─────────────────────────── */}
-      <div
-        className="flex gap-3 overflow-x-auto pb-2 px-5"
-        style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
-      >
-        {projects.map((p, i) => (
-          <button
-            key={p.id}
-            onClick={() => setOpen(open === i ? null : i)}
-            className="flex-shrink-0 rounded-xl overflow-hidden text-left"
-            style={{
-              width:  "52vw",
-              border: open === i
-                ? "2px solid var(--accent)"
-                : "1.5px solid var(--border)",
-              background: "var(--card)",
-              transition: "border-color 0.2s ease",
-            }}
-          >
-            <Image
-              src={p.image}
-              alt={p.title}
-              width={400} height={225}
-              className="w-full h-auto block"
-              sizes="52vw"
-            />
-            <div className="px-3 py-2 flex items-center justify-between gap-2">
-              <p className="text-xs font-bold truncate" style={{ color: "var(--fg)" }}>
-                {p.title}
-              </p>
-              <span
-                className="font-mono text-xs flex-shrink-0"
-                style={{ color: "var(--accent)" }}
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-            </div>
-          </button>
-        ))}
-      </div>
-
-      {/* ── Accordion detail rows ────────────────────────────────────────── */}
-      <div className="flex flex-col gap-2 px-5 mt-4">
+      {/* ── Project cards ── */}
+      <div className="flex flex-col gap-5 px-5">
         {projects.map((p, i) => {
           const isOpen = open === i;
           return (
             <div
               key={p.id}
-              className="rounded-2xl overflow-hidden"
+              className="proj-mob-card rounded-2xl overflow-hidden opacity-0"
               style={{
                 background:  "var(--card)",
-                border: isOpen
-                  ? "1.5px solid var(--accent)"
-                  : "1.5px solid var(--border)",
-                transition: "border-color 0.2s ease",
+                border:      isOpen ? "1.5px solid var(--accent)" : "1.5px solid var(--border)",
+                transition:  "border-color 0.25s ease",
+                boxShadow:   "var(--shadow-card)",
               }}
             >
-              {/* Collapsed row */}
-              <button
-                className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
-                onClick={() => setOpen(isOpen ? null : i)}
+              {/* ── Screenshot ── */}
+              <div
+                style={{
+                  borderBottom: "1px solid var(--border)",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
               >
-                <span className="font-mono text-xs flex-shrink-0" style={{ color: "var(--accent)" }}>
+                <Image
+                  src={p.image}
+                  alt={`${p.title} screenshot`}
+                  width={800}
+                  height={450}
+                  className="w-full h-auto block"
+                  sizes="(max-width: 768px) 90vw"
+                />
+                {/* Project number badge */}
+                <span
+                  className="absolute top-3 left-3 font-mono text-xs font-bold px-2 py-1 rounded-md"
+                  style={{
+                    background: "color-mix(in srgb, var(--bg) 85%, transparent)",
+                    color:      "var(--accent)",
+                    backdropFilter: "blur(6px)",
+                    border:     "1px solid var(--border)",
+                  }}
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <p className="flex-1 text-sm font-bold truncate" style={{ color: "var(--fg)" }}>
-                  {p.title}
-                </p>
+              </div>
 
-                {/* Links */}
-                <div className="flex items-center gap-2 flex-shrink-0"
-                  onClick={e => e.stopPropagation()}>
-                  {p.githubUrl !== "#" && (
-                    <a href={p.githubUrl} target="_blank" rel="noopener noreferrer"
-                      className="p-1" style={{ color: "var(--muted)" }}>
-                      <GithubIcon width={14} height={14} />
-                    </a>
-                  )}
-                  {p.liveUrl !== "#" && (
-                    <a href={p.liveUrl} target="_blank" rel="noopener noreferrer"
-                      className="p-1" style={{ color: "var(--accent)" }}>
-                      <ExternalLink size={14} />
-                    </a>
+              {/* ── Always-visible info row ── */}
+              <div className="px-4 pt-4 pb-3">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <h3 className="text-base font-black leading-snug" style={{ color: "var(--fg)" }}>
+                    {p.title}
+                  </h3>
+
+                  {/* External links */}
+                  <div
+                    className="flex items-center gap-1.5 flex-shrink-0 mt-0.5"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    {p.githubUrl !== "#" && (
+                      <a
+                        href={p.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 rounded-lg border"
+                        style={{ borderColor: "var(--border)", color: "var(--muted)" }}
+                      >
+                        <GithubIcon width={13} height={13} />
+                      </a>
+                    )}
+                    {p.liveUrl !== "#" && (
+                      <a
+                        href={p.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 rounded-lg border"
+                        style={{ borderColor: "var(--border)", color: "var(--accent)" }}
+                      >
+                        <ExternalLink size={13} />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                {/* First 3 tech tags — always visible */}
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {p.tech.slice(0, 3).map(t => (
+                    <span
+                      key={t}
+                      className="text-xs px-2.5 py-0.5 rounded-full border"
+                      style={{ borderColor: "var(--border)", color: "var(--muted)", background: "var(--bg)" }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                  {p.tech.length > 3 && (
+                    <span
+                      className="text-xs px-2.5 py-0.5 rounded-full border"
+                      style={{ borderColor: "var(--border)", color: "var(--muted)", background: "var(--bg)" }}
+                    >
+                      +{p.tech.length - 3} more
+                    </span>
                   )}
                 </div>
 
-                {/* Chevron */}
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                  style={{
-                    flexShrink: 0, color: "var(--muted)",
-                    transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-                    transition: "transform 0.25s ease",
-                  }}>
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
-                    strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
+                {/* Expand / collapse button */}
+                <button
+                  className="w-full flex items-center justify-between py-2 text-xs font-semibold"
+                  style={{ color: isOpen ? "var(--accent)" : "var(--muted)" }}
+                  onClick={() => setOpen(isOpen ? null : i)}
+                >
+                  <span>{isOpen ? "Hide details" : "Show details"}</span>
+                  <svg
+                    width="14" height="14" viewBox="0 0 16 16" fill="none"
+                    style={{
+                      transition: "transform 0.25s ease",
+                      transform:  isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    }}
+                  >
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
+                      strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
 
-              {/* Expandable content */}
-              <div style={{
-                display: "grid",
-                gridTemplateRows: isOpen ? "1fr" : "0fr",
-                transition: "grid-template-rows 0.3s ease",
-              }}>
+              {/* ── Expandable details ── */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateRows: isOpen ? "1fr" : "0fr",
+                  transition: "grid-template-rows 0.32s ease",
+                }}
+              >
                 <div style={{ overflow: "hidden" }}>
-                  <div className="flex flex-col gap-3 px-4 pb-4"
-                    style={{ borderTop: "1px solid var(--border)" }}>
-                    <p className="text-xs leading-relaxed pt-3" style={{ color: "var(--fg-dim)" }}>
+                  <div
+                    className="flex flex-col gap-3 px-4 pt-1 pb-4"
+                    style={{ borderTop: "1px solid var(--border)" }}
+                  >
+                    {/* Description */}
+                    <p className="text-xs leading-relaxed pt-2" style={{ color: "var(--fg-dim)" }}>
                       {p.description}
                     </p>
+
+                    {/* Metric pills */}
+                    {"cardMetrics" in p && Array.isArray(p.cardMetrics) && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {(p.cardMetrics as { value: string; label: string }[]).map((m) => (
+                          <div
+                            key={m.label}
+                            className="flex items-baseline gap-1 px-2.5 py-1 rounded-full border"
+                            style={{
+                              borderColor: "color-mix(in srgb, var(--accent) 30%, transparent)",
+                              background:  "color-mix(in srgb, var(--accent) 8%, transparent)",
+                            }}
+                          >
+                            <span className="text-xs font-black gradient-text">{m.value}</span>
+                            <span className="text-xs" style={{ color: "var(--fg-dim)" }}>{m.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* All tech tags */}
                     <div className="flex flex-wrap gap-1.5">
                       {p.tech.map(t => (
-                        <span key={t} className="text-xs px-2 py-1 rounded-full"
-                          style={{ background: "var(--bg)", color: "var(--muted)" }}>
+                        <span
+                          key={t}
+                          className="text-xs px-2 py-1 rounded-full border"
+                          style={{ borderColor: "var(--border)", color: "var(--muted)", background: "var(--bg)" }}
+                        >
                           {t}
                         </span>
                       ))}
                     </div>
+
+                    {/* More info → opens case study modal */}
+                    <button
+                      onClick={() => onOpenCaseStudy(i)}
+                      className="self-start text-xs font-bold px-4 py-2 rounded-xl transition-all"
+                      style={{
+                        background: "color-mix(in srgb, var(--accent) 12%, transparent)",
+                        border:     "1.5px solid var(--accent)",
+                        color:      "var(--accent)",
+                      }}
+                    >
+                      More info →
+                    </button>
                   </div>
                 </div>
               </div>
@@ -367,6 +473,7 @@ export function Projects() {
   const desktopSec  = useRef<HTMLElement>(null);
   const trackRef    = useRef<HTMLDivElement>(null);
   const headRef     = useRef<HTMLDivElement>(null);
+  const [modalIndex, setModalIndex] = useState<number | null>(null);
 
   useEffect(() => {
     /* Keep track top-padding in sync with the sticky header height */
@@ -427,13 +534,24 @@ export function Projects() {
       return () => ctx.revert();
     });
 
-    /* ── Mobile: animate header + image cards + accordion rows ── */
+    /* ── Mobile: animate header + project cards ── */
     mm.add("(max-width: 767px)", () => {
       const ctx = gsap.context(() => {
         gsap.fromTo(".proj-mob-hd",
           { opacity: 0, y: 28 },
           { opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
             scrollTrigger: { trigger: ".proj-mob-hd", start: "top 60%", toggleActions: "play none none none" } });
+
+        gsap.utils.toArray<HTMLElement>(".proj-mob-card").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 40 },
+            {
+              opacity: 1, y: 0, duration: 0.65, ease: "power3.out",
+              scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+            }
+          );
+        });
       });
       return () => ctx.revert();
     });
@@ -472,13 +590,30 @@ export function Projects() {
         {/* Scrolling track — flex row of panels */}
         <div ref={trackRef} className="h-track items-stretch" style={{ height: "100%" }}>
           <div style={{ flexShrink: 0, width: 56 }} />
-          {projects.map((p, i) => <ProjectPanel key={p.id} p={p} i={i} />)}
+          {projects.map((p, i) => (
+            <ProjectPanel
+              key={p.id}
+              p={p}
+              i={i}
+              onCaseStudy={() => setModalIndex(i)}
+            />
+          ))}
           <div style={{ flexShrink: 0, width: 56 }} />
         </div>
       </section>
 
       {/* ── Mobile accordion ── */}
-      <MobileProjects />
+      <MobileProjects onOpenCaseStudy={(i) => setModalIndex(i)} />
+
+      {/* ── Case Study Modal ── */}
+      {modalIndex !== null && (
+        <CaseStudyModal
+          projectIndex={modalIndex}
+          onClose={() => setModalIndex(null)}
+          onNext={() => setModalIndex((modalIndex + 1) % projects.length)}
+          onPrev={() => setModalIndex((modalIndex - 1 + projects.length) % projects.length)}
+        />
+      )}
     </div>
   );
 }
