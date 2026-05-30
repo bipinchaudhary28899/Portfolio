@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ArrowDown, Download } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/icons";
 import { personalInfo } from "@/data/portfolio";
 import { useLoadingComplete } from "@/context/LoadingContext";
+import { TerminalHero } from "@/components/ui/TerminalHero";
+import { ResumeModal } from "@/components/ui/ResumeModal";
 
 export function Hero() {
+  const [resumeOpen, setResumeOpen] = useState(false);
   const sec    = useRef<HTMLElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const badge  = useRef<HTMLDivElement>(null);
@@ -46,6 +49,7 @@ export function Hero() {
   }, [loadingComplete]);
 
   return (
+    <>
     <section
       ref={sec}
       id="hero"
@@ -72,16 +76,16 @@ export function Hero() {
 
       {/* Top bar */}
       <div className="relative z-10 flex items-center justify-between px-6 sm:px-14 pt-24">
-        <div ref={badge} className="opacity-0">
+        <span className="font-mono text-xs tabular-nums" style={{ color: "var(--muted)" }}>
+          {new Date().getFullYear()}
+        </span>
+        <div ref={badge} className="opacity-0 absolute left-1/2 -translate-x-1/2">
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border"
             style={{ border: "1px solid var(--border)", background: "var(--card)", color: "var(--muted)" }}>
             <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#22c55e" }} />
             Available for work
           </span>
         </div>
-        <span className="font-mono text-xs tabular-nums" style={{ color: "var(--muted)" }}>
-          {new Date().getFullYear()}
-        </span>
       </div>
 
       {/* Main */}
@@ -107,6 +111,7 @@ export function Hero() {
           <p className="text-sm sm:text-base leading-relaxed" style={{ color: "var(--fg-dim)" }}>
             {personalInfo.tagline}
           </p>
+          <TerminalHero />
         </div>
 
         <div ref={cta} className="opacity-0 mt-8 flex flex-wrap gap-3">
@@ -117,11 +122,12 @@ export function Hero() {
           >
             View Work
           </button>
-          <a href={personalInfo.resumeUrl} download="Bipin_Resume.pdf"
+          <button
+            onClick={() => setResumeOpen(true)}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border transition-all hover:border-orange-500"
             style={{ border: "1px solid var(--border)", color: "var(--fg)" }}>
-            <Download size={14} /> Resume
-          </a>
+            <Download size={14} /> View Resume
+          </button>
         </div>
       </div>
 
@@ -141,6 +147,37 @@ export function Hero() {
             </a>
           ))}
           <span className="hidden sm:block text-xs" style={{ color: "var(--muted)" }}>{personalInfo.location}</span>
+
+          {/* Desktop hint */}
+          <span className="hidden sm:flex items-center gap-1.5 font-mono text-xs" style={{ color: "var(--muted)", opacity: 0.55 }}>
+            <span>·</span>
+            <span>try typing</span>
+            <kbd style={{
+              padding:       "1px 5px",
+              borderRadius:  "4px",
+              border:        "1px solid var(--border)",
+              background:    "var(--bg-alt)",
+              color:         "var(--accent)",
+              fontSize:      "0.7rem",
+              letterSpacing: "0.05em",
+            }}>bipin</kbd>
+          </span>
+
+          {/* Mobile tap button */}
+          <button
+            className="flex sm:hidden items-center gap-1.5 font-mono text-xs px-2 py-1 rounded-md border"
+            style={{
+              border:     "1px solid var(--border)",
+              background: "var(--card)",
+              color:      "var(--accent)",
+              opacity:    0.75,
+            }}
+            onClick={() => window.dispatchEvent(new CustomEvent("open-cli"))}
+            aria-label="Open terminal"
+          >
+            <span style={{ fontSize: "0.8rem" }}>{"›_"}</span>
+            <span style={{ color: "var(--muted)", fontSize: "0.65rem" }}>terminal</span>
+          </button>
         </div>
 
         <button ref={scr} onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
@@ -151,5 +188,8 @@ export function Hero() {
       </div>
 
     </section>
+
+    {resumeOpen && <ResumeModal onClose={() => setResumeOpen(false)} />}
+    </>
   );
 }

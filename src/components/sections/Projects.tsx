@@ -8,6 +8,7 @@ import { ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/components/ui/icons";
 import { projects } from "@/data/portfolio";
 import { CaseStudyModal } from "./CaseStudyModal";
+import { StatusDot } from "@/components/ui/StatusDot";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -126,9 +127,12 @@ function ProjectPanel({
 
       {/* ── Row 1: counter + links ── */}
       <div className="relative z-10 flex items-center justify-between">
-        <span className="font-mono text-xs tracking-widest" style={{ color: "var(--accent)" }}>
-          {num} / {String(projects.length).padStart(2, "0")}
-        </span>
+        <div className="flex items-center gap-4">
+          <span className="font-mono text-xs tracking-widest" style={{ color: "var(--accent)" }}>
+            {num} / {String(projects.length).padStart(2, "0")}
+          </span>
+          {p.liveUrl !== "#" && <StatusDot url={p.liveUrl} />}
+        </div>
         <div className="flex items-center gap-2">
           {/* Case Study button */}
           <button
@@ -319,9 +323,16 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
               {/* ── Always-visible info row ── */}
               <div className="px-4 pt-4 pb-3">
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  <h3 className="text-base font-black leading-snug" style={{ color: "var(--fg)" }}>
-                    {p.title}
-                  </h3>
+                  <div>
+                    <h3 className="text-base font-black leading-snug" style={{ color: "var(--fg)" }}>
+                      {p.title}
+                    </h3>
+                    {p.liveUrl !== "#" && (
+                      <div className="mt-1">
+                        <StatusDot url={p.liveUrl} />
+                      </div>
+                    )}
+                  </div>
 
                   {/* External links */}
                   <div

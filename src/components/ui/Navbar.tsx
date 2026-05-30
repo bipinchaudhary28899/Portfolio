@@ -6,11 +6,13 @@ import { Menu, X } from "lucide-react";
 import { navLinks, personalInfo } from "@/data/portfolio";
 import { ThemePanel } from "@/components/ui/ThemePanel";
 import { useLoadingComplete } from "@/context/LoadingContext";
+import { ResumeModal } from "@/components/ui/ResumeModal";
 
 export function Navbar() {
-  const ref                     = useRef<HTMLElement>(null);
-  const [open, setOpen]         = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const ref                       = useRef<HTMLElement>(null);
+  const [open, setOpen]           = useState(false);
+  const [scrolled, setScrolled]   = useState(false);
+  const [resumeOpen, setResumeOpen] = useState(false);
 
   const loadingComplete = useLoadingComplete();
 
@@ -73,14 +75,13 @@ export function Navbar() {
         {/* Desktop right side */}
         <div className="hidden md:flex items-center gap-3">
           <ThemePanel />
-          <a
-            href={personalInfo.resumeUrl}
-            download="Bipin_Resume.pdf"
+          <button
+            onClick={() => setResumeOpen(true)}
             className="inline-flex items-center text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-85"
             style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))", color: "#fff" }}
           >
-            Resume ↓
-          </a>
+            View Resume
+          </button>
         </div>
 
         {/* Mobile right side */}
@@ -108,16 +109,17 @@ export function Navbar() {
               {l.label}
             </button>
           ))}
-          <a
-            href={personalInfo.resumeUrl}
-            download="Bipin_Resume.pdf"
+          <button
+            onClick={() => { setOpen(false); setResumeOpen(true); }}
             className="mt-1 inline-flex items-center justify-center text-sm font-semibold px-4 py-2.5 rounded-lg"
             style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))", color: "#fff" }}
           >
-            Download Resume
-          </a>
+            View Resume
+          </button>
         </div>
       )}
+
+      {resumeOpen && <ResumeModal onClose={() => setResumeOpen(false)} />}
     </header>
   );
 }

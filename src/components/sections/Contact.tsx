@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Mail, MapPin, Send } from "lucide-react";
+import { Check, Copy, Mail, MapPin, Send } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/icons";
 import { personalInfo } from "@/data/portfolio";
 
@@ -15,6 +15,14 @@ export function Contact() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  function copyEmail() {
+    navigator.clipboard.writeText(personalInfo.email).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
 
   // Pre-fill from "Order Package" buttons in the Freelance section
   useEffect(() => {
@@ -107,18 +115,45 @@ export function Contact() {
             </p>
 
             <div className="flex flex-col gap-5">
-              <a href={`mailto:${personalInfo.email}`}
-                className="flex items-center gap-4 p-5 rounded-xl border transition-all hover:border-orange-500/50 group"
-                style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-                <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: "rgba(255,101,53,.12)" }}>
-                  <Mail size={18} style={{ color: "var(--accent)" }} />
-                </span>
-                <div>
-                  <p className="text-xs uppercase tracking-wider mb-0.5" style={{ color: "var(--muted)" }}>Email</p>
-                  <p className="text-sm font-medium" style={{ color: "var(--fg)" }}>{personalInfo.email}</p>
-                </div>
-              </a>
+              <div
+                className="flex items-center gap-4 p-5 rounded-xl border transition-all hover:border-orange-500/50"
+                style={{ background: "var(--card)", borderColor: "var(--border)" }}
+              >
+                  <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: "rgba(255,101,53,.12)" }}>
+                    <Mail size={18} style={{ color: "var(--accent)" }} />
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs uppercase tracking-wider mb-0.5" style={{ color: "var(--muted)" }}>Email</p>
+                    <p className="text-sm font-medium truncate" style={{ color: "var(--fg)" }}>
+                      {personalInfo.email}
+                    </p>
+                  </div>
+                  <button
+                    onClick={copyEmail}
+                    title={copied ? "Copied!" : "Copy email"}
+                    className="p-2 rounded-lg border transition-all hover:border-orange-500/50 flex-shrink-0"
+                    style={{
+                      border:     "1px solid var(--border)",
+                      background: copied ? "rgba(34,197,94,0.1)" : "var(--bg)",
+                      color:      copied ? "#22c55e" : "var(--muted)",
+                    }}
+                  >
+                    {copied ? <Check size={14} /> : <Copy size={14} />}
+                  </button>
+                  <a
+                    href={`mailto:${personalInfo.email}`}
+                    title="Send email"
+                    className="p-2 rounded-lg border transition-all hover:border-orange-500/50 flex-shrink-0"
+                    style={{
+                      border:     "1px solid var(--border)",
+                      background: "var(--bg)",
+                      color:      "var(--accent)",
+                    }}
+                  >
+                    <Send size={14} />
+                  </a>
+              </div>
 
               <div className="flex items-center gap-4 p-5 rounded-xl border"
                 style={{ background: "var(--card)", borderColor: "var(--border)" }}>
