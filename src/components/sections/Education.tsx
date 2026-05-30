@@ -129,6 +129,9 @@ export function Education() {
           ease: "sine.inOut",
         });
 
+        // Pre-hide animated elements
+        gsap.set([".edu-hd-desktop", ".edu-hd-mobile", ".edu-card-desktop", ".edu-card-mobile", ".edu-tag"], { opacity: 0 });
+
         // Section header
         gsap.fromTo(
           ".edu-hd-desktop",

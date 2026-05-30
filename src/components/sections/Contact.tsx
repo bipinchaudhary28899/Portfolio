@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Check, Copy, Mail, MapPin, Send } from "lucide-react";
+import { Check, Copy, Mail, MapPin, Phone, Send } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/icons";
 import { personalInfo } from "@/data/portfolio";
 
@@ -45,15 +45,17 @@ export function Contact() {
         { opacity: 1, y: 0, duration: 0.75, ease: "power3.out",
           scrollTrigger: { trigger: ".contact-header", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
+      const isMobile = () => window.innerWidth < 768;
+
       gsap.fromTo(".contact-left",
-        { opacity: 0, x: -40 },
-        { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: ".contact-body", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
+        { opacity: 0, x: isMobile() ? 0 : -40, y: isMobile() ? 30 : 0 },
+        { opacity: 1, x: 0, y: 0, duration: 0.75, ease: "power3.out",
+          scrollTrigger: { trigger: ".contact-body", start: isMobile() ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
       gsap.fromTo(".contact-right",
-        { opacity: 0, x: 40 },
-        { opacity: 1, x: 0, duration: 0.75, ease: "power3.out",
-          scrollTrigger: { trigger: ".contact-body", start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
+        { opacity: 0, x: isMobile() ? 0 : 40, y: isMobile() ? 30 : 0 },
+        { opacity: 1, x: 0, y: 0, duration: 0.75, ease: "power3.out", delay: isMobile() ? 0.15 : 0,
+          scrollTrigger: { trigger: ".contact-body", start: isMobile() ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
     }, sec);
     return () => ctx.revert();
   }, []);
@@ -116,9 +118,11 @@ export function Contact() {
 
             <div className="flex flex-col gap-5">
               <div
-                className="flex items-center gap-4 p-5 rounded-xl border transition-all hover:border-orange-500/50"
+                className="flex flex-col rounded-xl border transition-all hover:border-orange-500/50"
                 style={{ background: "var(--card)", borderColor: "var(--border)" }}
               >
+                {/* top: icon + address */}
+                <div className="flex items-center gap-4 px-5 pt-5 pb-4">
                   <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ background: "rgba(255,101,53,.12)" }}>
                     <Mail size={18} style={{ color: "var(--accent)" }} />
@@ -129,32 +133,56 @@ export function Contact() {
                       {personalInfo.email}
                     </p>
                   </div>
+                </div>
+                {/* bottom: actions */}
+                <div className="flex gap-2 px-5 pb-4">
                   <button
                     onClick={copyEmail}
                     title={copied ? "Copied!" : "Copy email"}
-                    className="p-2 rounded-lg border transition-all hover:border-orange-500/50 flex-shrink-0"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-xs font-medium transition-all hover:border-orange-500/50"
                     style={{
                       border:     "1px solid var(--border)",
                       background: copied ? "rgba(34,197,94,0.1)" : "var(--bg)",
                       color:      copied ? "#22c55e" : "var(--muted)",
                     }}
                   >
-                    {copied ? <Check size={14} /> : <Copy size={14} />}
+                    {copied ? <Check size={13} /> : <Copy size={13} />}
+                    {copied ? "Copied!" : "Copy"}
                   </button>
                   <a
                     href={`mailto:${personalInfo.email}`}
-                    title="Send email"
-                    className="p-2 rounded-lg border transition-all hover:border-orange-500/50 flex-shrink-0"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-xs font-medium transition-all hover:border-orange-500/50"
                     style={{
-                      border:     "1px solid var(--border)",
-                      background: "var(--bg)",
+                      border:     "1px solid var(--accent)",
+                      background: "color-mix(in srgb, var(--accent) 10%, transparent)",
                       color:      "var(--accent)",
                     }}
                   >
-                    <Send size={14} />
+                    <Send size={13} /> Send Mail
                   </a>
+                </div>
               </div>
 
+              {/* Phone */}
+              <a
+                href={`tel:${personalInfo.phone}`}
+                className="flex items-center gap-4 p-5 rounded-xl border transition-all hover:border-orange-500/50 group"
+                style={{ background: "var(--card)", borderColor: "var(--border)" }}
+              >
+                <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
+                  style={{ background: "rgba(255,101,53,.12)" }}>
+                  <Phone size={18} style={{ color: "var(--accent)" }} />
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs uppercase tracking-wider mb-0.5" style={{ color: "var(--muted)" }}>Phone</p>
+                  <p className="text-sm font-medium" style={{ color: "var(--fg)" }}>{personalInfo.phone}</p>
+                </div>
+                <span className="text-xs px-2 py-1 rounded-md" style={{ background: "rgba(34,197,94,0.1)", color: "#22c55e" }}>
+                  Call
+                </span>
+              </a>
+
+              {/* Location */}
               <div className="flex items-center gap-4 p-5 rounded-xl border"
                 style={{ background: "var(--card)", borderColor: "var(--border)" }}>
                 <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -200,7 +228,7 @@ export function Contact() {
               </div>
             ) : (
               <form onSubmit={submit}
-                className="rounded-2xl border p-8 flex flex-col gap-5"
+                className="rounded-2xl border p-5 sm:p-8 flex flex-col gap-5"
                 style={{ background: "var(--card)", borderColor: "var(--border)" }}>
 
                 {error && (

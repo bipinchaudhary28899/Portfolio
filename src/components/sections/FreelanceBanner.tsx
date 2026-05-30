@@ -14,6 +14,7 @@ export function FreelanceBanner() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      gsap.set([".fb-wrap"], { opacity: 0 });
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapRef.current,

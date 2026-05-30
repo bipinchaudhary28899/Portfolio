@@ -12,6 +12,9 @@ export function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Pre-hide all animated elements to prevent opacity flash on mount
+      gsap.set([".about-label", ".about-title", ".stat-item", ".about-bio-block", ".achieve-item"], { opacity: 0 });
+
       const mm = gsap.matchMedia();
 
       /* ── shared: header ── */

@@ -39,6 +39,8 @@ export function Certifications() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      gsap.set([".cert-label", ".cert-title", ".cert-card"], { opacity: 0 });
+
       const mm = gsap.matchMedia();
 
       /* ── Header ── */

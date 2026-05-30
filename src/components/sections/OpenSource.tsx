@@ -20,6 +20,7 @@ export function OpenSource() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      gsap.set([".os-label", ".os-title", ".os-stat"], { opacity: 0 });
       const mm = gsap.matchMedia();
 
       /* ── Header ── */

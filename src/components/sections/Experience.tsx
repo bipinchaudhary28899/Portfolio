@@ -141,6 +141,7 @@ export function Experience() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      gsap.set([".exp-label", ".exp-title", ".exp-dot", ".exp-card", ".exp-ach"], { opacity: 0 });
 
       /* Header */
       gsap.fromTo(".exp-label",

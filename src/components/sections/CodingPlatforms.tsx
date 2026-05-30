@@ -13,6 +13,7 @@ export function CodingPlatforms() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      gsap.set([".cp-label", ".cp-title", ".cp-card", ".cp-stat"], { opacity: 0 });
       const mm = gsap.matchMedia();
 
       /* ── Header ── */

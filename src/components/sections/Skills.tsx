@@ -12,6 +12,8 @@ export function Skills() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      gsap.set([".skills-label", ".skills-title", ".skill-cat", ".skill-tag"], { opacity: 0 });
+
       const mm = gsap.matchMedia();
 
       /* ── Header ── */

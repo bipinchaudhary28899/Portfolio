@@ -446,6 +446,8 @@ export function FreelanceServices() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Pre-hide to prevent flash before ScrollTrigger fires
+      gsap.set([labelRef.current, descRef.current, buildRef.current, ctaRef.current], { opacity: 0 });
 
       /* Shared title animation — used for every section heading */
       const titleAnim = (target: Element | null, trigger: Element | null, delay = 0) =>
