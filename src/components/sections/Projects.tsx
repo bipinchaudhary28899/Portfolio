@@ -9,6 +9,7 @@ import { GithubIcon } from "@/components/ui/icons";
 import { projects } from "@/data/portfolio";
 import { CaseStudyModal } from "./CaseStudyModal";
 import { StatusDot } from "@/components/ui/StatusDot";
+import { Highlight } from "@/components/ui/Highlight";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -59,7 +60,7 @@ function ProjectCard({ p, i }: { p: (typeof projects)[0]; i: number }) {
           {p.title}
         </h3>
         <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
-          {p.description}
+          <Highlight text={p.description} />
         </p>
 
         <div className="flex flex-wrap gap-1.5">
@@ -182,7 +183,7 @@ function ProjectPanel({
             {p.title}
           </h3>
           <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
-            {p.description}
+            <Highlight text={p.description} />
           </p>
 
           {/* Metric pills */}
@@ -420,7 +421,7 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
                   >
                     {/* Description */}
                     <p className="text-xs leading-relaxed pt-2" style={{ color: "var(--fg-dim)" }}>
-                      {p.description}
+                      <Highlight text={p.description} />
                     </p>
 
                     {/* Metric pills */}

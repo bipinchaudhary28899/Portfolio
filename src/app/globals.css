@@ -23,6 +23,7 @@
   --nav-bg-scrolled:  rgba(7, 7, 15, 0.94);
   --grad-a:           #ff6535;
   --grad-b:           #ff9f1c;
+  --kw:               #ffb454;   /* keyword highlight — gold */
   /* shadows — dark theme: deep blacks */
   --shadow-sm:        0 1px 4px rgba(0,0,0,0.30), 0 4px 12px rgba(0,0,0,0.22);
   --shadow-card:      0 2px 8px rgba(0,0,0,0.42), 0 12px 28px rgba(0,0,0,0.30);
@@ -48,6 +49,7 @@
   --nav-bg-scrolled:  rgba(9, 7, 26, 0.96);
   --grad-a:           #e879a8;
   --grad-b:           #c084fc;
+  --kw:               #f5c563;   /* keyword highlight — gold */
   --shadow-sm:        0 1px 4px rgba(0,0,0,0.32), 0 4px 12px rgba(0,0,0,0.24);
   --shadow-card:      0 2px 8px rgba(0,0,0,0.44), 0 12px 28px rgba(0,0,0,0.32);
   --shadow-lg:        0 4px 16px rgba(0,0,0,0.54), 0 20px 56px rgba(0,0,0,0.44), 0 40px 80px rgba(0,0,0,0.26);
@@ -72,6 +74,7 @@
   --nav-bg-scrolled:  rgba(240, 247, 255, 0.97);
   --grad-a:           #0078c8;
   --grad-b:           #00a8d8;
+  --kw:               #b07400;   /* keyword highlight — gold (dark for light bg) */
   /* shadows — light theme: soft greys */
   --shadow-sm:        0 1px 3px rgba(0,0,0,0.07), 0 4px 10px rgba(0,0,0,0.05);
   --shadow-card:      0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(0,0,0,0.09);
@@ -97,6 +100,7 @@
   --nav-bg-scrolled:  rgba(243, 249, 245, 0.97);
   --grad-a:           #0d9966;
   --grad-b:           #12bf80;
+  --kw:               #a87400;   /* keyword highlight — gold (dark for light bg) */
   --shadow-sm:        0 1px 3px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
   --shadow-card:      0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
   --shadow-lg:        0 4px 16px rgba(0,0,0,0.07), 0 16px 40px rgba(0,0,0,0.09), 0 32px 64px rgba(0,0,0,0.06);
@@ -121,6 +125,7 @@
   --nav-bg-scrolled:  rgba(250, 249, 247, 0.97);
   --grad-a:           #e8501e;
   --grad-b:           #e8900a;
+  --kw:               #b07400;   /* keyword highlight — gold (dark for light bg) */
   --shadow-sm:        0 1px 3px rgba(0,0,0,0.07), 0 4px 10px rgba(0,0,0,0.05);
   --shadow-card:      0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(0,0,0,0.09);
   --shadow-lg:        0 4px 16px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.10), 0 32px 64px rgba(0,0,0,0.07);
@@ -145,6 +150,7 @@
   --nav-bg-scrolled:  rgba(254, 249, 241, 0.97);
   --grad-a:           #d97706;
   --grad-b:           #f59e0b;
+  --kw:               #9a5b00;   /* keyword highlight — deep gold for amber light bg */
   --shadow-sm:        0 1px 3px rgba(0,0,0,0.07), 0 4px 10px rgba(139,90,0,0.06);
   --shadow-card:      0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(139,90,0,0.09);
   --shadow-lg:        0 4px 16px rgba(0,0,0,0.08), 0 16px 40px rgba(139,90,0,0.10), 0 32px 64px rgba(0,0,0,0.07);
@@ -169,6 +175,7 @@
   --nav-bg-scrolled:  rgba(7, 7, 22, 0.96);
   --grad-a:           #7c8cff;
   --grad-b:           #b095ff;
+  --kw:               #ffce6b;   /* keyword highlight — gold */
   --shadow-sm:        0 1px 4px rgba(0,0,0,0.34), 0 4px 12px rgba(0,0,0,0.26);
   --shadow-card:      0 2px 8px rgba(0,0,0,0.46), 0 12px 28px rgba(0,0,0,0.34);
   --shadow-lg:        0 4px 16px rgba(0,0,0,0.56), 0 20px 56px rgba(0,0,0,0.46), 0 40px 80px rgba(0,0,0,0.28);
@@ -193,6 +200,7 @@
   --nav-bg-scrolled:  rgba(2, 2, 9, 0.98);
   --grad-a:           #00e896;
   --grad-b:           #00c8ff;
+  --kw:               #ffd866;   /* keyword highlight — gold */
   --shadow-sm:        0 1px 4px rgba(0,0,0,0.50), 0 4px 12px rgba(0,0,0,0.40);
   --shadow-card:      0 2px 8px rgba(0,0,0,0.60), 0 12px 28px rgba(0,0,0,0.50);
   --shadow-lg:        0 4px 16px rgba(0,0,0,0.65), 0 20px 56px rgba(0,0,0,0.55), 0 40px 80px rgba(0,0,0,0.40);
@@ -267,6 +275,16 @@ body::after {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Keyword highlight — gold accent + subtle underline */
+.kw {
+  color: var(--kw);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--kw) 45%, transparent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2.5px;
 }
 
 /* Overflow-clip for GSAP yPercent reveals */

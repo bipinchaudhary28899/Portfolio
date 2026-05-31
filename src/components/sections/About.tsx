@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { personalInfo } from "@/data/portfolio";
+import { Highlight } from "@/components/ui/Highlight";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,7 +103,7 @@ export function About() {
         <div className="about-body grid md:grid-cols-2 gap-12 items-start">
           <div className="about-bio-block opacity-0">
             <p className="text-base sm:text-lg leading-relaxed" style={{ color: "var(--fg-dim)" }}>
-              {personalInfo.bio}
+              <Highlight text={personalInfo.bio} />
             </p>
           </div>
           <div className="achieve-list flex flex-col gap-4">
@@ -119,7 +120,7 @@ export function About() {
                   style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}>
                   {i + 1}
                 </span>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>{a}</p>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}><Highlight text={a} /></p>
               </div>
             ))}
           </div>

@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { experiences } from "@/data/portfolio";
+import { Highlight } from "@/components/ui/Highlight";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -85,7 +86,7 @@ function ExpCard({ exp, pal, side }: { exp: (typeof experiences)[0]; pal: Pal; s
         {exp.achievements.map((a, j) => (
           <li key={j} className="exp-ach flex items-start gap-3 text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
             <span className="mt-[7px] shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: pal.accent }} />
-            {a}
+            <span><Highlight text={a} /></span>
           </li>
         ))}
       </ul>
@@ -330,7 +331,7 @@ export function Experience() {
                                 <li key={j} className="flex items-start gap-2.5 text-xs leading-relaxed"
                                   style={{ color: "var(--fg-dim)" }}>
                                   <span className="mt-[6px] shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: pal.accent }} />
-                                  {a}
+                                  <span><Highlight text={a} /></span>
                                 </li>
                               ))}
                             </ul>
