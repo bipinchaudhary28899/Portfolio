@@ -83,7 +83,7 @@ const KEYWORDS = [
 // Metric patterns (order does not matter — combined via alternation).
 const METRIC_PATTERNS = [
   String.raw`[~<>]?\d+(?:\.\d+)?(?:\s?[–-]\s?\d+(?:\.\d+)?)?\s?%`, // 40%, 30–40%, ~30%
-  String.raw`\b\d+\+?\s?(?:years?|FPS)\b`, // 3+ years, 60 FPS
+  String.raw`\b\d+(?:\.\d+)?\+?\s?(?:years?|FPS)\b`, // 3+ years, 2.5 years, 60 FPS
   String.raw`\b\d+K\+?\b`, // 170K+
   String.raw`<\s?\d+(?:\.\d+)?\s?(?:ms|s)\b`, // <2s, <200ms
   String.raw`\bsub-second\b`,

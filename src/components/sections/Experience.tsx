@@ -63,10 +63,18 @@ function ExpCard({ exp, pal, side }: { exp: (typeof experiences)[0]; pal: Pal; s
         <CompanyLogo src={exp.logo} company={exp.company} pal={pal} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2 flex-wrap">
-            <span className="text-xs font-bold px-2.5 py-1 rounded-full"
-              style={{ background: pal.bg, color: pal.accent, border: `1px solid ${pal.border}` }}>
-              {exp.company}
-            </span>
+            {exp.companyUrl ? (
+              <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer"
+                className="text-xs font-bold px-2.5 py-1 rounded-full transition-opacity hover:opacity-75"
+                style={{ background: pal.bg, color: pal.accent, border: `1px solid ${pal.border}` }}>
+                {exp.company}
+              </a>
+            ) : (
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                style={{ background: pal.bg, color: pal.accent, border: `1px solid ${pal.border}` }}>
+                {exp.company}
+              </span>
+            )}
             <span className="text-xs font-medium px-3 py-1 rounded-full shrink-0"
               style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
               {exp.period}
@@ -144,40 +152,62 @@ export function Experience() {
     const ctx = gsap.context(() => {
       gsap.set([".exp-label", ".exp-title", ".exp-dot", ".exp-card", ".exp-ach"], { opacity: 0 });
 
-      /* Header */
+      const mm = gsap.matchMedia();
+
+      /* ── Header — all devices ── */
+      const headerStart = () => window.innerWidth < 768 ? "top 60%" : "top 82%";
       gsap.fromTo(".exp-label",
         { opacity: 0, x: -24 },
         { opacity: 1, x: 0, duration: 0.5, ease: "power3.out",
-          scrollTrigger: { trigger: ".exp-header", start: "top 82%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ".exp-header", start: headerStart, toggleActions: "play none none none" } });
       gsap.fromTo(".exp-title",
         { opacity: 0, y: 44, skewY: 2 },
         { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out",
-          scrollTrigger: { trigger: ".exp-header", start: "top 82%", toggleActions: "play none none none" } });
+          scrollTrigger: { trigger: ".exp-header", start: headerStart, toggleActions: "play none none none" } });
 
-      /* Timeline line scrub */
+      /* ── Timeline line scrub — all devices ── */
       gsap.fromTo(".tl-line-fill",
         { scaleY: 0 },
         { scaleY: 1, ease: "none", transformOrigin: "top center",
           scrollTrigger: { trigger: ".exp-timeline", start: "top 75%", end: "bottom 25%", scrub: 0.6 } });
 
-      /* Per-entry animations */
-      gsap.utils.toArray<HTMLElement>(".exp-entry").forEach((el, i) => {
-        const fromRight = i % 2 !== 0;
+      /* ── Desktop: alternating left/right card entrances ── */
+      mm.add("(min-width: 768px)", () => {
+        gsap.utils.toArray<HTMLElement>(".exp-entry").forEach((el, i) => {
+          const fromRight = i % 2 !== 0;
 
-        gsap.fromTo(el.querySelector(".exp-dot"),
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.5)",
-            scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
+          gsap.fromTo(el.querySelector(".exp-dot"),
+            { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.5)",
+              scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
 
-        gsap.fromTo(el.querySelector(".exp-card"),
-          { opacity: 0, x: fromRight ? 70 : -70, y: 12 },
-          { opacity: 1, x: 0, y: 0, duration: 0.85, ease: "power3.out", delay: 0.08,
-            scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
+          gsap.fromTo(el.querySelector(".exp-card"),
+            { opacity: 0, x: fromRight ? 70 : -70, y: 12 },
+            { opacity: 1, x: 0, y: 0, duration: 0.85, ease: "power3.out", delay: 0.08,
+              scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
 
-        gsap.fromTo(el.querySelectorAll(".exp-ach"),
-          { opacity: 0, x: -14 },
-          { opacity: 1, x: 0, stagger: 0.07, duration: 0.45, ease: "power2.out", delay: 0.3,
-            scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
+          gsap.fromTo(el.querySelectorAll(".exp-ach"),
+            { opacity: 0, x: -14 },
+            { opacity: 1, x: 0, stagger: 0.07, duration: 0.45, ease: "power2.out", delay: 0.3,
+              scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
+        });
+      });
+
+      /* ── Mobile: animate dots in the mobile accordion layout ──
+           gsap.set hides ALL .exp-dot (including mobile ones), so we
+           must explicitly animate the mobile dot back to visible.
+           Each .exp-entry has two .exp-dot nodes: [0] desktop (display:none),
+           [1] mobile (visible). We target the last one.              ── */
+      mm.add("(max-width: 767px)", () => {
+        gsap.utils.toArray<HTMLElement>(".exp-entry").forEach((el) => {
+          const dots = el.querySelectorAll<HTMLElement>(".exp-dot");
+          const mobileDot = dots[dots.length - 1]; // last = mobile dot
+          if (!mobileDot) return;
+          gsap.fromTo(mobileDot,
+            { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)",
+              scrollTrigger: { trigger: el, start: "top 70%", toggleActions: "play none none none" } });
+        });
       });
 
     }, secRef);

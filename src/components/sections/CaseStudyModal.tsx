@@ -256,7 +256,7 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
                       />
                       {c.title}
                     </p>
-                    <p className="text-xs leading-relaxed pl-3" style={{ color: "var(--fg-dim)" }}>
+                    <p className="text-xs leading-relaxed pl-3" style={{ color: "var(--fg-dim)", whiteSpace: "pre-line" }}>
                       {c.detail}
                     </p>
                   </div>

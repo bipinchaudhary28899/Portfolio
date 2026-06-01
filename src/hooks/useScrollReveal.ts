@@ -13,8 +13,8 @@ interface RevealOptions {
   stagger?: number;
   /** duration in seconds (default 0.7) */
   duration?: number;
-  /** ScrollTrigger start (default "top 82%") */
-  start?: string;
+  /** ScrollTrigger start — string or function (default: "top 60%" on mobile, "top 82%" on desktop) */
+  start?: string | (() => string);
   /** delay before first item (default 0) */
   delay?: number;
 }
@@ -32,7 +32,7 @@ export function useScrollReveal(options: RevealOptions) {
       y        = 40,
       stagger  = 0.12,
       duration = 0.7,
-      start    = "top 82%",
+      start    = () => window.innerWidth < 768 ? "top 60%" : "top 82%",
       delay    = 0,
     } = options;
 

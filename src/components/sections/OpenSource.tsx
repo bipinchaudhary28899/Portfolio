@@ -70,7 +70,7 @@ export function OpenSource() {
           <p className="os-label section-label mb-3" style={{ opacity: 0 }}>Community</p>
           <h2 className="os-title font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
-            Open Source
+            Contributions
           </h2>
         </div>
 

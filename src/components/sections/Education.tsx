@@ -46,6 +46,27 @@ function EduCard({
             >
               {edu.degree}
             </h3>
+            {edu.university ? (
+              <a
+                href={edu.universityUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs mt-0.5 inline-block hover:underline"
+                style={{ color: "var(--accent)", opacity: 0.8 }}
+              >
+                {edu.university}
+              </a>
+            ) : edu.universityUrl ? (
+              <a
+                href={edu.universityUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs mt-0.5 inline-block hover:underline"
+                style={{ color: "var(--accent)", opacity: 0.8 }}
+              >
+                {mobile ? edu.institution : edu.institutionFull}
+              </a>
+            ) : null}
           </div>
           <span
             className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border"
@@ -69,7 +90,7 @@ function EduCard({
         </p>
 
         {/* Highlights */}
-        <ul className="flex flex-col gap-1.5">
+        {edu.highlights.length > 0 && <ul className="flex flex-col gap-1.5">
           {edu.highlights.map((h) => (
             <li
               key={h}
@@ -83,7 +104,7 @@ function EduCard({
               {h}
             </li>
           ))}
-        </ul>
+        </ul>}
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ArrowDown, Download } from "lucide-react";
+import { ArrowDown, Download, Briefcase } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/icons";
 import { personalInfo } from "@/data/portfolio";
 import { useLoadingComplete } from "@/context/LoadingContext";
@@ -114,19 +114,25 @@ export function Hero() {
           <TerminalHero />
         </div>
 
-        <div ref={cta} className="opacity-0 mt-8 flex flex-wrap gap-3">
-          <button
-            onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+        <div ref={cta} className="opacity-0 mt-8 flex flex-wrap gap-3 items-center">
+          <a
+            href="mailto:bkumar28899@gmail.com"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-85"
             style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}
           >
-            View Work
-          </button>
+            <Briefcase size={14} /> Hire Me Full-Time
+          </a>
           <button
             onClick={() => setResumeOpen(true)}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border transition-all hover:border-orange-500"
             style={{ border: "1px solid var(--border)", color: "var(--fg)" }}>
             <Download size={14} /> View Resume
+          </button>
+          <button
+            onClick={() => document.getElementById("freelance")?.scrollIntoView({ behavior: "smooth" })}
+            className="inline-flex items-center gap-1.5 text-sm font-medium transition-opacity hover:opacity-70"
+            style={{ color: "var(--accent)" }}>
+            Also available for freelance →
           </button>
         </div>
       </div>

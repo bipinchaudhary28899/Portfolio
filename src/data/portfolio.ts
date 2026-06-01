@@ -4,7 +4,7 @@ export const personalInfo = {
   lastName: "Chaudhary",
   role: "Full Stack AI Engineer",
   tagline: "Building scalable web systems that move metrics.",
-  bio: "Full Stack AI Engineer with 3+ years of experience building scalable web systems across video streaming, enterprise analytics, and cloud-native applications. Improved video startup latency by 40% using HLS-based adaptive streaming, reduced database query latency by 30%, and enhanced UI performance by 20% through Angular rendering strategies. Strong in system design, distributed systems, and AI-powered features.",
+  bio: "M.Tech graduate from MNNIT Allahabad with 3+ years in the industry - including 10 months at SAP Labs and 2.5 years as a Full Stack Developer at Nagarro - I like building things that real users actually depend on. Full Stack AI Engineer with 3+ years of experience building scalable web systems across video streaming, enterprise analytics, and cloud-native applications. Improved video startup latency by 40% using HLS-based adaptive streaming, reduced database query latency by 30%, and enhanced UI performance by 20% through Angular rendering strategies. Strong in system design, distributed systems, and AI-powered features.",
   achievements: [
     "Improved video playback startup time by 40% via serverless HLS adaptive streaming (S3 → Lambda → FFmpeg)",
     "Enhanced frontend performance by 20% TBT reduction using Angular OnPush strategy - 60 FPS under high data load",
@@ -37,7 +37,7 @@ export const projects = [
     id: 1,
     title: "StreamSphere",
     description:
-      "Serverless video streaming platform with HLS adaptive bitrate (360p/720p), event-driven Redis caching, cursor-based infinite scroll, and an AI enrichment pipeline using Whisper + GPT - reducing playback startup time by 40% and feed latency by 30–40%.",
+      "A full-stack YouTube-style video platform built with Angular 17 and Node.js/Express. StreamSphere supports Google OAuth login, direct-to-S3 video uploads, HLS adaptive streaming, a fully serverless AI pipeline (Whisper transcription + GPT-4o-mini vision + synthesis + HuggingFace categorization), comments, likes, watch history, a Netflix-style hero carousel, and a layered performance architecture that keeps the feed fast at scale.",
     tech: ["Angular", "Node.js", "AWS S3", "Lambda", "FFmpeg", "MongoDB", "Redis"],
     liveUrl: "https://stream-sphere-blru.vercel.app/home",
     githubUrl: "https://github.com/bipinchaudhary28899/StreamSphere",
@@ -164,7 +164,7 @@ export const projects = [
     id: 3,
     title: "Argumint",
     description:
-      "Full-stack debate platform with AI-powered argument generation using OpenAI APIs, real-time WebSocket updates, and a React frontend. Users can create debate topics, post arguments, and receive AI-generated counterarguments to foster critical thinking and engagement.",
+      "A multiplayer debate platform where players join rooms, argue for or against a motion, and get scored by an AI judge — with optional human judges whose reliability is itself scored. Supports two debate modes: Alternate (structured turn-by-turn) and Buzzer (grab-the-mic free-for-all). Live audio runs over WebRTC; everything else flows over Socket.IO.",
     tech: ["React.js", "Socket.io", "Node.js", "MongoDB", "Whisper API", "Zod", "JWT"],
     liveUrl: "https://argumint-frontend.vercel.app/",
     githubUrl: "https://github.com/bipinchaudhary28899/Argumint",
@@ -203,7 +203,7 @@ export const projects = [
         {
           title: "Prompt engineering for quality counterarguments",
           detail:
-            "Early prompts produced generic responses that restated the original argument. After 30+ iterations, settled on a structured prompt: (1) identify the core claim, (2) find the strongest real-world evidence against it, (3) steelman the opposite position, (4) respond in the same tone and length as the original. Quality jumped from ~3/5 to ~4.5/5 in user ratings.",
+            "Early prompts produced generic responses that restated the original argument. After 30+ iterations, settled on a structured prompt:\n\n  1. identify the core claim\n  2. find the strongest real-world evidence against it\n  3. steelman the opposite position\n  4. respond in the same tone and length as the original\n\nQuality jumped from ~3/5 to ~4.5/5 in user ratings.",
         },
         {
           title: "AI rate limiting per user",
@@ -265,6 +265,7 @@ export const experiences = [
     role: "Graduate Research Engineer",
     company: "SAP Labs",
     companyFull: "SAP Labs - iXp Internship (M.Tech MNNIT Allahabad)",
+    companyUrl: "https://www.sap.com/index.html",
     period: "Aug 2024 – Jun 2025",
     logo: "/images/logos/sap-logo.png",
     description:
@@ -287,6 +288,7 @@ export const experiences = [
     role: "Full Stack Developer",
     company: "Nagarro",
     companyFull: "Nagarro",
+    companyUrl: "https://www.nagarro.com/en/",
     period: "May 2021 – Sep 2023",
     logo: "/images/logos/nagarro-logo.png",
     description:
@@ -329,6 +331,7 @@ export const experiences = [
     role: "Teaching Assistant",
     company: "Coding Ninjas",
     companyFull: "Coding Ninjas India · Internship",
+    companyUrl: "https://www.codingninjas.com/",
     period: "Jun 2019 – Sep 2019",
     logo: "/images/logos/coding_ninjas_logo.png",
     description:
@@ -354,6 +357,7 @@ export const education = [
     degree: "M.Tech - Computer Science & Engineering",
     institution: "MNNIT Allahabad",
     institutionFull: "Motilal Nehru National Institute of Technology, Allahabad",
+    universityUrl: "https://www.mnnit.ac.in/",
     period: "Aug 2023 – Aug 2025",
     grade: "CPI: 8.75 / 10",
     description:
@@ -369,6 +373,8 @@ export const education = [
     degree: "B.Tech - Computer Science & Engineering",
     institution: "BIET Jhansi",
     institutionFull: "Bundelkhand Institute of Engineering and Technology",
+    university: "Dr. A.P.J. Abdul Kalam Technical University (AKTU), Lucknow",
+    universityUrl: "https://aktu.ac.in/index.html",
     period: "Aug 2017 – Aug 2021",
     grade: "78.6%",
     description:
@@ -381,16 +387,15 @@ export const education = [
   },
   {
     id: 3,
-    degree: "Intermediate (Class 12th) - PCM",
+    degree: "Intermediate (Class 12th)",
     institution: "Dyal Singh Public School",
     institutionFull: "Dyal Singh Public School, Karnal, Haryana",
     period: "2016 – 2017",
-    grade: "87.2% (CBSE)",
+    grade: "87.2%",
     description:
-      "Physics, Chemistry & Mathematics stream with CBSE board examinations. Achieved school topper position in the Computers subject.",
+      "CBSE Boards — Subjects: English Core, Mathematics, Physics, Chemistry, Computer Science, Work Experience, Physical & Health Education, and General Studies.",
     highlights: [
-      "School topper in Computers - 96/100 (CBSE Boards)",
-      "87.2% aggregate in PCM stream",
+      "School topper in Computer Science — 96/100 in CBSE board exam",
     ],
   },
   {
@@ -399,12 +404,10 @@ export const education = [
     institution: "Kendriya Vidyalaya Karnal",
     institutionFull: "Kendriya Vidyalaya Karnal",
     period: "2014 – 2015",
-    grade: "9.2 / 10 (CGPA)",
+    grade: "CGPA: 9.2 / 10",
     description:
-      "Completed secondary schooling under CBSE curriculum with strong academic performance across all core subjects.",
-    highlights: [
-      "CGPA: 9.2 / 10 - CBSE board examinations",
-    ],
+      "CBSE Boards — Subjects: English, Hindi, Mathematics, Science, and Social Science.",
+    highlights: [],
   },
 ];
 
@@ -577,7 +580,7 @@ export const navLinks = [
   { label: "Projects",    href: "#projects" },
   { label: "Skills",      href: "#skills" },
   { label: "Education",   href: "#education" },
-  { label: "Open Source", href: "#opensource" },
+  { label: "Contributions", href: "#opensource" },
   { label: "Hire Me",     href: "#freelance" },
   { label: "Contact",     href: "#contact" },
 ];

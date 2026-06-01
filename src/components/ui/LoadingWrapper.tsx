@@ -2,7 +2,11 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { LoadingContext } from "@/context/LoadingContext";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /* Lazy-load so GSAP never blocks the initial HTML */
 const LoadingScreen = dynamic(() => import("./LoadingScreen"), { ssr: false });
@@ -22,6 +26,12 @@ export default function LoadingWrapper({ children }: LoadingWrapperProps) {
     }
   }, []);
 
+  /* Prevent mobile URL bar hide/show from triggering constant ScrollTrigger refreshes.
+     A single, deliberate refresh is done after loading instead (see below). */
+  useEffect(() => {
+    ScrollTrigger.config({ ignoreMobileResize: true });
+  }, []);
+
   const handleComplete = useCallback(() => {
     /* Force back to top before revealing content */
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -34,6 +44,12 @@ export default function LoadingWrapper({ children }: LoadingWrapperProps) {
       /* Second guard: ensure we're at the top even if scroll happened during fade */
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       contentRef.current.style.opacity = "1";
+
+      /* Refresh ScrollTrigger once, after the content is fully visible.
+         This corrects any trigger positions that were calculated before the
+         layout settled (e.g. images that reserved space during load).     */
+      const id = setTimeout(() => ScrollTrigger.refresh(), 120);
+      return () => clearTimeout(id);
     }
   }, [loading]);
 
