@@ -233,7 +233,12 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  scroll-behavior: smooth;
+  /* NOTE: intentionally NO `scroll-behavior: smooth` here.
+     CSS smooth-scroll animates the scroll position, and GSAP ScrollTrigger
+     can sample past a section's reveal window during that animation, leaving
+     the section stuck at opacity 0 ("static"). Smooth navigation is handled
+     in JS via scrollIntoView({ behavior: "smooth" }) where needed, which does
+     not have this problem. */
   /* NOTE: do NOT set overflow-x here — it breaks position:fixed on mobile browsers */
 }
 

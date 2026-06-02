@@ -5,13 +5,16 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { personalInfo } from "@/data/portfolio";
 import { Highlight } from "@/components/ui/Highlight";
+import { useLoadingComplete } from "@/context/LoadingContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function About() {
   const sec = useRef<HTMLElement>(null);
+  const loadingComplete = useLoadingComplete();
 
   useEffect(() => {
+    if (!loadingComplete) return;
     const ctx = gsap.context(() => {
       // Pre-hide all animated elements to prevent opacity flash on mount
       gsap.set([".about-label", ".about-title", ".stat-item", ".about-bio-block", ".achieve-item"], { opacity: 0 });
@@ -59,7 +62,7 @@ export function About() {
 
     }, sec);
     return () => ctx.revert();
-  }, []);
+  }, [loadingComplete]);
 
   return (
     <section ref={sec} id="about" className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"

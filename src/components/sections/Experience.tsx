@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { experiences } from "@/data/portfolio";
 import { Highlight } from "@/components/ui/Highlight";
+import { useLoadingComplete } from "@/context/LoadingContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -147,8 +148,10 @@ function startYear(period: string): string {
 export function Experience() {
   const secRef = useRef<HTMLElement>(null);
   const [openMobile, setOpenMobile] = useState<number | null>(0);
+  const loadingComplete = useLoadingComplete();
 
   useEffect(() => {
+    if (!loadingComplete) return;
     const ctx = gsap.context(() => {
       gsap.set([".exp-label", ".exp-title", ".exp-dot", ".exp-card", ".exp-ach"], { opacity: 0 });
 
@@ -202,17 +205,28 @@ export function Experience() {
         gsap.utils.toArray<HTMLElement>(".exp-entry").forEach((el) => {
           const dots = el.querySelectorAll<HTMLElement>(".exp-dot");
           const mobileDot = dots[dots.length - 1]; // last = mobile dot
-          if (!mobileDot) return;
-          gsap.fromTo(mobileDot,
-            { scale: 0, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)",
-              scrollTrigger: { trigger: el, start: "top 70%", toggleActions: "play none none none" } });
+          if (mobileDot) {
+            gsap.fromTo(mobileDot,
+              { scale: 0, opacity: 0 },
+              { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)",
+                scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
+          }
+
+          /* The mobile accordion card itself had no entrance animation —
+             fade + slide it up so the section doesn't feel static. */
+          const card = el.querySelector<HTMLElement>(".exp-mob-card");
+          if (card) {
+            gsap.fromTo(card,
+              { opacity: 0, y: 32 },
+              { opacity: 1, y: 0, duration: 0.6, ease: "power3.out",
+                scrollTrigger: { trigger: el, start: "top 82%", toggleActions: "play none none none" } });
+          }
         });
       });
 
     }, secRef);
     return () => ctx.revert();
-  }, []);
+  }, [loadingComplete]);
 
   return (
     <section
@@ -300,7 +314,7 @@ export function Experience() {
                       <Dot pal={pal} />
                     </div>
 
-                    <div className="rounded-2xl overflow-hidden"
+                    <div className="exp-mob-card rounded-2xl overflow-hidden"
                       style={{
                         border: `1px solid ${openMobile === i ? pal.border : "var(--border)"}`,
                         background: "var(--card)",

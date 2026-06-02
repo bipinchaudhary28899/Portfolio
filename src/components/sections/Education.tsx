@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { GraduationCap } from "lucide-react";
 import { education } from "@/data/portfolio";
+import { useLoadingComplete } from "@/context/LoadingContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -115,8 +116,10 @@ export function Education() {
   const secRef         = useRef<HTMLElement>(null);
   const capDesktopRef  = useRef<HTMLDivElement>(null);
   const capMobileRef   = useRef<HTMLDivElement>(null);
+  const loadingComplete = useLoadingComplete();
 
   useEffect(() => {
+    if (!loadingComplete) return;
     // Scroll-direction rotation — mirrors plane behaviour in Experience
     const caps = () =>
       [capDesktopRef.current, capMobileRef.current].filter(Boolean) as HTMLDivElement[];
@@ -264,7 +267,7 @@ export function Education() {
       mm.revert();
       window.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [loadingComplete]);
 
   return (
     <div id="education" style={{ overflowX: "clip" }}>

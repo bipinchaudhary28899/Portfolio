@@ -111,7 +111,7 @@ export function Contact() {
         <div className="contact-body grid md:grid-cols-2 gap-12 items-start">
 
           {/* Left: info */}
-          <div className="contact-left opacity-0 flex flex-col gap-8">
+          <div className="contact-left opacity-0 min-w-0 flex flex-col gap-8">
             <p className="text-base leading-relaxed" style={{ color: "var(--fg-dim)" }}>
               Whether you have a project in mind, a role to fill, or just want to connect - my inbox is open.
             </p>
@@ -239,7 +239,7 @@ export function Contact() {
           </div>
 
           {/* Right: form */}
-          <div className="contact-right opacity-0">
+          <div className="contact-right opacity-0 min-w-0">
             {sent ? (
               <div className="rounded-2xl border p-10 flex flex-col items-center justify-center gap-4 text-center"
                 style={{ background: "var(--card)", borderColor: "var(--border)", minHeight: 340 }}>

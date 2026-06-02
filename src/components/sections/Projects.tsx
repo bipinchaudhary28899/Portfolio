@@ -10,6 +10,7 @@ import { projects } from "@/data/portfolio";
 import { CaseStudyModal } from "./CaseStudyModal";
 import { StatusDot } from "@/components/ui/StatusDot";
 import { Highlight } from "@/components/ui/Highlight";
+import { useLoadingComplete } from "@/context/LoadingContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -161,11 +162,10 @@ function ProjectPanel({
           )}
           {p.liveUrl !== "#" && (
             <a href={p.liveUrl} target="_blank" rel="noopener noreferrer"
-              className="p-2 rounded-lg border transition-all hover:scale-110"
-              style={{ border: "1px solid var(--border)", color: "var(--muted)" }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--accent)"; el.style.color = "var(--accent)"; }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--border)"; el.style.color = "var(--muted)"; }}>
-              <ExternalLink size={15} />
+              aria-label="Open live demo"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:scale-105"
+              style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}>
+              <ExternalLink size={14} /> Live Demo
             </a>
           )}
         </div>
@@ -345,6 +345,7 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
                         href={p.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="View source on GitHub"
                         className="p-1.5 rounded-lg border"
                         style={{ borderColor: "var(--border)", color: "var(--muted)" }}
                       >
@@ -356,9 +357,11 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
                         href={p.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-1.5 rounded-lg border"
-                        style={{ borderColor: "var(--border)", color: "var(--accent)" }}
+                        aria-label="Open live demo"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white"
+                        style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}
                       >
+                        Live Demo
                         <ExternalLink size={13} />
                       </a>
                     )}
@@ -486,8 +489,10 @@ export function Projects() {
   const trackRef    = useRef<HTMLDivElement>(null);
   const headRef     = useRef<HTMLDivElement>(null);
   const [modalIndex, setModalIndex] = useState<number | null>(null);
+  const loadingComplete = useLoadingComplete();
 
   useEffect(() => {
+    if (!loadingComplete) return;
     /* Keep track top-padding in sync with the sticky header height */
     const syncPadding = () => {
       if (headRef.current && trackRef.current) {
@@ -572,7 +577,7 @@ export function Projects() {
       mm.revert();
       window.removeEventListener("resize", syncPadding);
     };
-  }, []);
+  }, [loadingComplete]);
 
   return (
     <div id="projects">

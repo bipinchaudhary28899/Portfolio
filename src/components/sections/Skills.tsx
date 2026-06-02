@@ -4,13 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { skills } from "@/data/portfolio";
+import { useLoadingComplete } from "@/context/LoadingContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function Skills() {
   const sec = useRef<HTMLElement>(null);
+  const loadingComplete = useLoadingComplete();
 
   useEffect(() => {
+    if (!loadingComplete) return;
     const ctx = gsap.context(() => {
       gsap.set([".skills-label", ".skills-title", ".skill-cat", ".skill-tag"], { opacity: 0 });
 
@@ -55,7 +58,7 @@ export function Skills() {
 
     }, sec);
     return () => ctx.revert();
-  }, []);
+  }, [loadingComplete]);
 
   const categories = Object.entries(skills);
   const [activeTab, setActiveTab] = useState(0);

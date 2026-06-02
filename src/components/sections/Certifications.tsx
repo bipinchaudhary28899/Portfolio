@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ExternalLink, X, ZoomIn } from "lucide-react";
 import Image from "next/image";
 import { certifications } from "@/data/portfolio";
+import { useLoadingComplete } from "@/context/LoadingContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +15,7 @@ type Cert = (typeof certifications)[number];
 export function Certifications() {
   const sec = useRef<HTMLElement>(null);
   const [preview, setPreview] = useState<Cert | null>(null);
+  const loadingComplete = useLoadingComplete();
 
   /* Load Credly embed script once */
   useEffect(() => {
@@ -38,6 +40,7 @@ export function Certifications() {
   }, [preview]);
 
   useEffect(() => {
+    if (!loadingComplete) return;
     const ctx = gsap.context(() => {
       gsap.set([".cert-label", ".cert-title", ".cert-card"], { opacity: 0 });
 
@@ -68,7 +71,7 @@ export function Certifications() {
 
     }, sec);
     return () => ctx.revert();
-  }, []);
+  }, [loadingComplete]);
 
   return (
     <section ref={sec} id="certifications" className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"

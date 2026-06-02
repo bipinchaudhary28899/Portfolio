@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ExternalLink, GitMerge, Bug, FileText, Zap } from "lucide-react";
 import { openSourceContributions } from "@/data/portfolio";
 import type { ContributionType } from "@/data/portfolio";
+import { useLoadingComplete } from "@/context/LoadingContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,8 +18,10 @@ const typeConfig: Record<ContributionType, { label: string; color: string; Icon:
 
 export function OpenSource() {
   const sec = useRef<HTMLElement>(null);
+  const loadingComplete = useLoadingComplete();
 
   useEffect(() => {
+    if (!loadingComplete) return;
     const ctx = gsap.context(() => {
       gsap.set([".os-label", ".os-title", ".os-stat"], { opacity: 0 });
       const mm = gsap.matchMedia();
@@ -56,7 +59,7 @@ export function OpenSource() {
 
     }, sec);
     return () => ctx.revert();
-  }, []);
+  }, [loadingComplete]);
 
   const merged = openSourceContributions.filter((c) => c.status === "merged").length;
 
