@@ -21,6 +21,7 @@ function parseStat(stat: string) {
 
 export function CodingPlatforms() {
   const sec = useRef<HTMLElement>(null);
+  const counted = useRef<Set<Element>>(new Set());
   const loadingComplete = useLoadingComplete();
 
   useEffect(() => {
@@ -38,15 +39,20 @@ export function CodingPlatforms() {
       htl.fromTo(".cp-label",  { opacity: 0, x: -24 },         { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" })
          .fromTo(".cp-title",  { opacity: 0, y: 44, skewY: 2 }, { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out" }, "-=0.2");
 
-      /* ── Cards rise + scale in (each variant uses its own grid trigger) ── */
+      /* ── Cards rise + scale in (only the grid variant that is actually visible) ── */
       gsap.utils.toArray<HTMLElement>(".cp-grid").forEach((grid) => {
+        // The desktop and mobile grids both live in the DOM at once (one is
+        // display:none). Animate only the visible one, so the count-up that the
+        // user actually sees runs a single time.
+        if (grid.offsetParent === null) return;
+
         const cards = grid.querySelectorAll(".cp-card");
         gsap.fromTo(cards,
           { opacity: 0, y: 55, scale: 0.92 },
           { opacity: 1, y: 0, scale: 1, stagger: 0.12, duration: 0.65, ease: "power3.out",
             scrollTrigger: { trigger: grid, start: startFor, toggleActions: "play none none none" } });
 
-        /* ── Count-up: each big number counts from 0 → its target ── */
+        /* ── Count-up: each big number counts from 0 → its target, once ── */
         const stats = grid.querySelectorAll<HTMLElement>(".cp-stat");
         ScrollTrigger.create({
           trigger: grid,
@@ -58,8 +64,18 @@ export function CodingPlatforms() {
               const prefix   = el.dataset.prefix || "";
               const suffix   = el.dataset.suffix || "";
               const decimals = parseInt(el.dataset.decimals || "0", 10);
-              const counter  = { v: 0 };
 
+              // Guard against a second run (e.g. React StrictMode re-invoking the
+              // effect in dev): if this number already counted up, just show its
+              // final value instead of replaying the animation.
+              if (counted.current.has(el)) {
+                el.style.opacity = "1";
+                el.textContent = prefix + target.toFixed(decimals) + suffix;
+                return;
+              }
+              counted.current.add(el);
+
+              const counter = { v: 0 };
               gsap.to(el, { opacity: 1, duration: 0.4, delay: 0.35 + i * 0.12 });
               gsap.to(counter, {
                 v: target,
