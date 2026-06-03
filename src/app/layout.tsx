@@ -5,6 +5,7 @@ import { Navbar } from "@/components/ui/Navbar";
 import LoadingWrapper from "@/components/ui/LoadingWrapper";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { CLIEasterEgg } from "@/components/ui/CLIEasterEgg";
+import { DexyAssistant } from "@/components/ui/DexyAssistant";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Navbar />
             <main style={{ overflowX: "clip" }}>{children}</main>
             <CLIEasterEgg />
+            <DexyAssistant />
           </LoadingWrapper>
         </ThemeProvider>
       </body>

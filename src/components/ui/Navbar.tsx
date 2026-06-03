@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Menu, X } from "lucide-react";
-import { navLinks, personalInfo } from "@/data/portfolio";
+import { navLinks } from "@/data/portfolio";
 import { ThemePanel } from "@/components/ui/ThemePanel";
 import { useLoadingComplete } from "@/context/LoadingContext";
 import { ResumeModal } from "@/components/ui/ResumeModal";
@@ -98,26 +98,43 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile dropdown */}
-      {open && (
-        <div
-          className="md:hidden border-t px-6 py-6 flex flex-col gap-5"
-          style={{ borderColor: "var(--border)", background: "var(--bg)" }}
-        >
-          {navLinks.map((l) => (
-            <button key={l.href} onClick={() => go(l.href)} className="text-left text-base font-medium" style={{ color: "var(--fg-dim)" }}>
-              {l.label}
-            </button>
-          ))}
-          <button
-            onClick={() => { setOpen(false); setResumeOpen(true); }}
-            className="mt-1 inline-flex items-center justify-center text-sm font-semibold px-4 py-2.5 rounded-lg"
-            style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))", color: "#fff" }}
+      {/* Mobile dropdown — animated open/close (grid-rows collapse + fade/slide) */}
+      <div
+        className="md:hidden overflow-hidden"
+        aria-hidden={!open}
+        style={{
+          display: "grid",
+          gridTemplateRows: open ? "1fr" : "0fr",
+          transition: "grid-template-rows .35s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      >
+        <div style={{ minHeight: 0, overflow: "hidden" }}>
+          <div
+            className="border-t px-6 py-6 flex flex-col gap-5"
+            style={{
+              borderColor: "var(--border)",
+              background: "var(--bg)",
+              opacity: open ? 1 : 0,
+              transform: open ? "translateY(0)" : "translateY(-8px)",
+              transition: "opacity .3s ease, transform .35s ease",
+              pointerEvents: open ? "auto" : "none",
+            }}
           >
-            View Resume
-          </button>
+            {navLinks.map((l) => (
+              <button key={l.href} onClick={() => go(l.href)} className="text-left text-base font-medium" style={{ color: "var(--fg-dim)" }}>
+                {l.label}
+              </button>
+            ))}
+            <button
+              onClick={() => { setOpen(false); setResumeOpen(true); }}
+              className="mt-1 inline-flex items-center justify-center text-sm font-semibold px-4 py-2.5 rounded-lg"
+              style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))", color: "#fff" }}
+            >
+              View Resume
+            </button>
+          </div>
         </div>
-      )}
+      </div>
 
       {resumeOpen && <ResumeModal onClose={() => setResumeOpen(false)} />}
     </header>

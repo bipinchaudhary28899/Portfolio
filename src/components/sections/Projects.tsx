@@ -544,10 +544,19 @@ export function Projects() {
             pin: true,
             scrub: 1,
             invalidateOnRefresh: true,  // re-runs dist() after any resize
+            // This pin adds a large scroll spacer. A higher refreshPriority
+            // forces ScrollTrigger to measure this pin BEFORE the reveal
+            // triggers in the sections below it, so their start positions
+            // account for the added distance and don't fire early.
+            refreshPriority: 1,
           },
         });
 
       });
+
+      // Recalculate all trigger positions once the pin spacer exists, so
+      // downstream section reveals land at the correct scroll offsets.
+      ScrollTrigger.refresh();
       return () => ctx.revert();
     });
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ArrowDown, Download, Briefcase } from "lucide-react";
+import { Download, Briefcase } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/icons";
 import { personalInfo } from "@/data/portfolio";
 import { useLoadingComplete } from "@/context/LoadingContext";
@@ -20,7 +20,6 @@ export function Hero() {
   const tag    = useRef<HTMLDivElement>(null);
   const cta    = useRef<HTMLDivElement>(null);
   const bot    = useRef<HTMLDivElement>(null);
-  const scr    = useRef<HTMLButtonElement>(null);
 
   const loadingComplete = useLoadingComplete();
 
@@ -38,12 +37,7 @@ export function Hero() {
         .fromTo(n2.current,      { yPercent: 110 }, { yPercent: 0, duration: 1.1 },  0.80)
         .fromTo(tag.current,     { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.7 }, 1.05)
         .fromTo(cta.current,     { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6 }, 1.18)
-        .fromTo(bot.current,     { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 1.28)
-        .fromTo(scr.current,     { opacity: 0 },        { opacity: 1, duration: 0.5 },        1.45);
-
-      gsap.to(scr.current, {
-        y: 9, duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2,
-      });
+        .fromTo(bot.current,     { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 1.28);
     }, sec);
     return () => ctx.revert();
   }, [loadingComplete]);
@@ -185,12 +179,6 @@ export function Hero() {
             <span style={{ color: "var(--muted)", fontSize: "0.65rem" }}>terminal</span>
           </button>
         </div>
-
-        <button ref={scr} onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
-          className="flex flex-col items-center gap-1 opacity-0" style={{ color: "var(--muted)" }} aria-label="Scroll down">
-          <span className="font-mono text-xs tracking-widest uppercase">Scroll</span>
-          <ArrowDown size={15} />
-        </button>
       </div>
 
     </section>
