@@ -243,11 +243,6 @@ function ProjectPanel({
         ))}
       </div>
 
-      {/* Hover accent line */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-0.5 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"
-        style={{ background: "linear-gradient(90deg,var(--grad-a),var(--grad-b))" }}
-      />
     </div>
   );
 }

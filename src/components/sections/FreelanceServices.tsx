@@ -3,7 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Check, ChevronDown, Zap, Clock, Package } from "lucide-react";
+import {
+  Check, ChevronDown, Zap, Clock, Package,
+  Workflow, Code2, Sparkles, Rocket, TrendingUp, FileCode,
+} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,58 +14,61 @@ gsap.registerPlugin(ScrollTrigger);
 
 const PACKAGES = [
   {
-    tier: "BASIC",
-    name: "Starter Website",
-    price: "₹10K Onwards",
+    tier: "LAUNCH",
+    name: "Launch Package",
+    price: "₹15K Onwards",
     delivery: "5 Days",
-    description: "A fast, responsive website that looks professional and gets you online quickly.",
+    description:
+      "Perfect for startups, personal brands, portfolios, and small businesses looking to establish a professional online presence.",
     highlight: false,
     features: [
-      { label: "Pages",                  value: "3"    },
-      { label: "Revisions",              value: "2"    },
-      { label: "Plugin Installations",   value: "2"    },
-      { label: "Content Upload",         value: false  },
-      { label: "Payment Integration",    value: false  },
-      { label: "E-commerce",             value: false  },
-      { label: "Source Code Included",   value: true   },
+      { label: "Responsive, SEO-ready UI",        value: true  },
+      { label: "Custom design & branding",        value: true  },
+      { label: "Cloud deployment & domain setup", value: true  },
+      { label: "Authentication & user accounts",  value: false },
+      { label: "Database & admin dashboard",       value: false },
+      { label: "Payments & subscriptions",         value: false },
+      { label: "Full source code ownership",       value: true  },
     ],
-    extra: "Extra fast: 3 days for +₹2,500",
+    extra: "Rush delivery: 3 days for +₹2,500",
   },
   {
-    tier: "STANDARD",
-    name: "Full-Stack App",
-    price: "₹40K Onwards",
+    tier: "GROWTH",
+    name: "Growth Package",
+    price: "₹50K Onwards",
     delivery: "10 Days",
-    description: "A fully functional web app your users can sign up for, log in, and actually use.",
+    description:
+      "Custom web applications with authentication, dashboards, database integration, and business workflows designed for real users.",
     highlight: true,
     features: [
-      { label: "Pages",                  value: "7"    },
-      { label: "Revisions",              value: "3"    },
-      { label: "Plugin Installations",   value: "4"    },
-      { label: "Content Upload",         value: true   },
-      { label: "Payment Integration",    value: true   },
-      { label: "E-commerce",             value: false  },
-      { label: "Source Code Included",   value: true   },
+      { label: "Everything in Launch",            value: true  },
+      { label: "Authentication & user accounts",  value: true  },
+      { label: "Database & admin dashboard",       value: true  },
+      { label: "Business workflows & REST APIs",   value: true  },
+      { label: "Cloud deployment & CI/CD",         value: true  },
+      { label: "Payments & subscriptions",         value: false },
+      { label: "Full source code ownership",       value: true  },
     ],
-    extra: "Extra fast: 6 days for +₹8,000",
+    extra: "Rush delivery: 6 days for +₹8,000",
   },
   {
-    tier: "PREMIUM",
-    name: "Production System",
-    price: "₹80K Onwards",
+    tier: "SCALE",
+    name: "Scale Package",
+    price: "₹1L Onwards",
     delivery: "21 Days",
-    description: "A production-ready SaaS platform built to scale, monetize, and grow with your business.",
+    description:
+      "Production-ready SaaS MVPs with scalable architecture, cloud deployment, payments, analytics, and optional AI-powered features. ₹1L is a starting price for SaaS MVPs — advanced requirements increase the final cost.",
     highlight: false,
     features: [
-      { label: "Pages",                    value: "10"   },
-      { label: "Revisions",                value: "5"    },
-      { label: "Plugin Installations",     value: "10"   },
-      { label: "Content Upload",           value: true   },
-      { label: "Payment Integration",      value: true   },
-      { label: "E-commerce (20 products)", value: true   },
-      { label: "Source Code Included",     value: true   },
+      { label: "Everything in Growth",            value: true  },
+      { label: "Scalable, multi-tenant architecture", value: true },
+      { label: "Payments & subscriptions",         value: true  },
+      { label: "Analytics & monitoring",           value: true  },
+      { label: "AI-powered features (optional)",   value: true  },
+      { label: "Performance & security hardening", value: true  },
+      { label: "Full source code ownership",       value: true  },
     ],
-    extra: "Extra fast: 14 days for +₹17,000",
+    extra: "Rush delivery: 14 days for +₹17,000",
   },
 ];
 
@@ -84,6 +90,42 @@ const WHAT_I_BUILD = [
   "AWS / Vercel / Netlify deployment with CI/CD pipelines",
   "Real-time features using WebSockets",
   "AI integrations (OpenAI, LangChain, custom models)",
+];
+
+const WHY_WORK = [
+  {
+    Icon: Workflow,
+    title: "End-to-End Development",
+    description: "From idea to deployment, everything handled in one place.",
+  },
+  {
+    Icon: Code2,
+    title: "Modern Tech Stack",
+    description:
+      "React, Angular, Node.js, TypeScript, MongoDB, PostgreSQL, AWS, and cloud-native solutions.",
+  },
+  {
+    Icon: Sparkles,
+    title: "AI Integrations",
+    description:
+      "OpenAI-powered features, chatbots, automation, content generation, and intelligent workflows.",
+  },
+  {
+    Icon: Rocket,
+    title: "Production Deployment",
+    description:
+      "Secure hosting, CI/CD pipelines, domain setup, monitoring, and performance optimization.",
+  },
+  {
+    Icon: TrendingUp,
+    title: "Scalable Architecture",
+    description: "Built with maintainability, growth, and future feature expansion in mind.",
+  },
+  {
+    Icon: FileCode,
+    title: "Source Code Ownership",
+    description: "Clients receive complete ownership of the delivered source code.",
+  },
 ];
 
 const WORK_PROCESS = [
@@ -128,11 +170,15 @@ const WORK_PROCESS = [
 const FAQS = [
   {
     q: "How do I know which package is right for me?",
-    a: "Basic is for landing pages or simple marketing sites. Standard is best if you need user auth, a backend, and a real web app. Premium is for SaaS platforms with payments, multi-tenancy, or complex business logic.",
+    a: "Launch is for a professional online presence - portfolios, personal brands, and small-business sites. Growth is best when you need authentication, dashboards, a database, and real business workflows. Scale is for production SaaS MVPs with payments, analytics, scalable architecture, and optional AI features.",
+  },
+  {
+    q: "Why does this cost more than an AI code generator or no-code tool?",
+    a: "You're not paying for code generation alone - you're paying for system architecture, secure deployment, third-party integrations, scalability, maintainability, and professional execution. AI tools can scaffold UI, but turning that into a reliable, deployed product that real users depend on (auth, databases, payments, monitoring, performance) is the engineering work these packages cover.",
   },
   {
     q: "Do I need to have a design ready before ordering?",
-    a: "No - you can choose whether you have Figma/XD designs, rough wireframes, a reference site, or nothing at all. UI/UX design is also available as an add-on (+₹8,500).",
+    a: "No - you can choose whether you have Figma/XD designs, rough wireframes, a reference site, or nothing at all. UI/UX design is also available as an add-on (+₹8,000).",
   },
   {
     q: "What tech stack do you use?",
@@ -440,6 +486,7 @@ export function FreelanceServices() {
   const buildRef        = useRef<HTMLDivElement>(null);
   const cardsRef        = useRef<HTMLDivElement>(null);
   const mobileCardsRef  = useRef<HTMLDivElement>(null);
+  const whyRef          = useRef<HTMLDivElement>(null);
   const addonsRef       = useRef<HTMLDivElement>(null);
   const faqRef          = useRef<HTMLDivElement>(null);
   const ctaRef          = useRef<HTMLDivElement>(null);
@@ -494,6 +541,17 @@ export function FreelanceServices() {
         { opacity: 0, y: 50, scale: 0.96 },
         { opacity: 1, y: 0, scale: 1, duration: 0.65, stagger: 0.13, ease: "power3.out",
           scrollTrigger: { trigger: mobileCardsRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
+
+      /* ── 4b. "Why Work With Me?" heading + cards ── */
+      titleAnim(
+        whyRef.current?.querySelector(".why-heading") ?? null,
+        whyRef.current,
+      );
+      gsap.fromTo(
+        whyRef.current?.querySelectorAll(".why-card") ?? [],
+        { opacity: 0, y: 36, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.08, ease: "power3.out",
+          scrollTrigger: { trigger: whyRef.current, start: () => window.innerWidth < 768 ? "top 75%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 5. Add-ons heading (same title animation) ── */
       gsap.fromTo(
@@ -574,8 +632,10 @@ export function FreelanceServices() {
             className="mt-3 max-w-xl text-sm leading-relaxed"
             style={{ color: "var(--fg-dim)", opacity: 0 }}
           >
-            Full-stack engineer available for client projects - from responsive landing pages
-            to production-grade SaaS platforms with real-time features and AI integrations.
+            Full-stack engineer available for client projects - from a professional online
+            presence to production-grade SaaS platforms. You&apos;re not just paying for code -
+            you get architecture, integrations, secure deployment, scalability, and
+            professional execution that AI tools alone can&apos;t deliver.
           </p>
         </div>
 
@@ -618,6 +678,50 @@ export function FreelanceServices() {
         {/* ── Package Accordion — mobile only ── */}
         <div ref={mobileCardsRef} className="block sm:hidden">
           <MobilePackages />
+        </div>
+
+        {/* ── Pricing estimate note ── */}
+        <p
+          className="-mt-4 sm:-mt-10 max-w-3xl mx-auto text-center text-xs leading-relaxed"
+          style={{ color: "var(--muted)" }}
+        >
+          All pricing shown is a starting estimate. Final cost depends on project
+          complexity, integrations, business requirements, third-party services,
+          and deployment needs.
+        </p>
+
+        {/* ── Why Work With Me? ── */}
+        <div ref={whyRef}>
+          <h3
+            className="why-heading text-center font-bold mb-2"
+            style={{ fontSize: "clamp(1.5rem,3vw,2.25rem)", color: "var(--fg)", opacity: 0 }}
+          >
+            Why Work With Me?
+          </h3>
+          <p className="text-center max-w-xl mx-auto text-sm leading-relaxed mb-8" style={{ color: "var(--fg-dim)" }}>
+            You&apos;re paying for architecture, deployment, integrations, scalability,
+            and ongoing maintainability - not just generated code.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {WHY_WORK.map(({ Icon, title, description }) => (
+              <div
+                key={title}
+                className="why-card rounded-2xl border p-6 flex flex-col gap-3 transition-colors duration-200"
+                style={{ borderColor: "var(--border)", background: "var(--card)", opacity: 0 }}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
+              >
+                <span
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}
+                >
+                  <Icon size={18} color="#fff" />
+                </span>
+                <span className="text-base font-bold" style={{ color: "var(--fg)" }}>{title}</span>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>{description}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* ── Add-ons ── */}
@@ -726,11 +830,12 @@ export function FreelanceServices() {
         >
           <p className="cta-child section-label" style={{ opacity: 0 }}>Ready to build something?</p>
           <h3 className="cta-child text-2xl sm:text-3xl font-black" style={{ color: "var(--fg)", opacity: 0 }}>
-            Let's work together
+            Let&apos;s work together
           </h3>
           <p className="cta-child max-w-md text-sm leading-relaxed" style={{ color: "var(--fg-dim)", opacity: 0 }}>
-            Choose a package above or drop me a message directly - happy to discuss
-            your project, scope, and timeline before you commit.
+            Prices are starting estimates - every project is scoped to your goals,
+            integrations, and deployment needs. Choose a package above or message me
+            directly to discuss scope and timeline before you commit.
           </p>
           <div className="cta-child flex flex-wrap gap-3 justify-center" style={{ opacity: 0 }}>
             {PACKAGES.map((pkg) => (
