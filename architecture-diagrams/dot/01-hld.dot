@@ -1,0 +1,32 @@
+digraph HLD {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=11, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black, fontcolor=black];
+  graph [fontname="Helvetica", labelloc=t, label="StreamSphere — High-Level Design"];
+
+  User   [shape=oval, label="User"];
+  Browser[label="Browser — Angular 19 SPA\nHLS.js player, hero carousel, feed"];
+  API    [label="Express API — Vercel serverless\nstateless, JWT, Zod, rate limiting"];
+  Mongo  [shape=cylinder, label="MongoDB Atlas\nusers, videos, comments, history"];
+  Redis  [shape=cylinder, label="Redis / Upstash\ncache + counters"];
+  S3     [shape=cylinder, label="AWS S3 (ap-south-1)\nraw MP4, HLS, preview, thumbnail"];
+  CF     [label="AWS CloudFront CDN\nedge delivery of video files"];
+  CW     [label="AWS CloudWatch\nCDN metrics for dashboard"];
+  Lambda [label="AWS Lambda\nFFmpeg + AI pipeline"];
+  HF     [label="HuggingFace BART-MNLI\nzero-shot categorization"];
+  OAI    [label="OpenAI Whisper + GPT-4o-mini\ntranscription, vision, synthesis"];
+  Google [label="Google OAuth2"];
+
+  User -> Browser;
+  Browser -> API    [label="HTTPS REST + JWT"];
+  Browser -> S3     [label="presigned PUT upload"];
+  Browser -> CF     [label="video playback"];
+  API -> Mongo; API -> Redis;
+  API -> S3 [label="presigned URLs, delete"];
+  API -> CW; API -> Google [label="verify ID token"];
+  S3 -> Lambda [label="ObjectCreated event"];
+  Lambda -> S3 [label="HLS, preview, thumbnail"];
+  Lambda -> OAI; Lambda -> HF;
+  Lambda -> API [label="webhook /internal/hls-complete\n(x-hls-secret)"];
+  CF -> S3;
+}

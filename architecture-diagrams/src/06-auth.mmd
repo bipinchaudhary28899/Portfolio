@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant B as Browser (Angular)
+    participant G as Google OAuth
+    participant API as Express API
+    participant DB as MongoDB
+
+    B->>G: Google sign-in
+    G-->>B: Google ID token
+    B->>API: POST /api/google-login (ID token)
+    API->>G: verify token (google-auth-library, GOOGLE_CLIENT_ID)
+    G-->>API: verified payload
+    API->>DB: upsert user (sync profile image)
+    DB-->>API: user
+    API-->>B: HS256 JWT + user object
+    B->>B: store token + user in localStorage
+    Note over B,API: Interceptor adds Authorization: Bearer<br/>(except amazonaws.com); 401 -> clear + redirect

@@ -1,0 +1,21 @@
+digraph Synth {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Description (aiSummary) Generation Flow"];
+
+  subgraph cluster_in { label="Inputs"; fontname="Helvetica";
+    T[label="Video title"]; U[label="Uploader description"];
+    TR[label="Whisper transcript\n(null if music/silent)"];
+    VS[label="GPT-4o-mini visual summary\n(null if no frames)"]; }
+
+  S [label="GPT-4o-mini synthesis\nmerge inputs into one rich paragraph"];
+  OK [label="aiSummary paragraph stored"];
+  FB [label="Fallback: concatenate\ntitle + description + visual summary"];
+  NEXT [label="Feeds Phase 5 categorization"];
+
+  T->S; U->S; TR->S; VS->S;
+  S->OK [label="success"];
+  S->FB [label="API error"]; FB->OK;
+  OK->NEXT;
+}

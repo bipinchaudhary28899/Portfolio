@@ -1,0 +1,32 @@
+digraph Res {
+  rankdir=TB; bgcolor=white; compound=true; nodesep=0.3; ranksep=0.5;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Resilience & Fallbacks"];
+
+  subgraph cluster_up { label="Degrade gracefully — app stays up"; fontname="Helvetica"; labeljust=l;
+    R[label="Redis down -> cache no-op, use MongoDB"];
+    W[label="Whisper fails -> transcript null"];
+    V[label="Vision fails -> fixed timestamps / null"];
+    SY[label="Synthesis fails -> concatenate fallback"];
+    HF[label="HuggingFace fails -> retry 3x -> 'General'"];
+    PL[label="HLS.js unsupported -> native Safari HLS"];
+    PR[label="Video processing -> processing-state UI"];
+    RL[label="Rate limit hit -> JSON error"];
+    JW[label="Invalid JWT -> 401"];
+    CO[label="Unknown CORS origin -> rejected"];
+    R->W->V->SY->HF [style=invis];
+    PL->PR->RL->JW->CO [style=invis];
+  }
+  subgraph cluster_deg { label="Degraded / known gaps"; fontname="Helvetica"; labeljust=l;
+    MD[label="Mongo mid-run disconnect -> 500 until reconnect"];
+    WH[label="Webhook never fires -> stuck at processing"];
+    VC[label="View dedup w/ Redis down -> count inflated"];
+    MD->WH->VC [style=invis];
+  }
+  subgraph cluster_down { label="Intentional hard fail"; fontname="Helvetica"; labeljust=l;
+    MS[label="Mongo startup fail -> process.exit(1)"]; }
+
+  HF -> MD [style=invis, ltail=cluster_up, lhead=cluster_deg];
+  VC -> MS [style=invis, ltail=cluster_deg, lhead=cluster_down];
+}

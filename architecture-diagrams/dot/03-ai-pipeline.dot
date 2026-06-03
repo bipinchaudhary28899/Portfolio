@@ -1,0 +1,30 @@
+digraph AI {
+  rankdir=TB; bgcolor=white; compound=true;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Serverless AI Enrichment Pipeline (Lambda)"];
+
+  Start [shape=hexagon, label="Lambda triggered by\nS3 ObjectCreated (raw MP4)"];
+
+  subgraph cluster_p1 { label="Phase 1 — FFmpeg (parallel)"; fontname="Helvetica";
+    F1[label="HLS 360p/720p"]; F2[label="8s MP4 preview"];
+    F3[label="JPEG thumbnail"]; F4[label="90s mono MP3"]; }
+
+  subgraph cluster_p2 { label="Phase 2 — Deterministic metadata"; fontname="Helvetica";
+    D1[shape=diamond, label="ffmpeg -i stderr\ncontains 'Audio:'?"]; }
+
+  subgraph cluster_p3 { label="Phase 3 — Parallel AI (Promise.allSettled)"; fontname="Helvetica";
+    W[label="Whisper: transcribe MP3\ndiscard < 20 words"];
+    V[label="GPT-4o-mini vision\nup to 5 scene keyframes\nselect=gt(scene,0.3), else fixed"]; }
+
+  P4 [label="Phase 4 — Synthesis (GPT-4o-mini)\nmerge title+desc+transcript+visual\n-> aiSummary"];
+  P5 [label="Phase 5 — Categorization\nBART-MNLI zero-shot, 44 categories"];
+  End [label="Webhook fires -> status ready\nfallback: 'General' / aiSummary null"];
+
+  Start -> F1; Start -> F2; Start -> F3; Start -> F4;
+  F4 -> D1; F1 -> D1 [style=invis];
+  D1 -> W [label="audio present"];
+  D1 -> V [label="always"];
+  W -> P4; V -> P4;
+  P4 -> P5 -> End;
+}

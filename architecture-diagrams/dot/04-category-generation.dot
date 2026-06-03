@@ -1,0 +1,24 @@
+digraph Cat {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Video Category Generation (zero-shot)"];
+
+  A [label="aiSummary text (from synthesis)"];
+  B [label="44 candidate categories\nMusic, Gaming, Sports ... ASMR"];
+  C [label="Anchor high-priority genres\n(Music, Gaming) at top"];
+  E [label="Hypothesis template:\n'This video belongs to the {} genre or category.'"];
+  D [label="HuggingFace facebook/bart-large-mnli\nzero-shot classification"];
+  F [label="Score every category"];
+  G [shape=diamond, label="HTTP 429 / 503?"];
+  H [label="Retry up to 3x"];
+  I [label="Pick highest-scoring category"];
+  J [label="Store category on video doc"];
+  K [label="Fallback: category = 'General'"];
+
+  A->D; B->C->D; E->D;
+  D->F->G;
+  G->H [label="yes"]; H->D;
+  G->I [label="no"]; I->J;
+  G->K [label="retries exhausted"];
+}

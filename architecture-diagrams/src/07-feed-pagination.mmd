@@ -1,0 +1,21 @@
+flowchart TD
+    A["Feed component load"]
+    B{"Category filter?"}
+    C["Server-side category filter"]
+    D["Keyword search (debounce 350ms)<br/>MongoDB full-text index"]
+    E["Query: _id < cursor, sort _id desc<br/>limit 10 (cursor pagination)"]
+    F["Check cache ss:feed:* / ss:search:*"]
+    G{"Cache hit?"}
+    H[("MongoDB query")]
+    I["Return 10 videos + nextCursor + hasMore<br/>batch user profile image lookup (Map)"]
+    J["IntersectionObserver sentinel<br/>prefetch next page 800px early"]
+    K["Append videos (stale-while-revalidate)"]
+
+    A --> B
+    B -->|yes| C --> F
+    B -->|no| D --> F
+    F --> G
+    G -->|hit| I
+    G -->|miss| E --> H --> I
+    I --> J --> K
+    K -->|scroll| E

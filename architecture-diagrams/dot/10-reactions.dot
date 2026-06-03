@@ -1,0 +1,21 @@
+digraph React {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Like / Dislike Toggle"];
+
+  A [label="User clicks like or dislike"];
+  B [label="isLiking/isDisliking flag\nblocks double-click"];
+  C [label="POST reaction to backend service"];
+  D [shape=diamond, label="Current state?"];
+  E [label="Liked + click like\n-> remove like"];
+  F [label="Disliked + click like\n-> remove dislike, add like"];
+  G [label="No reaction + click\n-> add reaction"];
+  H [label="Single doc save:\ncounts + likedBy/dislikedBy arrays"];
+  I [label="Invalidate ss:video:id + ss:top-liked"];
+
+  A->B->C->D;
+  D->E; D->F; D->G;
+  E->H; F->H; G->H;
+  H->I;
+}

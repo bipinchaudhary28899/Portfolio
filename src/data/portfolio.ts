@@ -93,6 +93,63 @@ export const projects = [
       architecture:
         "Upload → S3 (raw) → S3 Event → Lambda (FFmpeg) → S3 (HLS segments) → CloudFront CDN → Angular Player\n\nParallel: S3 Event → Lambda (Whisper + GPT) → MongoDB (metadata)\n\nFeed API: Angular → Node.js → Redis (cursor) → MongoDB → Response",
     } satisfies CaseStudy,
+    diagrams: [
+      {
+        src: "/images/streamsphere-architecture/01-hld.png",
+        title: "High-Level Design",
+        caption: "The full system at a glance — Angular SPA, a stateless Express API, MongoDB/Redis, and the S3 → Lambda → CloudFront media path alongside the AI services.",
+      },
+      {
+        src: "/images/streamsphere-architecture/02-upload-transcode.png",
+        title: "Upload + HLS Transcoding",
+        caption: "The browser uploads straight to S3 via a presigned URL; an S3 event triggers Lambda transcoding, which webhooks the backend once HLS renditions are ready.",
+      },
+      {
+        src: "/images/streamsphere-architecture/03-ai-pipeline.png",
+        title: "AI Enrichment Pipeline",
+        caption: "All five Lambda phases — FFmpeg outputs, audio detection, parallel Whisper transcription + GPT-4o vision, synthesis, and zero-shot categorization.",
+      },
+      {
+        src: "/images/streamsphere-architecture/04-category-generation.png",
+        title: "Video Category Generation",
+        caption: "HuggingFace BART-MNLI scores the aiSummary against 44 genre-framed categories, with retries on 429/503 and a 'General' fallback.",
+      },
+      {
+        src: "/images/streamsphere-architecture/05-description-synthesis.png",
+        title: "Description (aiSummary) Generation",
+        caption: "GPT-4o-mini merges title, uploader description, transcript, and visual summary into one rich paragraph, falling back to concatenation on error.",
+      },
+      {
+        src: "/images/streamsphere-architecture/06-auth.png",
+        title: "Authentication — Google OAuth + JWT",
+        caption: "Google verifies the ID token, the backend upserts the user and issues an HS256 JWT that an interceptor attaches to every subsequent request.",
+      },
+      {
+        src: "/images/streamsphere-architecture/07-feed-pagination.png",
+        title: "Feed — Cursor Pagination",
+        caption: "Keyset pagination on _id keeps deep-scroll queries O(1) and insert-stable, prefetched 800px early via an IntersectionObserver sentinel.",
+      },
+      {
+        src: "/images/streamsphere-architecture/08-caching-invalidation.png",
+        title: "Redis Caching + Invalidation",
+        caption: "Cache-aside reads with tuned TTLs and targeted busting on writes; a Redis outage silently falls through to MongoDB as the source of truth.",
+      },
+      {
+        src: "/images/streamsphere-architecture/09-view-dedup.png",
+        title: "View Counting with Deduplication",
+        caption: "A 24-hour Redis key per user (or anonymous UUID) stops refreshes and back-navigation from inflating a video's view count.",
+      },
+      {
+        src: "/images/streamsphere-architecture/10-reactions.png",
+        title: "Like / Dislike Toggle",
+        caption: "Mutually exclusive reactions are resolved server-side in a single document save, then the video and top-liked caches are invalidated.",
+      },
+      {
+        src: "/images/streamsphere-architecture/11-resilience.png",
+        title: "Resilience & Fallbacks",
+        caption: "Every subsystem degrades gracefully — AI, Redis, and player failures are isolated so a single fault never takes the whole app down.",
+      },
+    ],
   },
   {
     id: 2,

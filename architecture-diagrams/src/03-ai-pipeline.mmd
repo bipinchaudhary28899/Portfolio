@@ -1,0 +1,34 @@
+flowchart TD
+    Start["Lambda triggered by S3 ObjectCreated<br/>(raw MP4)"]
+
+    subgraph P1["Phase 1 - FFmpeg (parallel)"]
+        F1["HLS renditions 360p/720p"]
+        F2["8s MP4 preview"]
+        F3["JPEG thumbnail"]
+        F4["90s mono MP3 audio clip"]
+    end
+
+    subgraph P2["Phase 2 - Deterministic metadata"]
+        D1{"ffmpeg -i stderr<br/>contains 'Audio:'?"}
+    end
+
+    subgraph P3["Phase 3 - Parallel AI (Promise.allSettled)"]
+        W["Whisper: transcribe MP3<br/>discard transcript under 20 words"]
+        V["GPT-4o-mini vision<br/>up to 5 scene-change keyframes<br/>select=gt(scene,0.3), else fixed ts"]
+    end
+
+    P4["Phase 4 - Synthesis (GPT-4o-mini)<br/>merge title + description +<br/>transcript + visual -> aiSummary"]
+
+    P5["Phase 5 - Categorization<br/>BART-MNLI zero-shot, 44 categories"]
+
+    End["Webhook fires -> video status ready<br/>fallback: category 'General', aiSummary null"]
+
+    Start --> P1
+    F1 --> P2
+    F4 --> P2
+    D1 -->|yes| W
+    D1 -->|no audio| V
+    D1 -->|always| V
+    W --> P4
+    V --> P4
+    P4 --> P5 --> End

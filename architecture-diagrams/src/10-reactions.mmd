@@ -1,0 +1,16 @@
+flowchart TD
+    A["User clicks like or dislike"]
+    B["isLiking/isDisliking flag<br/>blocks double-click"]
+    C["POST reaction to backend service"]
+    D{"Current state?"}
+    E["Liked already + click like<br/>-> remove like"]
+    F["Disliked + click like<br/>-> remove dislike, add like"]
+    G["No reaction + click<br/>-> add reaction"]
+    H["Single doc save:<br/>update likes/dislikes counts<br/>+ likedBy/dislikedBy arrays"]
+    I["Invalidate ss:video:id + ss:top-liked"]
+
+    A --> B --> C --> D
+    D --> E --> H
+    D --> F --> H
+    D --> G --> H
+    H --> I

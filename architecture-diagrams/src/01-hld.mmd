@@ -1,0 +1,33 @@
+flowchart TD
+    User([User])
+    Browser["Browser - Angular 19 SPA<br/>HLS.js player, hero carousel, feed"]
+    API["Express API - Vercel serverless<br/>stateless, JWT auth, Zod, rate limiting"]
+
+    Mongo[("MongoDB Atlas<br/>users, videos, comments, history")]
+    Redis[("Redis / Upstash<br/>cache + counters")]
+    S3[("AWS S3 ap-south-1<br/>raw MP4, HLS, preview, thumbnail")]
+    CF["AWS CloudFront CDN<br/>edge delivery of all video files"]
+    CW["AWS CloudWatch<br/>CDN metrics for dashboard"]
+    Lambda["AWS Lambda<br/>FFmpeg + AI pipeline"]
+    HF["HuggingFace BART-MNLI<br/>zero-shot categorization"]
+    OAI["OpenAI Whisper + GPT-4o-mini<br/>transcription, vision, synthesis"]
+    Google["Google OAuth2"]
+
+    User --> Browser
+    Browser -->|HTTPS REST + JWT| API
+    Browser -->|presigned PUT upload| S3
+    Browser -->|video playback| CF
+
+    API --> Mongo
+    API --> Redis
+    API -->|presigned URLs, delete| S3
+    API --> CW
+    API -->|verify ID token| Google
+
+    S3 -->|ObjectCreated event| Lambda
+    Lambda -->|HLS, preview, thumbnail| S3
+    Lambda --> OAI
+    Lambda --> HF
+    Lambda -->|webhook POST /internal/hls-complete<br/>x-hls-secret| API
+
+    CF --> S3

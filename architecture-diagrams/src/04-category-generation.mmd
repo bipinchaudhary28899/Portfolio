@@ -1,0 +1,20 @@
+flowchart TD
+    A["aiSummary text (from synthesis)"]
+    B["44 candidate categories<br/>Music, Gaming, Sports, ... ASMR"]
+    C["Anchor high-priority genres at top<br/>(Music, Gaming)"]
+    D["HuggingFace facebook/bart-large-mnli<br/>zero-shot classification"]
+    E["Hypothesis template:<br/>'This video belongs to the {} genre or category.'"]
+    F["Score every category"]
+    G{"HTTP 429 / 503?"}
+    H["Retry up to 3x"]
+    I["Pick highest-scoring category"]
+    J["Store category on video doc"]
+    K["Fallback: category = 'General'"]
+
+    A --> D
+    B --> C --> D
+    E --> D
+    D --> F --> G
+    G -->|yes| H --> D
+    G -->|no| I --> J
+    G -->|retries exhausted| K

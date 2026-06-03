@@ -384,6 +384,19 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
                   )}
                 </div>
 
+                {/* Case Study — always visible on the mini card */}
+                <button
+                  onClick={() => onOpenCaseStudy(i)}
+                  className="w-full text-xs font-bold px-4 py-2 rounded-xl transition-all mb-1"
+                  style={{
+                    background: "color-mix(in srgb, var(--accent) 12%, transparent)",
+                    border:     "1.5px solid var(--accent)",
+                    color:      "var(--accent)",
+                  }}
+                >
+                  Case Study →
+                </button>
+
                 {/* Expand / collapse button */}
                 <button
                   className="w-full flex items-center justify-between py-2 text-xs font-semibold"
@@ -453,19 +466,6 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
                         </span>
                       ))}
                     </div>
-
-                    {/* More info → opens case study modal */}
-                    <button
-                      onClick={() => onOpenCaseStudy(i)}
-                      className="self-start text-xs font-bold px-4 py-2 rounded-xl transition-all"
-                      style={{
-                        background: "color-mix(in srgb, var(--accent) 12%, transparent)",
-                        border:     "1.5px solid var(--accent)",
-                        color:      "var(--accent)",
-                      }}
-                    >
-                      More info →
-                    </button>
                   </div>
                 </div>
               </div>

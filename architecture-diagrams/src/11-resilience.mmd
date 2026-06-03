@@ -1,0 +1,23 @@
+flowchart TD
+    subgraph AppUp["Degrade gracefully (app stays up)"]
+        R["Redis down -> cache no-op, use MongoDB"]
+        W["Whisper fails -> transcript null"]
+        V["Vision fails -> fixed timestamps / null"]
+        SY["Synthesis fails -> concatenate fallback"]
+        HF["HuggingFace fails -> retry 3x -> 'General'"]
+        PL["HLS.js unsupported -> native Safari HLS"]
+        PR["Video processing -> processing state UI"]
+        RL["Rate limit hit -> JSON error"]
+        JW["Invalid JWT -> 401"]
+        CO["Unknown CORS origin -> rejected"]
+    end
+
+    subgraph Degraded["Degraded / known gaps"]
+        MD["Mongo mid-run disconnect -> 500 until reconnect"]
+        WH["Webhook never fires -> stuck at processing"]
+        VC["View dedup w/ Redis down -> count inflated"]
+    end
+
+    subgraph Down["Intentional hard fail"]
+        MS["Mongo startup fail -> process.exit(1)"]
+    end

@@ -1,0 +1,19 @@
+flowchart TD
+    subgraph IN["Inputs"]
+        T["Video title"]
+        U["Uploader description"]
+        TR["Whisper transcript<br/>(null if music/silent)"]
+        VS["GPT-4o-mini visual summary<br/>(null if no frames)"]
+    end
+
+    S["GPT-4o-mini synthesis<br/>merge inputs into one rich paragraph"]
+    OK["aiSummary paragraph stored"]
+    FB["Fallback: concatenate<br/>title + description + visual summary"]
+
+    T --> S
+    U --> S
+    TR --> S
+    VS --> S
+    S -->|success| OK
+    S -->|API error| FB --> OK
+    OK --> NEXT["Feeds Phase 5 categorization"]

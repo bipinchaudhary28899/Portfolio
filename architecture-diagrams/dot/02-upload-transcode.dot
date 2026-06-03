@@ -1,0 +1,22 @@
+digraph Upload {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=11, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Direct-to-S3 Upload + HLS Transcoding"];
+
+  A [label="Browser: select file\nvalidate video/* and < 3 min"];
+  B [label="POST /api/upload-url"];
+  C [label="API returns presigned PUT URL\nkey Videos/uuid/file, 1h TTL"];
+  D [label="Browser PUTs binary directly to S3\n(interceptor skips JWT for S3)"];
+  E [label="POST /api/save-video\nmetadata, status: processing"];
+  F [shape=cylinder, label="S3 raw MP4 stored"];
+  G [shape=hexagon, label="S3 ObjectCreated event"];
+  H [label="AWS Lambda transcoder\nFFmpeg + AI pipeline"];
+  I [shape=cylinder, label="S3: master.m3u8, 360p/720p .ts,\npreview.mp4, thumbnail.jpg"];
+  J [label="Webhook POST /api/internal/hls-complete\n(x-hls-secret)"];
+  K [label="Backend: status -> ready\nstore hlsUrl, previewUrl,\nthumbnailUrl, category, aiSummary"];
+  L [label="Bust Redis cache"];
+  M [label="CloudFront serves HLS,\npreview, thumbnail"];
+
+  A->B->C->D->E->F->G->H->I->J->K->L->M;
+}

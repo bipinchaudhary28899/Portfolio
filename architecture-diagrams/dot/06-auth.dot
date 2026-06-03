@@ -1,0 +1,22 @@
+digraph Auth {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Authentication — Google OAuth + JWT"];
+
+  A [label="Browser: Google sign-in"];
+  B [label="Google returns ID token"];
+  C [label="POST /api/google-login (ID token)"];
+  D [label="API verifies token\n(google-auth-library, GOOGLE_CLIENT_ID)"];
+  E [shape=cylinder, label="MongoDB upsert user\n(sync profile image)"];
+  F [label="API issues HS256 JWT + user object"];
+  G [label="Store token + user in localStorage"];
+  H [label="Interceptor adds Authorization: Bearer\n(except amazonaws.com)"];
+  I [shape=diamond, label="Response 401?"];
+  J [label="Clear localStorage + redirect /home"];
+  K [label="Authenticated requests proceed"];
+
+  A->B->C->D->E->F->G->H->I;
+  I->J [label="yes"];
+  I->K [label="no"];
+}

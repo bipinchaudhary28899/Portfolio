@@ -1,0 +1,38 @@
+digraph Cache {
+  rankdir=TB; bgcolor=white; nodesep=0.3; ranksep=0.5;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Redis Caching + Invalidation"];
+
+  Req [label="API read request"];
+  CK [shape=diamond, label="Key in Redis?"];
+  Resp [label="Return data"];
+  Mongo [shape=cylinder, label="MongoDB (source of truth)"];
+  Set [label="Set key with TTL"];
+
+  Req->CK;
+  CK->Resp [label="hit"];
+  CK->Mongo [label="miss"]; Mongo->Set->Resp;
+
+  subgraph cluster_ttl { label="Cached keys (TTL)"; fontname="Helvetica"; labeljust=l;
+    R1[label="ss:feed:all / ss:feed:cat (2 min)"];
+    R2[label="ss:video:id (10 min)"];
+    R3[label="ss:search:term:cat (1 min)"];
+    R4[label="ss:top-liked (5 min)"];
+    R1->R2->R3->R4 [style=invis]; }
+
+  subgraph cluster_w { label="Writes invalidate"; fontname="Helvetica"; labeljust=l;
+    W1[label="like/dislike -> ss:video:id + ss:top-liked"];
+    W2[label="view -> ss:video:id"];
+    W3[label="delete -> SCAN delPattern feed/cat pages"];
+    W4[label="hls-complete -> feed caches"];
+    W1->W2->W3->W4 [style=invis]; }
+
+  Down [shape=diamond, label="Redis down / unset?"];
+  NoOp [label="All cache methods no-op\nfall through to MongoDB"];
+  Down->NoOp [label="yes"];
+
+  Resp->R1 [style=invis];
+  R4->W1 [style=invis];
+  W4->Down [style=invis];
+}

@@ -1,0 +1,27 @@
+digraph Feed {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Feed — Cursor Pagination + Infinite Scroll"];
+
+  A [label="Feed component load"];
+  B [shape=diamond, label="Category filter?"];
+  C [label="Server-side category filter"];
+  D [label="Keyword search (debounce 350ms)\nMongoDB full-text index"];
+  F [label="Check cache ss:feed:* / ss:search:*"];
+  G [shape=diamond, label="Cache hit?"];
+  E [label="Query: _id < cursor, sort _id desc\nlimit 10 (cursor pagination)"];
+  H [shape=cylinder, label="MongoDB"];
+  I [label="Return 10 videos + nextCursor + hasMore\nbatch profile-image lookup (Map)"];
+  J [label="IntersectionObserver sentinel\nprefetch next page 800px early"];
+  K [label="Append videos (stale-while-revalidate)"];
+
+  A->B;
+  B->C [label="yes"]; C->F;
+  B->D [label="no"]; D->F;
+  F->G;
+  G->I [label="hit"];
+  G->E [label="miss"]; E->H->I;
+  I->J->K;
+  K->E [label="on scroll"];
+}

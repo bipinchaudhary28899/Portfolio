@@ -1,0 +1,17 @@
+flowchart TD
+    A["Browser: select file<br/>validate video/* and under 3 min"]
+    B["POST /api/upload-url"]
+    C["API returns presigned PUT URL<br/>key Videos/uuid/filename, 1h TTL"]
+    D["Browser PUTs binary directly to S3<br/>interceptor skips JWT for S3"]
+    E["POST /api/save-video<br/>metadata, status: processing"]
+    F[("S3 raw MP4 stored")]
+    G{{"S3 ObjectCreated event"}}
+    H["AWS Lambda transcoder<br/>FFmpeg + AI pipeline"]
+    I[("S3: master.m3u8, 360p/720p .ts,<br/>preview.mp4, thumbnail.jpg")]
+    J["Lambda webhook<br/>POST /api/internal/hls-complete<br/>x-hls-secret"]
+    K["Backend: status -> ready<br/>store hlsUrl, previewUrl,<br/>thumbnailUrl, category, aiSummary"]
+    L["Bust Redis cache"]
+    M["CloudFront serves HLS,<br/>preview, thumbnail"]
+
+    A --> B --> C --> D --> E --> F --> G --> H
+    H --> I --> J --> K --> L --> M

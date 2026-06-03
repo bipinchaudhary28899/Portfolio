@@ -1,0 +1,20 @@
+flowchart TD
+    A["User opens player"]
+    B{"Logged in?"}
+    C["userId from JWT"]
+    D["anonId from X-Anon-Session<br/>(localStorage crypto.randomUUID)"]
+    E["POST /api/videos/:id/view"]
+    F["Build Redis key<br/>ss:view:videoId:userId-or-anonId"]
+    G{"Key exists?"}
+    H["Do not recount"]
+    I["Set key, TTL 24h"]
+    J["$inc views atomically"]
+    K["Invalidate ss:video:id cache"]
+    L["Redis down -> may over-count<br/>(soft metric)"]
+
+    A --> B
+    B -->|yes| C --> E
+    B -->|no| D --> E
+    E --> F --> G
+    G -->|yes| H
+    G -->|no| I --> J --> K

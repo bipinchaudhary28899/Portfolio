@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { X, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/components/ui/icons";
 import { projects } from "@/data/portfolio";
+import { ArchitectureCarousel } from "@/components/sections/ArchitectureCarousel";
 
 interface Props {
   projectIndex: number;
@@ -20,6 +21,7 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
   const p     = projects[projectIndex];
   const cs    = p.caseStudy;
   const total = projects.length;
+  const diagrams = (p as { diagrams?: { src: string; title: string; caption: string }[] }).diagrams;
 
   /* ── Animate in whenever projectIndex changes ── */
   useEffect(() => {
@@ -183,7 +185,6 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
             style={{
               background: "var(--card)",
               border:     "1.5px solid var(--border)",
-              borderLeft: "3px solid var(--accent)",
             }}
           >
             <p
@@ -273,7 +274,7 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
                 className="text-xs font-bold tracking-widest uppercase mb-4"
                 style={{ color: "var(--accent)" }}
               >
-                Architecture
+                Data Flow
               </p>
               <pre
                 className="text-xs leading-relaxed font-mono whitespace-pre-wrap"
@@ -283,6 +284,11 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
               </pre>
             </div>
           </div>
+
+          {/* Architecture — carousel, only when the project provides diagrams */}
+          {diagrams && diagrams.length > 0 && (
+            <ArchitectureCarousel diagrams={diagrams} />
+          )}
         </div>
 
         {/* ══ METRICS FOOTER ═════════════════════════════════════════════════ */}

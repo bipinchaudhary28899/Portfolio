@@ -1,0 +1,25 @@
+digraph View {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="View Counting with Deduplication"];
+
+  A [label="User opens player"];
+  B [shape=diamond, label="Logged in?"];
+  C [label="userId from JWT"];
+  D [label="anonId from X-Anon-Session\n(localStorage crypto.randomUUID)"];
+  E [label="POST /api/videos/:id/view"];
+  F [label="Build Redis key\nss:view:videoId:userId-or-anonId"];
+  G [shape=diamond, label="Key exists?"];
+  H [label="Do not recount"];
+  I [label="Set key, TTL 24h"];
+  J [label="$inc views atomically"];
+  K [label="Invalidate ss:video:id cache"];
+
+  A->B;
+  B->C [label="yes"]; C->E;
+  B->D [label="no"]; D->E;
+  E->F->G;
+  G->H [label="yes"];
+  G->I [label="no"]; I->J->K;
+}

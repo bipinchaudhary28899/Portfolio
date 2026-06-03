@@ -1,0 +1,21 @@
+flowchart TD
+    subgraph Reads["Reads (cache-aside)"]
+        R1["Feed pages ss:feed:all:* / ss:feed:cat:* (2 min)"]
+        R2["Single video ss:video:id (10 min)"]
+        R3["Search ss:search:term:cat (1 min)"]
+        R4["Top-liked ss:top-liked (5 min)"]
+    end
+
+    Req["API read request"] --> CK{"Key in Redis?"}
+    CK -->|hit| Resp["Return cached"]
+    CK -->|miss| Mongo[("MongoDB")] --> Set["Set key with TTL"] --> Resp
+
+    subgraph Writes["Writes invalidate"]
+        W1["like/dislike -> bust ss:video:id + ss:top-liked"]
+        W2["view -> bust ss:video:id"]
+        W3["delete -> SCAN delPattern feed/category pages"]
+        W4["hls-complete -> bust feed caches"]
+    end
+
+    Down{"Redis down / unset?"}
+    Down -->|yes| NoOp["All cache methods no-op<br/>fall through to MongoDB"]
