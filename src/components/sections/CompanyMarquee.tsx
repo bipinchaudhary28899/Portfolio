@@ -96,8 +96,10 @@ export function CompanyMarquee() {
           .cm-item { width: 12rem; height: 3.75rem; }
           .cm-logo { padding: 0.5rem; }
         }
-        /* Grayscale-with-hover reveal only on pointer (desktop) devices. */
-        @media (hover: hover) {
+        /* Grayscale-with-hover reveal only on true mouse devices.
+           Requiring pointer: fine (not just hover: hover) keeps logos
+           full-colour on Android/touch, which can mis-report hover. */
+        @media (hover: hover) and (pointer: fine) {
           .cm-item { opacity: 0.55; }
           .cm-logo { filter: grayscale(1); }
           .cm-item:hover { opacity: 1; transform: translateY(-2px); }
