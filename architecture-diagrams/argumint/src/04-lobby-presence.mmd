@@ -1,0 +1,21 @@
+flowchart TD
+    J["POST /rooms/join code<br/>add to participants"]
+    S["Socket emits room:join<br/>socket.join room:&lt;id&gt;"]
+    B{{"Broadcast to room:&lt;id&gt;"}}
+    P1["room:participant-status-updated<br/>ready / not-ready"]
+    P2["room:role-changed<br/>participant / judge / spectator / moderator"]
+    P3["room:host-transferred"]
+    P4["room:participant-left / room:deleted"]
+    RS["room:get-state handshake<br/>late joiner / reconnect rebuilds state"]
+    ST["All clients re-render<br/>live participant list"]
+
+    J --> S --> B
+    B --> P1
+    B --> P2
+    B --> P3
+    B --> P4
+    P1 --> ST
+    P2 --> ST
+    P3 --> ST
+    P4 --> ST
+    RS --> ST

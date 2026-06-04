@@ -1,0 +1,17 @@
+flowchart TD
+    Spk["Speaker talks during turn"]
+    WS{"Web Speech API supported & working?"}
+    Live["useSpeechRecognition<br/>live in-browser transcript<br/>auto-restart on drop"]
+    Rec["useRecorder captures audio<br/>POST /debates/.../transcribe"]
+    Whp["whisper.service -><br/>OpenAI gpt-4o-mini-transcribe"]
+    Txt["Transcript text returned"]
+    Sub["debate:submit-argument<br/>text attached to turn"]
+    Cost[("Debate records<br/>Whisper minutes -> USD cost")]
+
+    Spk --> WS
+    WS -->|yes| Live
+    WS -->|no / fails| Rec
+    Rec --> Whp --> Txt
+    Live --> Sub
+    Txt --> Sub
+    Whp --> Cost

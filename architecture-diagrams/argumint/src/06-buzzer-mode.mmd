@@ -1,0 +1,27 @@
+flowchart TD
+    Open{{"buzzer:open<br/>mic is free"}}
+    Grab["Player emits buzzer:grab"]
+    Lock{"Acquire Redis lock race-free?"}
+    Lost["Lock held by other -> grab rejected"]
+    Hold["buzzer:holder-changed<br/>floor assigned to player"]
+    Warn["buzzer:warning /<br/>buzzer:holder-urgent countdown"]
+    Rel{"Release or timeout?"}
+    Relq["buzzer:release"]
+    TO["buzzer:speaker-timeout"]
+    Win["buzzer:window-open<br/>re-grab window (few seconds)"]
+    Wc{"Re-grabbed in window?"}
+    Free["buzzer:window-closed -><br/>floor frees, mic open again"]
+
+    Open --> Grab --> Lock
+    Lock -->|no| Lost
+    Lock -->|yes| Hold
+    Lost --> Open
+    Hold --> Warn --> Rel
+    Rel -->|release| Relq
+    Rel -->|timeout| TO
+    Relq --> Win
+    TO --> Win
+    Win --> Wc
+    Wc -->|yes| Hold
+    Wc -->|no| Free
+    Free --> Open

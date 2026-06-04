@@ -1,0 +1,18 @@
+flowchart TD
+    A["POST /auth/login rate-limited<br/>or /auth/register"]
+    B["auth.service: bcrypt verify<br/>issue HS256 JWT"]
+    C[("Redis: set session key<br/>one session per user")]
+    D["Return { user, token }"]
+    E["Frontend stores JWT in localStorage"]
+    F["api.ts attaches<br/>Authorization: Bearer jwt"]
+    G["Socket connect: token in handshake<br/>socket auth middleware verifies"]
+    H{"Existing session for this user?"}
+    I["Prompt before evicting old session"]
+    J["session:evicted -><br/>old socket logged out"]
+    K["Authenticated REST + socket<br/>requests proceed"]
+
+    A --> B --> C --> D --> E --> F
+    E --> G --> H
+    H -->|yes| I --> J --> K
+    H -->|no| K
+    F --> K

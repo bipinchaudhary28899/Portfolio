@@ -1,0 +1,22 @@
+digraph WebRTC {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Live Audio — WebRTC Mesh over Socket.IO Signalling"];
+
+  P  [label="Peer joins arena\nuseWebRTCMesh"];
+  GP [label="webrtc:get-peers\nlist current room peers"];
+  Off[label="Create RTCPeerConnection\nemit webrtc:offer (SDP)"];
+  Sig[shape=hexagon, label="Socket.IO relays signalling\nto a specific peer socket"];
+  Ans[label="Peer replies\nwebrtc:answer (SDP)"];
+  Ice[label="webrtc:ice-candidate\nexchanged both ways"];
+  Conn[label="Direct P2P connection\nestablished per peer"];
+  Mesh[shape=cylinder, label="Full audio mesh\nmedia browser <-> browser only"];
+
+  P -> GP -> Off -> Sig;
+  Sig -> Ans -> Ice -> Conn -> Mesh;
+  Off -> Sig [style=invis];
+  Note[shape=note, fontname="Helvetica", fontsize=9,
+        label="Server never touches media —\nonly SDP offers/answers + ICE"];
+  Mesh -> Note [style=invis];
+}

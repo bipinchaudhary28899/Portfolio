@@ -1,0 +1,34 @@
+digraph Cred {
+  rankdir=TB; bgcolor=white; compound=true;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Judge Credibility — 6 Pillars + EMA + Bias Cap"];
+
+  Open [shape=hexagon, label="debate:scoring-window-opened\n(Pro rooms with human judges)"];
+  Sub  [label="Judges submit + lock scores\ndebate:submit / lock-judge-scores"];
+
+  subgraph cluster_p { label="credibility.service — session score"; fontname="Helvetica"; labeljust=l;
+    P1[label="P1 Rank Agreement 30%\nSpearman vs AI"];
+    P2[label="P2 Gap Preservation 20%"];
+    P3[label="P3 Consensus Similarity 15%\nvs human median"];
+    P6[label="P6 Integrity 10%\npenalise identical scores"];
+    P4[label="P4 Outlier Coherence 10%\n(needs >=3 sessions)"];
+    P5[label="P5 Bias Detection 15%\n(needs >=5 sessions)"];
+    P1->P2->P3->P6 [style=invis];
+    P4->P5 [style=invis];
+  }
+
+  Cap [shape=diamond, label="P5 bias severity?\nCV thresholds"];
+  Mul [label="Hard cap multiplier\nclean x1.0 / mod x0.75 / severe x0.50"];
+  EMA [label="Rolling EMA update\nlambda = 2/(min(N,20)+1)\nnew = lam*session + (1-lam)*prev"];
+  New [label="New judges start at 0.75"];
+  Band[label="Band: Strong >=0.75 /\nModerate 0.45-0.74 / Flagged <0.45"];
+  JS  [shape=cylinder, label="Write JudgeSession doc\n(raw + pillars + credibility)"];
+
+  Open -> Sub;
+  Sub -> P1 [lhead=cluster_p];
+  P6 -> Cap [ltail=cluster_p];
+  Cap -> Mul -> EMA;
+  New -> EMA [style=dashed, label="first session"];
+  EMA -> Band -> JS;
+}

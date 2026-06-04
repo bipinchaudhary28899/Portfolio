@@ -1,0 +1,32 @@
+digraph Buzzer {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Buzzer Mode — Grab-the-Mic (Redis Lock)"];
+
+  Open [shape=hexagon, label="buzzer:open\nmic is free"];
+  Grab [label="Player emits buzzer:grab"];
+  Lock [shape=diamond, label="Acquire Redis lock\n(race-free)?"];
+  Lost [label="Lock held by other ->\ngrab rejected"];
+  Hold [label="buzzer:holder-changed\nfloor assigned to player"];
+  Warn [label="buzzer:warning /\nbuzzer:holder-urgent (countdown)"];
+  Rel  [shape=diamond, label="Release or\ntimeout?"];
+  Relq [label="buzzer:release"];
+  TO   [label="buzzer:speaker-timeout"];
+  Win  [label="buzzer:window-open\nre-grab window (few seconds)"];
+  Wc   [shape=diamond, label="Re-grabbed\nin window?"];
+  Free [label="buzzer:window-closed ->\nfloor frees, mic open again"];
+
+  Open -> Grab -> Lock;
+  Lock -> Lost [label="no"];
+  Lock -> Hold [label="yes"];
+  Lost -> Open;
+  Hold -> Warn -> Rel;
+  Rel -> Relq [label="release"];
+  Rel -> TO   [label="timeout"];
+  Relq -> Win; TO -> Win;
+  Win -> Wc;
+  Wc -> Hold [label="yes"];
+  Wc -> Free [label="no"];
+  Free -> Open;
+}

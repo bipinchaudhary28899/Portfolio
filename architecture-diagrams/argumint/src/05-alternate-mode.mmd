@@ -1,0 +1,20 @@
+flowchart TD
+    TO["Server builds turn order<br/>from FOR/AGAINST assignment"]
+    TS{{"debate:turn-started<br/>active speaker + endsAt timestamp"}}
+    SP["Speaker talks<br/>audio via WebRTC P2P"]
+    TR["Live transcription<br/>Web Speech / Whisper fallback"]
+    Sub{"Argument submitted before endsAt?"}
+    AR["debate:submit-argument<br/>debate:argument-submitted broadcast"]
+    TIM["Timer expires -> turn auto-ends"]
+    TE["debate:turn-ended<br/>advance to next turn"]
+    More{"Turns remaining?"}
+    End["All turns done -><br/>debate:ended -> AI judge"]
+
+    TO --> TS --> SP --> TR --> Sub
+    Sub -->|yes| AR
+    Sub -->|no / timeout| TIM
+    AR --> TE
+    TIM --> TE
+    TE --> More
+    More -->|yes| TS
+    More -->|no| End

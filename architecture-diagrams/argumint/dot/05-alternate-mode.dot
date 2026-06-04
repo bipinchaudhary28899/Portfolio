@@ -1,0 +1,25 @@
+digraph Alternate {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Alternate Mode — Structured Turn-by-Turn"];
+
+  TO [label="Server builds turn order\nfrom FOR/AGAINST assignment"];
+  TS [shape=hexagon, label="debate:turn-started\nactive speaker + endsAt timestamp"];
+  SP [label="Speaker talks\n(audio via WebRTC P2P)"];
+  TR [label="Live transcription\nWeb Speech / Whisper fallback"];
+  Sub[shape=diamond, label="Argument submitted\nbefore endsAt?"];
+  AR [label="debate:submit-argument\ndebate:argument-submitted broadcast"];
+  TIM[label="Timer expires ->\nturn auto-ends"];
+  TE [label="debate:turn-ended\nadvance to next turn"];
+  More[shape=diamond, label="Turns\nremaining?"];
+  End[label="All turns done ->\ndebate:ended -> AI judge"];
+
+  TO -> TS -> SP -> TR -> Sub;
+  Sub -> AR  [label="yes"];
+  Sub -> TIM [label="no / timeout"];
+  AR -> TE; TIM -> TE;
+  TE -> More;
+  More -> TS  [label="yes"];
+  More -> End [label="no"];
+}

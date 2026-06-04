@@ -1,0 +1,17 @@
+flowchart TD
+    Sub["POST /payments/create-subscription"]
+    Co["User completes Razorpay checkout"]
+    Ver["POST /payments/verify-payment<br/>confirm signed payment"]
+    WH{{"Razorpay server-to-server<br/>POST /payments/webhook"}}
+    HMAC{"HMAC valid? verify vs req.rawBody"}
+    Rej["Reject 401"]
+    User[("Update User:<br/>isPro, subscriptionStatus,<br/>currentPeriodEnd")]
+    Stat["GET /payments/subscription-status<br/>useSubscription hook"]
+    Gate["Gate Pro features<br/>e.g. human-judge rooms"]
+
+    Sub --> Co --> Ver
+    Ver --> User
+    WH --> HMAC
+    HMAC -->|no| Rej
+    HMAC -->|yes| User
+    User --> Stat --> Gate

@@ -1,0 +1,22 @@
+digraph Transcribe {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Speech Transcription — Web Speech + Whisper Fallback"];
+
+  Spk [label="Speaker talks during turn"];
+  WS  [shape=diamond, label="Web Speech API\nsupported & working?"];
+  Live[label="useSpeechRecognition\nlive in-browser transcript\n(auto-restart on drop)"];
+  Rec [label="useRecorder captures audio\nPOST /debates/.../transcribe"];
+  Whp [label="whisper.service ->\nOpenAI gpt-4o-mini-transcribe"];
+  Txt [label="Transcript text returned"];
+  Sub [label="debate:submit-argument\ntext attached to turn"];
+  Cost[shape=cylinder, label="Debate records\nWhisper minutes -> USD cost"];
+
+  Spk -> WS;
+  WS -> Live [label="yes"];
+  WS -> Rec  [label="no / fails"];
+  Rec -> Whp -> Txt;
+  Live -> Sub; Txt -> Sub;
+  Whp -> Cost;
+}

@@ -1,0 +1,29 @@
+flowchart TD
+    Create["Create room POST /rooms/create<br/>motion, mode, rounds, turn duration<br/>6-char code, status=lobby"]
+    Lobby["Lobby - join + ready up<br/>room:join / room:update-status"]
+    Vote{"Optional topic voting?"}
+    Voting["room:start-voting -><br/>vote-topic -> end-voting"]
+    Start["Host: room:start-debate<br/>assign FOR/AGAINST, build turn order<br/>persist Debate, debate:started"]
+    Prep["Prep screen -> arena"]
+    Mode{"Debate mode?"}
+    Alt["Alternate: per-turn timers<br/>debate:turn-started / -ended"]
+    Buz["Buzzer: grab-the-mic<br/>buzzer:grab / holder-changed"]
+    Judge["Assemble transcript -><br/>AI judge GPT-4o-mini<br/>debate:result-ready"]
+    Human{"Human judges seated?"}
+    Cred["Scoring window -> submit + lock<br/>credibility.service updates"]
+    Result["Result page: leaderboard,<br/>per-axis breakdown, winning side"]
+    Persist[("Persist stats, xp, judgeStats")]
+
+    Create --> Lobby --> Vote
+    Vote -->|yes| Voting
+    Vote -->|no| Start
+    Voting --> Start
+    Start --> Prep --> Mode
+    Mode -->|alternate| Alt
+    Mode -->|buzzer| Buz
+    Alt --> Judge
+    Buz --> Judge
+    Judge --> Human
+    Human -->|yes| Cred
+    Human -->|no| Result
+    Cred --> Result --> Persist

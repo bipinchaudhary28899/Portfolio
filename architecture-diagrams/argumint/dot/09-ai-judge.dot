@@ -1,0 +1,31 @@
+digraph Judge {
+  rankdir=TB; bgcolor=white; compound=true;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="AI Judge — GPT-4o-mini Scoring Pipeline"];
+
+  Trg [shape=hexagon, label="Debate ends\n(all turns or debate:host-end)"];
+  Asm [label="judge.service assembles\nfull chronological transcript"];
+  Call[label="Call OpenAI OPENAI_JUDGE_MODEL\n(default gpt-4o-mini)"];
+
+  subgraph cluster_axes { label="Per-speaker scores — 0..25 each"; fontname="Helvetica"; labeljust=l;
+    C1[label="Clarity"]; C2[label="Evidence"];
+    C3[label="Rebuttal"]; C4[label="Organization"];
+    C1->C2->C3->C4 [style=invis];
+  }
+
+  Fix [label="Re-compute total = sum of 4 parts\nclamp each axis to 0..25"];
+  Win [label="Pick winning side + points\nfeedback, strengths, improvements"];
+  OK  [shape=diamond, label="Judge call\nsucceeded?"];
+  RR  [label="debate:result-ready"];
+  RF  [label="debate:result-failed"];
+  Cost[shape=cylinder, label="Record token usage +\nUSD cost on Debate doc"];
+
+  Trg -> Asm -> Call;
+  Call -> C1 [lhead=cluster_axes];
+  C4 -> Fix [ltail=cluster_axes];
+  Fix -> Win -> OK;
+  OK -> RR [label="yes"];
+  OK -> RF [label="no"];
+  Win -> Cost;
+}

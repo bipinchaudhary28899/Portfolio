@@ -1,0 +1,23 @@
+flowchart TD
+    User([User])
+    Browser["Browser - React 19 + Vite SPA<br/>lobby, arena, buzzer UI, Web Speech"]
+    API["Express 4 API - Render<br/>REST: /auth /rooms /debates /payments"]
+    IO["Socket.IO server<br/>room:* debate:* buzzer:* webrtc:*"]
+    Mongo[("MongoDB (Mongoose)<br/>User, Room, Debate, JudgeSession")]
+    Redis[("Redis (ioredis)<br/>sessions + buzzer locks/cooldowns")]
+    OAI["OpenAI<br/>Whisper transcribe + GPT-4o-mini judge"]
+    RZP["Razorpay<br/>subscriptions + webhooks"]
+
+    User --> Browser
+    Browser -->|HTTPS REST + Bearer JWT| API
+    Browser -->|WSS live state| IO
+    Browser -->|WebRTC audio mesh P2P| Browser
+
+    API --> Mongo
+    API --> Redis
+    IO --> Mongo
+    IO -->|single-session + buzzer locks| Redis
+    IO -->|transcribe + judge| OAI
+    API -->|Whisper fallback| OAI
+    API -->|create / verify| RZP
+    RZP -->|webhook HMAC raw body| API

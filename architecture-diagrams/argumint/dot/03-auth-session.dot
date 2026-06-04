@@ -1,0 +1,26 @@
+digraph Auth {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Auth — JWT Bearer + Redis Single Session"];
+
+  A [label="POST /auth/login (rate-limited)\nor /auth/register"];
+  B [label="auth.service: bcrypt verify\nissue HS256 JWT"];
+  C [shape=cylinder, label="Redis: set session key\n(one session per user)"];
+  D [label="Return { user, token }"];
+  E [label="Frontend stores JWT in localStorage"];
+  F [label="api.ts attaches\nAuthorization: Bearer <jwt>"];
+  G [label="Socket connect: token in handshake\nsocket auth middleware verifies"];
+  H [shape=diamond, label="Existing session\nfor this user?"];
+  I [label="Prompt before evicting\nold session"];
+  J [label="session:evicted ->\nold socket logged out"];
+  K [label="Authenticated REST + socket\nrequests proceed"];
+
+  A -> B -> C -> D -> E -> F;
+  E -> G;
+  G -> H;
+  H -> I [label="yes"];
+  I -> J -> K;
+  H -> K [label="no"];
+  F -> K;
+}

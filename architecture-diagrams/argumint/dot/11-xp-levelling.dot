@@ -1,0 +1,25 @@
+digraph XP {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="XP & Levelling — 10-Tier Debater Ladder"];
+
+  End [shape=hexagon, label="Debate result finalised"];
+  Award[label="Award XP per debate\npersist user.xp + stats (W/L)"];
+  Calc[label="getLevelInfo(totalXP)\nlevels.ts lookup table"];
+  Tier[label="Returns current tier,\nnext tier, progress %"];
+  Sep [label="Separate from Judge Credibility\n(two independent scoring zones)"];
+  UI  [label="Home player card +\nLevel Rewards page"];
+
+  subgraph cluster_ladder { label="Tiers: Novice -> Grand Master (0 -> 7000 XP)"; fontname="Helvetica"; labeljust=l;
+    L1[label="L1 Novice 0 / L2 Debater 150 / L3 Arguer 400"];
+    L2[label="L4 Advocate 750 / L5 Orator 1200 / L6 Rhetorician 1800"];
+    L3[label="L7 Sophist 2600 / L8 Dialectician 3600"];
+    L4[label="L9 Logician 5000 / L10 Grand Master 7000"];
+    L1->L2->L3->L4 [style=invis];
+  }
+
+  End -> Award -> Calc -> Tier -> UI;
+  Tier -> L1 [style=invis];
+  Award -> Sep [style=dashed];
+}

@@ -1,0 +1,23 @@
+digraph Pay {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Pro Subscriptions — Razorpay + Webhook Sync"];
+
+  Sub [label="POST /payments/create-subscription"];
+  Co  [label="User completes\nRazorpay checkout"];
+  Ver [label="POST /payments/verify-payment\nconfirm signed payment"];
+  WH  [shape=hexagon, label="Razorpay server-to-server\nPOST /payments/webhook"];
+  HMAC[shape=diamond, label="HMAC valid?\n(verify vs req.rawBody)"];
+  Rej [label="Reject (401)"];
+  User[shape=cylinder, label="Update User:\nisPro, subscriptionStatus,\ncurrentPeriodEnd"];
+  Stat[label="GET /payments/subscription-status\nuseSubscription hook"];
+  Gate[label="Gate Pro features\n(e.g. human-judge rooms)"];
+
+  Sub -> Co -> Ver;
+  Ver -> User;
+  WH -> HMAC;
+  HMAC -> Rej  [label="no"];
+  HMAC -> User [label="yes"];
+  User -> Stat -> Gate;
+}

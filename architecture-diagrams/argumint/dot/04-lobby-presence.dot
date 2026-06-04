@@ -1,0 +1,22 @@
+digraph Lobby {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Real-Time Lobby — Presence & Host Controls"];
+
+  J  [label="POST /rooms/join (code)\nadd to participants"];
+  S  [label="Socket emits room:join\nsocket.join(room:<id>)"];
+  B  [shape=hexagon, label="Broadcast to room:<id>"];
+  P1 [label="room:participant-status-updated\nready / not-ready"];
+  P2 [label="room:role-changed\nparticipant / judge / spectator / moderator"];
+  P3 [label="room:host-transferred"];
+  P4 [label="room:participant-left / room:deleted"];
+  RS [label="room:get-state handshake\nlate joiner / reconnect rebuilds state"];
+  ST [label="All clients re-render\nlive participant list"];
+
+  J -> S -> B;
+  B -> P1; B -> P2; B -> P3; B -> P4;
+  P1 -> ST; P2 -> ST; P3 -> ST; P4 -> ST;
+  RS -> ST;
+  S -> RS [style=invis];
+}

@@ -1,0 +1,24 @@
+flowchart TD
+    Trg{{"Debate ends<br/>all turns or debate:host-end"}}
+    Asm["judge.service assembles<br/>full chronological transcript"]
+    Call["Call OpenAI OPENAI_JUDGE_MODEL<br/>default gpt-4o-mini"]
+
+    subgraph Axes["Per-speaker scores - 0..25 each"]
+        C1["Clarity"]
+        C2["Evidence"]
+        C3["Rebuttal"]
+        C4["Organization"]
+    end
+
+    Fix["Re-compute total = sum of 4 parts<br/>clamp each axis to 0..25"]
+    Win["Pick winning side + points<br/>feedback, strengths, improvements"]
+    OK{"Judge call succeeded?"}
+    RR["debate:result-ready"]
+    RF["debate:result-failed"]
+    Cost[("Record token usage +<br/>USD cost on Debate doc")]
+
+    Trg --> Asm --> Call --> Axes
+    Axes --> Fix --> Win --> OK
+    OK -->|yes| RR
+    OK -->|no| RF
+    Win --> Cost

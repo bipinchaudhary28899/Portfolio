@@ -282,6 +282,68 @@ export const projects = [
       architecture:
         "React → Socket.io (room join) → Node.js → MongoDB (debate + arguments)\n\nArgument submitted → Node.js → OpenAI GPT-4 (streaming) → Socket.io (broadcast to room)\n\nRate limiting: Redis sliding window counter per userId\nAuth: JWT access (15min) + rotating refresh token (7 days)",
     } satisfies CaseStudy,
+    diagrams: [
+      {
+        src: "/images/argumint-architecture/01-hld.png",
+        title: "High-Level Design",
+        caption: "The whole system at a glance — the React SPA, the Express REST API and Socket.IO server, MongoDB/Redis, the peer-to-peer WebRTC audio mesh, and the OpenAI and Razorpay integrations.",
+      },
+      {
+        src: "/images/argumint-architecture/02-debate-lifecycle.png",
+        title: "Life of a Debate",
+        caption: "End to end: create room, lobby ready-up, optional topic voting, side assignment, the chosen speaking mode, AI judging, optional human judging, and persisted results.",
+      },
+      {
+        src: "/images/argumint-architecture/03-auth-session.png",
+        title: "Authentication & Single Session",
+        caption: "Login issues a Bearer JWT stored in localStorage; Redis enforces one active session per user and evicts the old socket via session:evicted when you log in elsewhere.",
+      },
+      {
+        src: "/images/argumint-architecture/04-lobby-presence.png",
+        title: "Real-Time Lobby — Presence & Host Controls",
+        caption: "Room broadcasts keep every client's participant list live; a room:get-state handshake lets a late joiner or reconnecting socket rebuild full lobby state.",
+      },
+      {
+        src: "/images/argumint-architecture/05-alternate-mode.png",
+        title: "Alternate Mode — Turn-by-Turn",
+        caption: "The server is authoritative over turn order and timers: it emits turn-started with an endsAt timestamp, accepts the submitted argument (or times out), then advances.",
+      },
+      {
+        src: "/images/argumint-architecture/06-buzzer-mode.png",
+        title: "Buzzer Mode — Grab-the-Mic",
+        caption: "A Redis lock makes 'who holds the mic' race-free; on release or timeout a short re-grab window opens before the floor frees and the mic reopens.",
+      },
+      {
+        src: "/images/argumint-architecture/07-webrtc-audio.png",
+        title: "Live Audio — WebRTC Mesh",
+        caption: "Socket.IO relays only SDP offers/answers and ICE candidates; the audio media itself flows directly browser-to-browser in a full peer mesh, never through the server.",
+      },
+      {
+        src: "/images/argumint-architecture/08-transcription.png",
+        title: "Speech Transcription",
+        caption: "The browser Web Speech API is the primary path; when unsupported or failing, recorded audio falls back to server-side OpenAI Whisper, with Whisper minutes costed per debate.",
+      },
+      {
+        src: "/images/argumint-architecture/09-ai-judge.png",
+        title: "AI Judge — Scoring Pipeline",
+        caption: "GPT-4o-mini scores each speaker on four 0–25 axes; the service re-computes the total as the sum of parts, clamps each axis, picks a winner, and records token usage and USD cost.",
+      },
+      {
+        src: "/images/argumint-architecture/10-credibility.png",
+        title: "Judge Credibility — 6 Pillars",
+        caption: "Each human judge's session is scored across six pillars (two need history), capped by detected bias severity, then folded into a rolling EMA credibility and written as a JudgeSession.",
+      },
+      {
+        src: "/images/argumint-architecture/11-xp-levelling.png",
+        title: "XP & Levelling",
+        caption: "Debating earns XP and progresses a 10-tier ladder from Novice to Grand Master via getLevelInfo — a scoring zone entirely separate from judge credibility.",
+      },
+      {
+        src: "/images/argumint-architecture/12-payments.png",
+        title: "Pro Subscriptions & Payments",
+        caption: "Razorpay drives recurring Pro subscriptions; a HMAC-verified webhook (checked against the raw request body) keeps isPro and subscription status in sync regardless of client behaviour.",
+      },
+    ],
   },
 ];
 

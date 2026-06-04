@@ -1,0 +1,14 @@
+flowchart TD
+    P["Peer joins arena<br/>useWebRTCMesh"]
+    GP["webrtc:get-peers<br/>list current room peers"]
+    Off["Create RTCPeerConnection<br/>emit webrtc:offer SDP"]
+    Sig{{"Socket.IO relays signalling<br/>to a specific peer socket"}}
+    Ans["Peer replies webrtc:answer SDP"]
+    Ice["webrtc:ice-candidate<br/>exchanged both ways"]
+    Conn["Direct P2P connection<br/>established per peer"]
+    Mesh[("Full audio mesh<br/>media browser to browser only")]
+    Note["Server never touches media -<br/>only SDP offers/answers + ICE"]
+
+    P --> GP --> Off --> Sig
+    Sig --> Ans --> Ice --> Conn --> Mesh
+    Mesh -.-> Note

@@ -1,0 +1,24 @@
+flowchart TD
+    Open{{"debate:scoring-window-opened<br/>Pro rooms with human judges"}}
+    Sub["Judges submit + lock scores<br/>debate:submit / lock-judge-scores"]
+
+    subgraph Pillars["credibility.service - session score"]
+        P1["P1 Rank Agreement 30%<br/>Spearman vs AI"]
+        P2["P2 Gap Preservation 20%"]
+        P3["P3 Consensus Similarity 15%<br/>vs human median"]
+        P6["P6 Integrity 10%<br/>penalise identical scores"]
+        P4["P4 Outlier Coherence 10%<br/>needs >=3 sessions"]
+        P5["P5 Bias Detection 15%<br/>needs >=5 sessions"]
+    end
+
+    Cap{"P5 bias severity? CV thresholds"}
+    Mul["Hard cap multiplier<br/>clean x1.0 / mod x0.75 / severe x0.50"]
+    EMA["Rolling EMA update<br/>lambda = 2/(min(N,20)+1)<br/>new = lam*session + (1-lam)*prev"]
+    New["New judges start at 0.75"]
+    Band["Band: Strong >=0.75 /<br/>Moderate 0.45-0.74 / Flagged <0.45"]
+    JS[("Write JudgeSession doc<br/>raw + pillars + credibility")]
+
+    Open --> Sub --> Pillars
+    Pillars --> Cap --> Mul --> EMA
+    New -.->|first session| EMA
+    EMA --> Band --> JS

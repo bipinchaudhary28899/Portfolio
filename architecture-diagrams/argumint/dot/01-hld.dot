@@ -1,0 +1,29 @@
+digraph HLD {
+  rankdir=TB; bgcolor=white;
+  node [shape=box, fontname="Helvetica", fontsize=11, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black, fontcolor=black];
+  graph [fontname="Helvetica", labelloc=t, label="Argumint — High-Level Design"];
+
+  User    [shape=oval, label="User"];
+  Browser [label="Browser — React 19 + Vite SPA\nlobby, arena, buzzer UI, Web Speech"];
+  API     [label="Express 4 API — Render\nREST: /auth /rooms /debates /payments"];
+  IO      [label="Socket.IO server\nroom:* debate:* buzzer:* webrtc:*"];
+  Mongo   [shape=cylinder, label="MongoDB (Mongoose)\nUser, Room, Debate, JudgeSession"];
+  Redis   [shape=cylinder, label="Redis (ioredis)\nsessions + buzzer locks/cooldowns"];
+  OAI     [label="OpenAI\nWhisper transcribe + GPT-4o-mini judge"];
+  RZP     [label="Razorpay\nsubscriptions + webhooks"];
+
+  User -> Browser;
+  Browser -> API [label="HTTPS REST + Bearer JWT"];
+  Browser -> IO  [label="WSS live state"];
+  Browser -> Browser [label="WebRTC audio mesh (P2P)"];
+
+  API -> Mongo;
+  API -> Redis;
+  IO  -> Mongo;
+  IO  -> Redis [label="single-session + buzzer locks"];
+  IO  -> OAI   [label="transcribe + judge"];
+  API -> OAI   [label="Whisper fallback"];
+  API -> RZP   [label="create / verify"];
+  RZP -> API   [label="webhook (HMAC raw body)"];
+}

@@ -1,0 +1,18 @@
+flowchart TD
+    End{{"Debate result finalised"}}
+    Award["Award XP per debate<br/>persist user.xp + stats W/L"]
+    Calc["getLevelInfo totalXP<br/>levels.ts lookup table"]
+    Tier["Returns current tier,<br/>next tier, progress %"]
+    Sep["Separate from Judge Credibility<br/>two independent scoring zones"]
+    UI["Home player card +<br/>Level Rewards page"]
+
+    subgraph Ladder["Tiers: Novice -> Grand Master (0 -> 7000 XP)"]
+        L1["L1 Novice 0 / L2 Debater 150 / L3 Arguer 400"]
+        L2["L4 Advocate 750 / L5 Orator 1200 / L6 Rhetorician 1800"]
+        L3["L7 Sophist 2600 / L8 Dialectician 3600"]
+        L4["L9 Logician 5000 / L10 Grand Master 7000"]
+    end
+
+    End --> Award --> Calc --> Tier --> UI
+    Tier --> Ladder
+    Award -.-> Sep

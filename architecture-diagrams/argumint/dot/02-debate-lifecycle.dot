@@ -1,0 +1,34 @@
+digraph Lifecycle {
+  rankdir=TB; bgcolor=white; compound=true;
+  node [shape=box, fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Life of a Debate — End to End"];
+
+  Create [label="Create room (POST /rooms/create)\nmotion, mode, rounds, turn duration\n6-char code, status=lobby"];
+  Lobby  [label="Lobby — join + ready up\nroom:join / room:update-status"];
+  Vote   [shape=diamond, label="Optional topic\nvoting?"];
+  Voting [label="room:start-voting ->\nvote-topic -> end-voting"];
+  Start  [label="Host: room:start-debate\nassign FOR/AGAINST, build turn order\npersist Debate, debate:started"];
+  Prep   [label="Prep screen -> arena"];
+  Mode   [shape=diamond, label="Debate mode?"];
+  Alt    [label="Alternate: per-turn timers\ndebate:turn-started / -ended"];
+  Buz    [label="Buzzer: grab-the-mic\nbuzzer:grab / holder-changed"];
+  Judge  [label="Assemble transcript ->\nAI judge (GPT-4o-mini)\ndebate:result-ready"];
+  Human  [shape=diamond, label="Human judges\nseated?"];
+  Cred   [label="Scoring window -> submit + lock\ncredibility.service updates"];
+  Result [label="Result page: leaderboard,\nper-axis breakdown, winning side"];
+  Persist[shape=cylinder, label="Persist stats, xp, judgeStats"];
+
+  Create -> Lobby -> Vote;
+  Vote -> Voting [label="yes"];
+  Vote -> Start  [label="no"];
+  Voting -> Start;
+  Start -> Prep -> Mode;
+  Mode -> Alt [label="alternate"];
+  Mode -> Buz [label="buzzer"];
+  Alt -> Judge; Buz -> Judge;
+  Judge -> Human;
+  Human -> Cred   [label="yes"];
+  Human -> Result [label="no"];
+  Cred -> Result -> Persist;
+}
