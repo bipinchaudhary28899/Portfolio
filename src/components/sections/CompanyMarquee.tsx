@@ -5,13 +5,34 @@
    logos for the firms/teams Bipin has worked with. The track is
    rendered twice and translated -50% so the loop is seamless.
    Pauses on hover, respects prefers-reduced-motion.
+
+   Logos are full-colour by default everywhere. The muted grayscale-
+   with-hover effect is enabled ONLY when JavaScript positively
+   confirms a real mouse device (no touch). Pure CSS media queries
+   (hover/pointer) proved unreliable on some Android browsers that
+   mis-report their capabilities, so we also check touch points.
 ═══════════════════════════════════════════════════════════════ */
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { companyLogos } from "@/data/portfolio";
 
 export function CompanyMarquee() {
   const loop = [...companyLogos, ...companyLogos];
+  const [mouseDevice, setMouseDevice] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      const hasTouch =
+        "ontouchstart" in window || (navigator.maxTouchPoints ?? 0) > 0;
+      const finePointer = window.matchMedia(
+        "(hover: hover) and (pointer: fine)",
+      ).matches;
+      // Only a non-touch, fine-pointer device gets the grayscale/hover effect.
+      setMouseDevice(finePointer && !hasTouch);
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   return (
     <section
@@ -39,7 +60,7 @@ export function CompanyMarquee() {
 
         {/* ── Moving logo strip ── */}
         <div
-          className="cm-viewport"
+          className={`cm-viewport${mouseDevice ? " cm-desktop" : ""}`}
           style={{
             WebkitMaskImage:
               "linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%)",
@@ -76,7 +97,6 @@ export function CompanyMarquee() {
           gap: 1.25rem;
           animation: cm-scroll 32s linear infinite;
         }
-        .cm-viewport:hover .cm-track { animation-play-state: paused; }
         .cm-item {
           position: relative;
           flex: 0 0 auto;
@@ -85,7 +105,7 @@ export function CompanyMarquee() {
           opacity: 1;
           transition: opacity .3s ease, transform .3s ease;
         }
-        /* Touch devices have no hover, so logos stay full-colour by default. */
+        /* Default everywhere (incl. all touch devices): full colour. */
         .cm-logo {
           filter: grayscale(0);
           transition: filter .3s ease;
@@ -96,15 +116,12 @@ export function CompanyMarquee() {
           .cm-item { width: 12rem; height: 3.75rem; }
           .cm-logo { padding: 0.5rem; }
         }
-        /* Grayscale-with-hover reveal only on true mouse devices.
-           Requiring pointer: fine (not just hover: hover) keeps logos
-           full-colour on Android/touch, which can mis-report hover. */
-        @media (hover: hover) and (pointer: fine) {
-          .cm-item { opacity: 0.55; }
-          .cm-logo { filter: grayscale(1); }
-          .cm-item:hover { opacity: 1; transform: translateY(-2px); }
-          .cm-item:hover .cm-logo { filter: grayscale(0); }
-        }
+        /* Grayscale-with-hover reveal: enabled only when JS adds .cm-desktop. */
+        .cm-desktop:hover .cm-track { animation-play-state: paused; }
+        .cm-desktop .cm-item { opacity: 0.55; }
+        .cm-desktop .cm-logo { filter: grayscale(1); }
+        .cm-desktop .cm-item:hover { opacity: 1; transform: translateY(-2px); }
+        .cm-desktop .cm-item:hover .cm-logo { filter: grayscale(0); }
         @keyframes cm-scroll {
           from { transform: translateX(0); }
           to   { transform: translateX(-50%); }
