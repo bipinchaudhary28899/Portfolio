@@ -4,10 +4,19 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
+import type { SVGProps } from "react";
 import { codingPlatforms } from "@/data/portfolio";
+import { GithubIcon, LeetCodeIcon, HackerRankIcon } from "@/components/ui/icons";
 import { useLoadingComplete } from "@/context/LoadingContext";
 
 gsap.registerPlugin(ScrollTrigger);
+
+/* Map each platform to its brand icon. */
+const PLATFORM_ICONS: Record<string, (props: SVGProps<SVGSVGElement>) => React.JSX.Element> = {
+  LeetCode: LeetCodeIcon,
+  HackerRank: HackerRankIcon,
+  GitHub: GithubIcon,
+};
 
 /* Split a stat like "350+", "5★", "20+" into its animatable number and the
    surrounding text so we can count 0 → number while keeping the suffix. */
@@ -113,6 +122,7 @@ export function CodingPlatforms() {
         <div className="cp-grid hidden sm:grid sm:grid-cols-3 gap-6">
           {codingPlatforms.map((p) => {
             const { prefix, target, suffix, decimals } = parseStat(p.stat);
+            const Icon = PLATFORM_ICONS[p.name];
             return (
               <a key={p.id} href={p.url} target="_blank" rel="noopener noreferrer"
                 className="cp-card opacity-0 group rounded-2xl border p-8 flex flex-col gap-5 relative overflow-hidden transition-transform duration-300 hover:-translate-y-2"
@@ -121,7 +131,8 @@ export function CodingPlatforms() {
                 <div className="absolute top-0 left-0 right-0 h-px" style={{ background: p.color, opacity: 0.6 }} />
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold uppercase tracking-widest" style={{ color: "var(--muted)" }}>
+                  <span className="flex items-center gap-2.5 text-sm font-bold uppercase tracking-widest" style={{ color: "var(--muted)" }}>
+                    {Icon && <Icon width={18} height={18} style={{ color: p.color }} />}
                     {p.name}
                   </span>
                   <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -154,6 +165,7 @@ export function CodingPlatforms() {
         <div className="cp-grid grid grid-cols-1 gap-3 sm:hidden">
           {codingPlatforms.map((p) => {
             const { prefix, target, suffix, decimals } = parseStat(p.stat);
+            const Icon = PLATFORM_ICONS[p.name];
             return (
               <a key={p.id} href={p.url} target="_blank" rel="noopener noreferrer"
                 className="cp-card opacity-0 group relative flex items-center gap-4 rounded-xl border p-4 overflow-hidden"
@@ -177,7 +189,8 @@ export function CodingPlatforms() {
                 {/* Info */}
                 <div className="flex flex-col gap-1.5 min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-bold uppercase tracking-widest truncate" style={{ color: "var(--fg)" }}>
+                    <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest truncate" style={{ color: "var(--fg)" }}>
+                      {Icon && <Icon width={15} height={15} className="flex-shrink-0" style={{ color: p.color }} />}
                       {p.name}
                     </span>
                     <ArrowUpRight size={15} className="flex-shrink-0" style={{ color: "var(--muted)" }} />

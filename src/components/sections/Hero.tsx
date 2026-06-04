@@ -147,37 +147,6 @@ export function Hero() {
             </a>
           ))}
           <span className="hidden sm:block text-xs" style={{ color: "var(--muted)" }}>{personalInfo.location}</span>
-
-          {/* Desktop hint */}
-          <span className="hidden sm:flex items-center gap-1.5 font-mono text-xs" style={{ color: "var(--muted)", opacity: 0.55 }}>
-            <span>·</span>
-            <span>try typing</span>
-            <kbd style={{
-              padding:       "1px 5px",
-              borderRadius:  "4px",
-              border:        "1px solid var(--border)",
-              background:    "var(--bg-alt)",
-              color:         "var(--accent)",
-              fontSize:      "0.7rem",
-              letterSpacing: "0.05em",
-            }}>bipin</kbd>
-          </span>
-
-          {/* Mobile tap button */}
-          <button
-            className="flex sm:hidden items-center gap-1.5 font-mono text-xs px-2 py-1 rounded-md border"
-            style={{
-              border:     "1px solid var(--border)",
-              background: "var(--card)",
-              color:      "var(--accent)",
-              opacity:    0.75,
-            }}
-            onClick={() => window.dispatchEvent(new CustomEvent("open-cli"))}
-            aria-label="Open terminal"
-          >
-            <span style={{ fontSize: "0.8rem" }}>{"›_"}</span>
-            <span style={{ color: "var(--muted)", fontSize: "0.65rem" }}>terminal</span>
-          </button>
         </div>
       </div>
 

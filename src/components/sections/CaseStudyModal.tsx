@@ -179,6 +179,28 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
         {/* ══ BODY ═══════════════════════════════════════════════════════════ */}
         <div className="px-6 sm:px-10 pt-8 pb-4">
 
+          {/* Origin — the story behind the project, full width */}
+          {cs.origin && (
+            <div
+              className="rounded-2xl p-5 sm:p-6 mb-6"
+              style={{
+                background:  "var(--card)",
+                border:      "1.5px solid var(--border)",
+                borderLeft:  "2.5px solid var(--accent)",
+              }}
+            >
+              <p
+                className="text-xs font-bold tracking-widest uppercase mb-3"
+                style={{ color: "var(--accent)" }}
+              >
+                The Origin
+              </p>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
+                {cs.origin}
+              </p>
+            </div>
+          )}
+
           {/* Problem — full width */}
           <div
             className="rounded-2xl p-5 sm:p-6 mb-6"

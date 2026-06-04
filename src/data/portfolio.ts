@@ -25,6 +25,7 @@ export const personalInfo = {
 };
 
 export interface CaseStudy {
+  origin: string;
   problem: string;
   decisions: { title: string; detail: string }[];
   challenges: { title: string; detail: string }[];
@@ -48,6 +49,8 @@ export const projects = [
       { value: "30–40%", label: "feed latency cut" },
     ],
     caseStudy: {
+      origin:
+        "StreamSphere began as a way to upskill on AWS. I set out to build a simple YouTube clone — a hands-on excuse to learn S3, Lambda, CloudFront, and the wider serverless ecosystem. But as I kept adding features, swapping in new tech, and reworking the architecture, it outgrew the clone entirely and became its own product: a streaming platform with a serverless AI enrichment pipeline and a layered performance design. The steepest learning curve was AWS itself — wiring Lambda, S3, and CloudFront into one coherent serverless pipeline.",
       problem:
         "Most video platforms transcode on upload but still suffer from cold-start latency because segments aren't cached at the edge. Users abandon streams that take over 3 seconds to start — a direct hit to engagement. I needed a pipeline that produced edge-ready HLS segments the moment a video was uploaded, with zero server idle cost between uploads.",
       decisions: [
@@ -166,6 +169,8 @@ export const projects = [
       { value: "Live", label: "queue management" },
     ],
     caseStudy: {
+      origin:
+        "DentalConnect started from a real need in my own family. A close family member is a dentist who wanted a website where patients could book appointments online. That single, concrete use case became the seed for a full platform — a scheduling engine, live queue management, and WhatsApp-based OTP auth all grew around it. The learning curve here was Next.js and PostgreSQL, plus a complete end-to-end integration of the WhatsApp API for real-world messaging.",
       problem:
         "The clinic was running appointments on paper and WhatsApp messages — doctors double-booked, patients showed up at wrong times, and there was no visibility into the live queue. No-show rates sat around 25–30%, typical for clinics with no automated reminders. The core challenge was modeling a scheduling engine complex enough to handle doctor leaves, emergency slot blocks, and recurring weekly availability without creating a maintenance nightmare.",
       decisions: [
@@ -232,6 +237,8 @@ export const projects = [
       { value: "GPT-4", label: "counterarguments" },
     ],
     caseStudy: {
+      origin:
+        "With Argumint I wanted to build something genuinely useful — production-ready and valuable to real people. The goal was a platform that helps anyone sharpen how they argue: practising communication, prepping for a group-discussion round, or running structured debates. It scales from a solo learner all the way to a large IT firm organising debates at scale. The learning curve was real-time systems — Socket.IO, live data sync, and race-free room creation that keeps every participant's debate state consistent.",
       problem:
         "Traditional debate forums are static — you post an argument and wait hours for another human to respond. This creates echo chambers: only users who already agree engage, while the original poster never stress-tests their reasoning. The goal was to build a platform where every argument gets an immediate, intelligent, steelmanned counterpoint — making the act of forming an argument genuinely harder and more productive.",
       decisions: [
@@ -345,6 +352,14 @@ export const projects = [
       },
     ],
   },
+];
+
+/* Logos of companies/teams worked with — used by the motion marquee. */
+export const companyLogos = [
+  { name: "SAP Labs", src: "/images/logos/sap-logo.png" },
+  { name: "Nagarro", src: "/images/logos/nagarro-logo.png" },
+  { name: "Coding Ninjas", src: "/images/logos/coding_ninjas_logo.png" },
+  { name: "FoodWagon", src: "/images/logos/Foodwagon-logo.png" },
 ];
 
 export const skills = {

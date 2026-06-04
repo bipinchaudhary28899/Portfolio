@@ -7,10 +7,10 @@ import { Education }          from "@/components/sections/Education";
 import { OpenSource }         from "@/components/sections/OpenSource";
 import { CodingPlatforms }    from "@/components/sections/CodingPlatforms";
 import { Certifications }     from "@/components/sections/Certifications";
+import { CompanyMarquee }     from "@/components/sections/CompanyMarquee";
 import { FreelanceBanner }    from "@/components/sections/FreelanceBanner";
 import { FreelanceServices }  from "@/components/sections/FreelanceServices";
 import { Contact }            from "@/components/sections/Contact";
-import { Footer }             from "@/components/ui/Footer";
 
 export default function Home() {
   return (
@@ -24,10 +24,10 @@ export default function Home() {
       <OpenSource />
       <CodingPlatforms />
       <Certifications />
+      <CompanyMarquee />
       <FreelanceBanner />
       <FreelanceServices />
       <Contact />
-      <Footer />
     </>
   );
 }

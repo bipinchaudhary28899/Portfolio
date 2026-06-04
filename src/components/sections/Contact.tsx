@@ -96,7 +96,7 @@ export function Contact() {
   } as const;
 
   return (
-    <section ref={sec} id="contact" className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"
+    <section ref={sec} id="contact" className="pt-24 sm:pt-36 pb-10 sm:pb-14 px-6 sm:px-12 lg:px-20"
       style={{ background: "var(--bg-alt)" }}>
       <div className="max-w-6xl mx-auto">
 
