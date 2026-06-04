@@ -27,6 +27,19 @@ const STARTERS = [
 
 const GREETING = `Hi! I'm Mr. Dexy, ${personalInfo.firstName}'s AI portfolio assistant. Ask me anything about his projects, skills, or experience.`;
 
+/* Rotating teaser questions shown in a bubble above the closed
+   launcher, to invite people to actually use the assistant.
+   Clicking the bubble opens the chat and asks the shown question. */
+const TEASERS = [
+  `Why should you hire ${personalInfo.firstName}?`,
+  `What technologies does ${personalInfo.firstName} know?`,
+  "Tell me about StreamSphere",
+  "What's the story behind Argumint?",
+  `How much AWS experience does ${personalInfo.firstName} have?`,
+  `What's ${personalInfo.firstName}'s strongest skill?`,
+  "Walk me through a project's architecture",
+];
+
 /* Split an assistant message into the main answer and the
    "You may also ask:" suggestion block, so we can render the
    suggestions as clickable chips. */
@@ -50,6 +63,9 @@ export function DexyAssistant() {
     { role: "assistant", content: GREETING },
   ]);
   const [loading, setLoading] = useState(false);
+  const [teaserIdx, setTeaserIdx] = useState(0);
+  const [teaserReady, setTeaserReady] = useState(false);
+  const [teaserDismissed, setTeaserDismissed] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +76,21 @@ export function DexyAssistant() {
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 120);
   }, [open]);
+
+  /* Reveal the teaser shortly after load so it animates in gently. */
+  useEffect(() => {
+    const t = setTimeout(() => setTeaserReady(true), 1100);
+    return () => clearTimeout(t);
+  }, []);
+
+  /* Cycle the teaser question while the panel is closed. */
+  useEffect(() => {
+    if (open || teaserDismissed) return;
+    const id = setInterval(() => setTeaserIdx((i) => (i + 1) % TEASERS.length), 3600);
+    return () => clearInterval(id);
+  }, [open, teaserDismissed]);
+
+  const showTeaser = !open && teaserReady && !teaserDismissed;
 
   const send = useCallback(
     async (text: string) => {
@@ -113,8 +144,71 @@ export function DexyAssistant() {
     [messages, loading],
   );
 
+  /* Open the panel and immediately ask the given question. */
+  const openWith = useCallback(
+    (q: string) => {
+      setTeaserDismissed(true);
+      setOpen(true);
+      setTimeout(() => send(q), 80);
+    },
+    [send],
+  );
+
   return (
     <>
+      {/* ── Rotating teaser bubble (only while closed) ── */}
+      {showTeaser && (
+        <div style={teaserWrapStyle} className="dexy-teaser">
+          <button
+            type="button"
+            onClick={() => openWith(TEASERS[teaserIdx])}
+            style={teaserButtonStyle}
+            aria-label={`Ask Mr. Dexy: ${TEASERS[teaserIdx]}`}
+          >
+            <span style={teaserLabelStyle}>Ask Mr. Dexy</span>
+            <span key={teaserIdx} className="dexy-teaser-q" style={teaserQuestionStyle}>
+              {TEASERS[teaserIdx]}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setTeaserDismissed(true)}
+            aria-label="Dismiss suggestions"
+            style={teaserCloseStyle}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+          >
+            <X size={13} />
+          </button>
+          <span style={teaserTailStyle} />
+          <style>{`
+            @keyframes dexy-teaser-pop {
+              0% { opacity: 0; transform: translateY(8px) scale(.96); }
+              100% { opacity: 1; transform: translateY(0) scale(1); }
+            }
+            @keyframes dexy-teaser-q {
+              0% { opacity: 0; transform: translateY(6px); }
+              100% { opacity: 1; transform: translateY(0); }
+            }
+            .dexy-teaser { animation: dexy-teaser-pop .35s ease both; }
+            .dexy-teaser-q { animation: dexy-teaser-q .4s ease both; display: block; }
+          `}</style>
+        </div>
+      )}
+
+      {/* ── Attention pulse ring (only while teaser is visible) ── */}
+      {showTeaser && (
+        <span aria-hidden style={pulseRingStyle}>
+          <style>{`
+            @keyframes dexy-pulse {
+              0% { transform: scale(1); opacity: .55; }
+              70% { transform: scale(1.6); opacity: 0; }
+              100% { transform: scale(1.6); opacity: 0; }
+            }
+          `}</style>
+        </span>
+      )}
+
       {/* ── Launcher bubble ── */}
       <button
         aria-label={open ? "Close assistant" : "Ask Mr. Dexy"}
@@ -348,6 +442,88 @@ const chipStyle: React.CSSProperties = {
   cursor: "pointer",
   transition: "border-color .15s ease",
   textAlign: "left",
+};
+
+/* ── Teaser bubble styles ── */
+const teaserWrapStyle: React.CSSProperties = {
+  position: "fixed",
+  bottom: "5.4rem",
+  right: "1.5rem",
+  zIndex: 59,
+  display: "flex",
+  alignItems: "stretch",
+  gap: ".25rem",
+  maxWidth: "min(264px, calc(100vw - 3rem))",
+  padding: ".55rem .5rem .55rem .7rem",
+  background: "var(--card)",
+  border: "1px solid var(--border)",
+  borderRadius: ".85rem",
+  boxShadow: "var(--shadow-lg)",
+};
+
+const teaserButtonStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: ".15rem",
+  border: "none",
+  background: "transparent",
+  padding: 0,
+  cursor: "pointer",
+  textAlign: "left",
+  minWidth: 0,
+};
+
+const teaserLabelStyle: React.CSSProperties = {
+  fontSize: ".64rem",
+  fontWeight: 600,
+  letterSpacing: ".04em",
+  textTransform: "uppercase",
+  color: "var(--muted)",
+};
+
+const teaserQuestionStyle: React.CSSProperties = {
+  fontSize: ".86rem",
+  fontWeight: 600,
+  lineHeight: 1.3,
+  color: "var(--accent)",
+};
+
+const teaserCloseStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "flex-start",
+  justifyContent: "center",
+  border: "none",
+  background: "transparent",
+  color: "var(--muted)",
+  cursor: "pointer",
+  padding: ".05rem",
+  flexShrink: 0,
+  transition: "color .15s ease",
+};
+
+const teaserTailStyle: React.CSSProperties = {
+  position: "absolute",
+  bottom: "-6px",
+  right: "20px",
+  width: "11px",
+  height: "11px",
+  background: "var(--card)",
+  borderRight: "1px solid var(--border)",
+  borderBottom: "1px solid var(--border)",
+  transform: "rotate(45deg)",
+};
+
+const pulseRingStyle: React.CSSProperties = {
+  position: "fixed",
+  bottom: "1.5rem",
+  right: "1.5rem",
+  width: "3.5rem",
+  height: "3.5rem",
+  borderRadius: "9999px",
+  background: "var(--accent)",
+  zIndex: 59,
+  pointerEvents: "none",
+  animation: "dexy-pulse 2.4s ease-out infinite",
 };
 
 /* ── Minimal Markdown renderer (no external deps) ──────────────
