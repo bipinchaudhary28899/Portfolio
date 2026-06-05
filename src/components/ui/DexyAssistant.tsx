@@ -1,7 +1,7 @@
 "use client";
 
 /* ═══════════════════════════════════════════════════════════════
-   Mr. Dexy — Floating AI Portfolio Assistant
+   Mr. Dexy - Floating AI Portfolio Assistant
    ---------------------------------------------------------------
    A bottom-right chat bubble that opens a panel. Streams answers
    from /api/dexy. Themed entirely with the site's CSS variables
@@ -130,7 +130,7 @@ export function DexyAssistant() {
       } catch (e) {
         const message =
           e instanceof Error && e.message
-            ? `Sorry — ${e.message}. Please try again.`
+            ? `Sorry - ${e.message}. Please try again.`
             : "Sorry, something went wrong. Please try again.";
         setMessages((prev) => {
           const copy = [...prev];
@@ -237,6 +237,23 @@ export function DexyAssistant() {
         {open ? <X size={24} /> : <Bot size={26} />}
       </button>
 
+      {/* ── Mobile backdrop blur (behind the panel) ── */}
+      {open && (
+        <div
+          className="md:hidden"
+          aria-hidden
+          onClick={() => setOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 59,
+            background: "rgba(0,0,0,0.4)",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+          }}
+        />
+      )}
+
       {/* ── Chat panel ── */}
       {open && (
         <div
@@ -300,6 +317,7 @@ export function DexyAssistant() {
             style={{
               flex: 1,
               overflowY: "auto",
+              overscrollBehavior: "contain",
               padding: "1rem",
               display: "flex",
               flexDirection: "column",

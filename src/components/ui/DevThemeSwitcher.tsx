@@ -1,2 +1,2 @@
-// Removed — dev-only component, no longer needed.
+// Removed - dev-only component, no longer needed.
 export {};

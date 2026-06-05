@@ -54,7 +54,7 @@ export default function LoadingWrapper({ children }: LoadingWrapperProps) {
           changes innerHeight. Because we run with `ignoreMobileResize: true`
           (to avoid jitter), that one legitimate height change must be picked
           up manually, otherwise every section's start position is computed
-          against the *tall* initial viewport and the reveals fire too early —
+          against the *tall* initial viewport and the reveals fire too early -
           so the mid-page sections appear already-revealed (static) by the
           time you scroll to them.                                          */
     const timers = [120, 400, 900].map((ms) =>
@@ -104,7 +104,7 @@ export default function LoadingWrapper({ children }: LoadingWrapperProps) {
      touch fling) or moved programmatically, the browser can advance the scroll
      position past a section's entire start→end range between two ScrollTrigger
      samples. The "active" state is never observed, so "play" never fires and
-     the section stays at opacity 0 — appearing static. It only heals if you
+     the section stays at opacity 0 - appearing static. It only heals if you
      scroll back through it slowly. Because it depends on frame timing, it is
      intermittent.
 
@@ -128,7 +128,7 @@ export default function LoadingWrapper({ children }: LoadingWrapperProps) {
       ScrollTrigger.update();
       (ScrollTrigger.getAll() as unknown as STLike[]).forEach((st) => {
         if (st.vars.scrub) return;
-        if (st.scroll() < st.start) return; // start not reached — let it animate later
+        if (st.scroll() < st.start) return; // start not reached - let it animate later
         const anim = st.animation;
         if (anim) {
           if (!anim.isActive() && anim.progress() < 1) anim.progress(1);

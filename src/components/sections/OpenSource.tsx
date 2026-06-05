@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ExternalLink, GitMerge, Bug, FileText, Zap } from "lucide-react";
+import { ExternalLink, GitMerge, Bug, FileText, Zap, ChevronDown } from "lucide-react";
 import { openSourceContributions } from "@/data/portfolio";
 import type { ContributionType } from "@/data/portfolio";
 import { useLoadingComplete } from "@/context/LoadingContext";
@@ -19,6 +19,17 @@ const typeConfig: Record<ContributionType, { label: string; color: string; Icon:
 export function OpenSource() {
   const sec = useRef<HTMLElement>(null);
   const loadingComplete = useLoadingComplete();
+  /* Mobile-only: collapse each card's description behind a toggle.
+     Multiple can be open at once. Desktop always shows the description. */
+  const [openSet, setOpenSet] = useState<Set<number>>(new Set());
+  const isOpen = (id: number) => openSet.has(id);
+  const toggle = (id: number) =>
+    setOpenSet((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   useEffect(() => {
     if (!loadingComplete) return;
@@ -71,7 +82,7 @@ export function OpenSource() {
         {/* Header */}
         <div className="os-header mb-6">
           <p className="os-label section-label mb-3" style={{ opacity: 0 }}>Community</p>
-          <h2 className="os-title font-black tracking-tight leading-none"
+          <h2 className="os-title heading-accent font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
             Contributions
           </h2>
@@ -111,26 +122,59 @@ export function OpenSource() {
                       <cfg.Icon size={11} className="inline mr-1" />{cfg.label}
                     </span>
                     <span className="text-xs font-mono" style={{ color: "var(--muted)" }}>{c.date}</span>
-                    <span className="ml-auto flex items-center gap-1 text-xs font-medium" style={{ color: "var(--muted)" }}>
+                    <span className="sm:ml-auto flex items-center gap-1 text-xs font-medium" style={{ color: "var(--muted)" }}>
                       <span className="w-2.5 h-2.5 rounded-full" style={{ background: c.langColor }} />
                       {c.language}
                     </span>
                   </div>
 
-                  {/* Title + repo */}
-                  <div>
-                    <h3 className="text-base font-semibold mb-1" style={{ color: "var(--fg)" }}>
-                      {c.prTitle}
-                    </h3>
-                    <p className="text-xs" style={{ color: "var(--muted)" }}>
-                      {c.repo} · {c.prNumber}
-                    </p>
-                  </div>
+                  {/* Title + repo — the whole header toggles the description
+                      on mobile (gets the global button press effect). Inert on
+                      desktop, where the description is always shown. */}
+                  <button
+                    type="button"
+                    onClick={() => toggle(c.id)}
+                    aria-expanded={isOpen(c.id)}
+                    aria-label="Toggle description"
+                    className="w-full text-left flex items-start justify-between gap-3 sm:pointer-events-none"
+                  >
+                    <div className="min-w-0">
+                      <h3 className="text-base font-semibold mb-1" style={{ color: "var(--fg)" }}>
+                        {c.prTitle}
+                      </h3>
+                      <p className="text-xs" style={{ color: "var(--muted)" }}>
+                        {c.repo} · {c.prNumber}
+                      </p>
+                    </div>
+                    <ChevronDown
+                      size={18}
+                      className="sm:hidden shrink-0 mt-0.5"
+                      style={{
+                        color: "var(--muted)",
+                        transform: isOpen(c.id) ? "rotate(180deg)" : "rotate(0deg)",
+                        transition: "transform 0.3s ease",
+                      }}
+                    />
+                  </button>
 
-                  {/* Description */}
-                  <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
-                    {c.description}
-                  </p>
+                  {/* Description — collapsible on mobile (smooth height + fade),
+                      always shown on desktop */}
+                  <div
+                    className={`grid transition-[grid-template-rows] duration-[350ms] ease-[cubic-bezier(0.4,0,0.2,1)] sm:grid-rows-[1fr] ${
+                      isOpen(c.id) ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <p
+                        className={`text-sm leading-relaxed transition-opacity duration-300 sm:opacity-100 ${
+                          isOpen(c.id) ? "opacity-100" : "opacity-0"
+                        }`}
+                        style={{ color: "var(--fg-dim)" }}
+                      >
+                        {c.description}
+                      </p>
+                    </div>
+                  </div>
 
                   {/* Link */}
                   <a href={c.prUrl} target="_blank" rel="noopener noreferrer"

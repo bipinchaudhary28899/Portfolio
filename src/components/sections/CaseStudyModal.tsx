@@ -84,7 +84,7 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
               "linear-gradient(180deg, var(--shine-top) 0px, transparent 1px)",
           }}
         >
-          {/* Row 1: prev/next counter — left | links + close — right */}
+          {/* Row 1: prev/next counter - left | links + close - right */}
           <div className="flex items-center justify-between gap-3 mb-2">
             {/* Left: prev/next + counter */}
             <div className="flex items-center gap-2">
@@ -167,7 +167,7 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
             </div>
           </div>
 
-          {/* Row 2: full project title — always wraps, never truncates */}
+          {/* Row 2: full project title - always wraps, never truncates */}
           <h2
             className="font-black text-lg sm:text-xl leading-snug"
             style={{ color: "var(--fg)" }}
@@ -179,14 +179,13 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
         {/* ══ BODY ═══════════════════════════════════════════════════════════ */}
         <div className="px-6 sm:px-10 pt-8 pb-4">
 
-          {/* Origin — the story behind the project, full width */}
+          {/* Origin - the story behind the project, full width */}
           {cs.origin && (
             <div
               className="rounded-2xl p-5 sm:p-6 mb-6"
               style={{
                 background:  "var(--card)",
                 border:      "1.5px solid var(--border)",
-                borderLeft:  "2.5px solid var(--accent)",
               }}
             >
               <p
@@ -201,7 +200,7 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
             </div>
           )}
 
-          {/* Problem — full width */}
+          {/* Problem - full width */}
           <div
             className="rounded-2xl p-5 sm:p-6 mb-6"
             style={{
@@ -220,7 +219,7 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
             </p>
           </div>
 
-          {/* Decisions | Challenges | Architecture — 3-col on large screens */}
+          {/* Decisions | Challenges | Architecture - 3-col on large screens */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
 
             {/* Tech Decisions */}
@@ -307,7 +306,7 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
             </div>
           </div>
 
-          {/* Architecture — carousel, only when the project provides diagrams */}
+          {/* Architecture - carousel, only when the project provides diagrams */}
           {diagrams && diagrams.length > 0 && (
             <ArchitectureCarousel diagrams={diagrams} />
           )}

@@ -21,7 +21,7 @@ function ProjectCard({ p, i }: { p: (typeof projects)[0]; i: number }) {
       className="proj-card rounded-2xl border overflow-hidden flex flex-col opacity-0"
       style={{ background: "var(--card)", borderColor: "var(--border)" }}
     >
-      {/* Full landscape screenshot — no cropping */}
+      {/* Full landscape screenshot - no cropping */}
       <div className="w-full overflow-hidden" style={{ borderBottom: "1px solid var(--border)" }}>
         <Image
           src={p.image}
@@ -119,7 +119,7 @@ function ProjectPanel({
         opacity: 0.55,
         pointerEvents: "none",
       }} />
-      {/* Ghost number — more visible, gradient-tinted watermark */}
+      {/* Ghost number - more visible, gradient-tinted watermark */}
       <span
         className="absolute bottom-8 right-10 font-black font-mono pointer-events-none select-none gradient-text"
         style={{ fontSize: "clamp(6rem,11vw,11rem)", lineHeight: 1, opacity: 0.08 }}
@@ -165,13 +165,13 @@ function ProjectPanel({
               aria-label="Open live demo"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:scale-105"
               style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}>
-              <ExternalLink size={14} /> Live Demo
+              <ExternalLink size={14} /> Live
             </a>
           )}
         </div>
       </div>
 
-      {/* ── Row 2: two columns — title+desc  |  screenshot ── */}
+      {/* ── Row 2: two columns - title+desc  |  screenshot ── */}
       <div className="relative z-10 flex items-center gap-8 flex-1 py-4" style={{ minHeight: 0 }}>
 
         {/* Left text */}
@@ -247,7 +247,7 @@ function ProjectPanel({
   );
 }
 
-/* ── Mobile projects — full cards with expand + case study ───────────────── */
+/* ── Mobile projects - full cards with expand + case study ───────────────── */
 function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => void }) {
   const [open, setOpen] = useState<number | null>(null);
 
@@ -255,20 +255,9 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
     <section className="block md:hidden py-14" style={{ background: "var(--bg)" }}>
 
       {/* Header */}
-      <div className="proj-mob-hd flex items-end justify-between mb-6 px-5" style={{ opacity: 0 }}>
-        <div>
-          <p className="section-label mb-2">Work</p>
-          <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Selected Projects</h2>
-        </div>
-        <a
-          href="https://github.com/bipinchaudhary28899"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs font-medium pb-1"
-          style={{ color: "var(--accent)" }}
-        >
-          GitHub →
-        </a>
+      <div className="proj-mob-hd mb-6 px-5" style={{ opacity: 0 }}>
+        <p className="section-label mb-2">Work</p>
+        <h2 className="heading-accent text-3xl font-black" style={{ color: "var(--fg)" }}>Selected Projects</h2>
       </div>
 
       {/* ── Project cards ── */}
@@ -356,14 +345,14 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white"
                         style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}
                       >
-                        Live Demo
+                        Live
                         <ExternalLink size={13} />
                       </a>
                     )}
                   </div>
                 </div>
 
-                {/* First 3 tech tags — always visible */}
+                {/* First 3 tech tags - always visible */}
                 <div className="flex flex-wrap gap-1.5 mb-3">
                   {p.tech.slice(0, 3).map(t => (
                     <span
@@ -384,7 +373,7 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
                   )}
                 </div>
 
-                {/* Case Study — always visible on the mini card */}
+                {/* Case Study - always visible on the mini card */}
                 <button
                   onClick={() => onOpenCaseStudy(i)}
                   className="w-full text-xs font-bold px-4 py-2 rounded-xl transition-all mb-1"
@@ -523,7 +512,7 @@ export function Projects() {
           }
         );
 
-        /* Horizontal scrub — sum each child's rendered offsetWidth so vw-based
+        /* Horizontal scrub - sum each child's rendered offsetWidth so vw-based
            widths and dynamic padding don't fool the measurement.            */
         const dist = () =>
           Array.from(track.children as HTMLCollectionOf<HTMLElement>)
@@ -593,22 +582,17 @@ export function Projects() {
       >
         <div
           ref={headRef}
-          className="absolute top-0 left-0 right-0 z-20 opacity-0 flex items-end justify-between px-14 pt-24 pb-5"
+          className="absolute top-0 left-0 right-0 z-20 opacity-0 px-14 pt-24 pb-5"
         >
           <div>
             <p className="section-label mb-1">Work</p>
-            <h2 className="font-bold" style={{ fontSize: "clamp(1.8rem,3.5vw,3rem)", color: "var(--fg)" }}>
+            <h2 className="heading-accent font-black tracking-tight leading-none" style={{ fontSize: "clamp(2rem,4vw,3.5rem)", color: "var(--fg)" }}>
               Selected Projects
             </h2>
           </div>
-          <a href="https://github.com/bipinchaudhary28899" target="_blank" rel="noopener noreferrer"
-            className="text-sm font-medium mb-1 flex items-center gap-1.5 transition-opacity hover:opacity-70"
-            style={{ color: "var(--accent)" }}>
-            All on GitHub →
-          </a>
         </div>
 
-        {/* Scrolling track — flex row of panels */}
+        {/* Scrolling track - flex row of panels */}
         <div ref={trackRef} className="h-track items-stretch" style={{ height: "100%" }}>
           <div style={{ flexShrink: 0, width: 56 }} />
           {projects.map((p, i) => (

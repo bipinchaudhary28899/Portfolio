@@ -46,23 +46,23 @@ export const projects = [
     cardMetrics: [
       { value: "40%", label: "faster startup" },
       { value: "3", label: "adaptive bitrates" },
-      { value: "30–40%", label: "feed latency cut" },
+      { value: "30-40%", label: "feed latency cut" },
     ],
     caseStudy: {
       origin:
-        "StreamSphere began as a way to upskill on AWS. I set out to build a simple YouTube clone — a hands-on excuse to learn S3, Lambda, CloudFront, and the wider serverless ecosystem. But as I kept adding features, swapping in new tech, and reworking the architecture, it outgrew the clone entirely and became its own product: a streaming platform with a serverless AI enrichment pipeline and a layered performance design. The steepest learning curve was AWS itself — wiring Lambda, S3, and CloudFront into one coherent serverless pipeline.",
+        "StreamSphere began as a way to upskill on AWS. I set out to build a simple YouTube clone - a hands-on excuse to learn S3, Lambda, CloudFront, and the wider serverless ecosystem. But as I kept adding features, swapping in new tech, and reworking the architecture, it outgrew the clone entirely and became its own product: a streaming platform with a serverless AI enrichment pipeline and a layered performance design. The steepest learning curve was AWS itself - wiring Lambda, S3, and CloudFront into one coherent serverless pipeline.",
       problem:
-        "Most video platforms transcode on upload but still suffer from cold-start latency because segments aren't cached at the edge. Users abandon streams that take over 3 seconds to start — a direct hit to engagement. I needed a pipeline that produced edge-ready HLS segments the moment a video was uploaded, with zero server idle cost between uploads.",
+        "Most video platforms transcode on upload but still suffer from cold-start latency because segments aren't cached at the edge. Users abandon streams that take over 3 seconds to start - a direct hit to engagement. I needed a pipeline that produced edge-ready HLS segments the moment a video was uploaded, with zero server idle cost between uploads.",
       decisions: [
         {
           title: "HLS over WebRTC",
           detail:
-            "WebRTC's peer topology doesn't scale for VOD. HLS with adaptive bitrate (360p / 720p / 1080p) lets CloudFront cache segments globally — the client auto-selects quality based on bandwidth, with no server involvement after upload.",
+            "WebRTC's peer topology doesn't scale for VOD. HLS with adaptive bitrate (360p / 720p / 1080p) lets CloudFront cache segments globally - the client auto-selects quality based on bandwidth, with no server involvement after upload.",
         },
         {
           title: "Lambda + FFmpeg over Elastic Transcoder",
           detail:
-            "AWS Elastic Transcoder costs $0.015/min and has limited format control. A custom FFmpeg Lambda layer gave full control over segment duration, keyframe intervals, and audio normalization at a fraction of the cost — roughly 70% cheaper for my workload.",
+            "AWS Elastic Transcoder costs $0.015/min and has limited format control. A custom FFmpeg Lambda layer gave full control over segment duration, keyframe intervals, and audio normalization at a fraction of the cost - roughly 70% cheaper for my workload.",
         },
         {
           title: "Redis cursor cache over offset pagination",
@@ -74,7 +74,7 @@ export const projects = [
         {
           title: "Lambda cold-start on FFmpeg layer",
           detail:
-            "The FFmpeg binary is 90 MB. Cold starts were hitting 4–6s, negating the latency benefit. Fixed by using a scheduled pre-warm Lambda invocation every 5 minutes and compressing the binary with UPX — reduced cold start to under 800ms.",
+            "The FFmpeg binary is 90 MB. Cold starts were hitting 4-6s, negating the latency benefit. Fixed by using a scheduled pre-warm Lambda invocation every 5 minutes and compressing the binary with UPX - reduced cold start to under 800ms.",
         },
         {
           title: "HLS segment drift on variable-frame-rate input",
@@ -89,9 +89,9 @@ export const projects = [
       ],
       metrics: [
         { value: "40%", label: "Startup latency reduction", detail: "From ~3.2s to ~1.9s average first-frame time, measured across 50 test uploads on varied network conditions." },
-        { value: "70%", label: "Transcoding cost cut", detail: "Lambda + FFmpeg vs AWS Elastic Transcoder on equivalent workload — from $0.015/min to ~$0.004/min equivalent." },
+        { value: "70%", label: "Transcoding cost cut", detail: "Lambda + FFmpeg vs AWS Elastic Transcoder on equivalent workload - from $0.015/min to ~$0.004/min equivalent." },
         { value: "<800ms", label: "Lambda cold start", detail: "After UPX compression of the FFmpeg binary and scheduled pre-warm Lambda invocations." },
-        { value: "30–40%", label: "Feed latency reduction", detail: "Redis cursor cache vs MongoDB offset pagination on a collection of 10,000+ videos." },
+        { value: "30-40%", label: "Feed latency reduction", detail: "Redis cursor cache vs MongoDB offset pagination on a collection of 10,000+ videos." },
       ],
       architecture:
         "Upload → S3 (raw) → S3 Event → Lambda (FFmpeg) → S3 (HLS segments) → CloudFront CDN → Angular Player\n\nParallel: S3 Event → Lambda (Whisper + GPT) → MongoDB (metadata)\n\nFeed API: Angular → Node.js → Redis (cursor) → MongoDB → Response",
@@ -100,7 +100,7 @@ export const projects = [
       {
         src: "/images/streamsphere-architecture/01-hld.png",
         title: "High-Level Design",
-        caption: "The full system at a glance — Angular SPA, a stateless Express API, MongoDB/Redis, and the S3 → Lambda → CloudFront media path alongside the AI services.",
+        caption: "The full system at a glance - Angular SPA, a stateless Express API, MongoDB/Redis, and the S3 → Lambda → CloudFront media path alongside the AI services.",
       },
       {
         src: "/images/streamsphere-architecture/02-upload-transcode.png",
@@ -110,7 +110,7 @@ export const projects = [
       {
         src: "/images/streamsphere-architecture/03-ai-pipeline.png",
         title: "AI Enrichment Pipeline",
-        caption: "All five Lambda phases — FFmpeg outputs, audio detection, parallel Whisper transcription + GPT-4o vision, synthesis, and zero-shot categorization.",
+        caption: "All five Lambda phases - FFmpeg outputs, audio detection, parallel Whisper transcription + GPT-4o vision, synthesis, and zero-shot categorization.",
       },
       {
         src: "/images/streamsphere-architecture/04-category-generation.png",
@@ -124,12 +124,12 @@ export const projects = [
       },
       {
         src: "/images/streamsphere-architecture/06-auth.png",
-        title: "Authentication — Google OAuth + JWT",
+        title: "Authentication - Google OAuth + JWT",
         caption: "Google verifies the ID token, the backend upserts the user and issues an HS256 JWT that an interceptor attaches to every subsequent request.",
       },
       {
         src: "/images/streamsphere-architecture/07-feed-pagination.png",
-        title: "Feed — Cursor Pagination",
+        title: "Feed - Cursor Pagination",
         caption: "Keyset pagination on _id keeps deep-scroll queries O(1) and insert-stable, prefetched 800px early via an IntersectionObserver sentinel.",
       },
       {
@@ -150,7 +150,7 @@ export const projects = [
       {
         src: "/images/streamsphere-architecture/11-resilience.png",
         title: "Resilience & Fallbacks",
-        caption: "Every subsystem degrades gracefully — AI, Redis, and player failures are isolated so a single fault never takes the whole app down.",
+        caption: "Every subsystem degrades gracefully - AI, Redis, and player failures are isolated so a single fault never takes the whole app down.",
       },
     ],
   },
@@ -170,14 +170,14 @@ export const projects = [
     ],
     caseStudy: {
       origin:
-        "DentalConnect started from a real need in my own family. A close family member is a dentist who wanted a website where patients could book appointments online. That single, concrete use case became the seed for a full platform — a scheduling engine, live queue management, and WhatsApp-based OTP auth all grew around it. The learning curve here was Next.js and PostgreSQL, plus a complete end-to-end integration of the WhatsApp API for real-world messaging.",
+        "DentalConnect started from a real need in my own family. A close family member is a dentist who wanted a website where patients could book appointments online. That single, concrete use case became the seed for a full platform - a scheduling engine, live queue management, and WhatsApp-based OTP auth all grew around it. The learning curve here was Next.js and PostgreSQL, plus a complete end-to-end integration of the WhatsApp API for real-world messaging.",
       problem:
-        "The clinic was running appointments on paper and WhatsApp messages — doctors double-booked, patients showed up at wrong times, and there was no visibility into the live queue. No-show rates sat around 25–30%, typical for clinics with no automated reminders. The core challenge was modeling a scheduling engine complex enough to handle doctor leaves, emergency slot blocks, and recurring weekly availability without creating a maintenance nightmare.",
+        "The clinic was running appointments on paper and WhatsApp messages - doctors double-booked, patients showed up at wrong times, and there was no visibility into the live queue. No-show rates sat around 25-30%, typical for clinics with no automated reminders. The core challenge was modeling a scheduling engine complex enough to handle doctor leaves, emergency slot blocks, and recurring weekly availability without creating a maintenance nightmare.",
       decisions: [
         {
           title: "WhatsApp OTP over SMS",
           detail:
-            "SMS delivery failure rates in India run 15–20% due to DND filters. WhatsApp has near-100% delivery for registered numbers and patients are already in the app. Chose the WhatsApp Business API with a 6-digit OTP flow — zero password friction and implicit phone verification in one step.",
+            "SMS delivery failure rates in India run 15-20% due to DND filters. WhatsApp has near-100% delivery for registered numbers and patients are already in the app. Chose the WhatsApp Business API with a 6-digit OTP flow - zero password friction and implicit phone verification in one step.",
         },
         {
           title: "PostgreSQL + Supabase over MongoDB",
@@ -187,33 +187,33 @@ export const projects = [
         {
           title: "Row-Level Security at the DB layer",
           detail:
-            "Rather than filtering in the API layer (where a bug leaks data), patients can only SELECT their own appointments, and doctors only see their own queues — enforced by Postgres RLS policies. Even if the API is compromised, the database refuses unauthorized reads at the query level.",
+            "Rather than filtering in the API layer (where a bug leaks data), patients can only SELECT their own appointments, and doctors only see their own queues - enforced by Postgres RLS policies. Even if the API is compromised, the database refuses unauthorized reads at the query level.",
         },
         {
           title: "Zod for end-to-end validation",
           detail:
-            "Booking a slot involves 6 fields that all need to be consistent (date, doctor, duration, slot type, patient id, time). A single Zod schema validates the API request, generates TypeScript types for the handler, and produces user-facing error messages — one source of truth instead of three.",
+            "Booking a slot involves 6 fields that all need to be consistent (date, doctor, duration, slot type, patient id, time). A single Zod schema validates the API request, generates TypeScript types for the handler, and produces user-facing error messages - one source of truth instead of three.",
         },
       ],
       challenges: [
         {
           title: "Conflict-free scheduling engine",
           detail:
-            "The hardest part: a doctor has weekly recurring availability, but also holiday blocks, emergency overrides, and existing appointments — all of which can overlap. Built a slot resolver that materializes available slots on-the-fly by taking the weekly schedule, subtracting blocks and existing appointments within the requested window, and returning only conflict-free options. Zero SQL date-range overlap using the exclusion constraint pattern.",
+            "The hardest part: a doctor has weekly recurring availability, but also holiday blocks, emergency overrides, and existing appointments - all of which can overlap. Built a slot resolver that materializes available slots on-the-fly by taking the weekly schedule, subtracting blocks and existing appointments within the requested window, and returning only conflict-free options. Zero SQL date-range overlap using the exclusion constraint pattern.",
         },
         {
           title: "WhatsApp webhook reliability",
           detail:
-            "WhatsApp webhooks retry on non-200 responses, which caused duplicate OTP sends if the DB write was slow. Added idempotency keys (hash of phone + timestamp rounded to 30s) to deduplicate incoming webhook events before processing — solved duplicate OTP complaints on day 2 of launch.",
+            "WhatsApp webhooks retry on non-200 responses, which caused duplicate OTP sends if the DB write was slow. Added idempotency keys (hash of phone + timestamp rounded to 30s) to deduplicate incoming webhook events before processing - solved duplicate OTP complaints on day 2 of launch.",
         },
         {
           title: "Live queue without WebSockets",
           detail:
-            "A full WebSocket server felt like over-engineering for a 2-doctor clinic. Used Supabase Realtime (Postgres LISTEN/NOTIFY under the hood) to push queue updates to the doctor dashboard. Zero additional infrastructure — the queue refreshes within 200ms of any appointment status change.",
+            "A full WebSocket server felt like over-engineering for a 2-doctor clinic. Used Supabase Realtime (Postgres LISTEN/NOTIFY under the hood) to push queue updates to the doctor dashboard. Zero additional infrastructure - the queue refreshes within 200ms of any appointment status change.",
         },
       ],
       metrics: [
-        { value: "0", label: "Double bookings since launch", detail: "Conflict detection runs at the database level with exclusion constraints — no two appointments can share the same doctor + time slot." },
+        { value: "0", label: "Double bookings since launch", detail: "Conflict detection runs at the database level with exclusion constraints - no two appointments can share the same doctor + time slot." },
         { value: "~30%", label: "No-show reduction", detail: "WhatsApp OTP confirmation acts as a soft commitment. Patients who complete OTP verification show up at a significantly higher rate." },
         { value: "<200ms", label: "Queue update latency", detail: "Supabase Realtime LISTEN/NOTIFY delivers appointment status changes to the doctor dashboard in under 200ms." },
         { value: "100%", label: "WhatsApp delivery rate", detail: "Compared to ~80% for SMS in India due to DND filters. Zero failed OTP deliveries since launch." },
@@ -226,7 +226,7 @@ export const projects = [
     id: 3,
     title: "Argumint",
     description:
-      "A multiplayer debate platform where players join rooms, argue for or against a motion, and get scored by an AI judge — with optional human judges whose reliability is itself scored. Supports two debate modes: Alternate (structured turn-by-turn) and Buzzer (grab-the-mic free-for-all). Live audio runs over WebRTC; everything else flows over Socket.IO.",
+      "A multiplayer debate platform where players join rooms, argue for or against a motion, and get scored by an AI judge - with optional human judges whose reliability is itself scored. Supports two debate modes: Alternate (structured turn-by-turn) and Buzzer (grab-the-mic free-for-all). Live audio runs over WebRTC; everything else flows over Socket.IO.",
     tech: ["React.js", "Socket.io", "Node.js", "MongoDB", "Whisper API", "Zod", "JWT"],
     liveUrl: "https://argumint-frontend.vercel.app/",
     githubUrl: "https://github.com/bipinchaudhary28899/Argumint",
@@ -238,9 +238,9 @@ export const projects = [
     ],
     caseStudy: {
       origin:
-        "With Argumint I wanted to build something genuinely useful — production-ready and valuable to real people. The goal was a platform that helps anyone sharpen how they argue: practising communication, prepping for a group-discussion round, or running structured debates. It scales from a solo learner all the way to a large IT firm organising debates at scale. The learning curve was real-time systems — Socket.IO, live data sync, and race-free room creation that keeps every participant's debate state consistent.",
+        "With Argumint I wanted to build something genuinely useful - production-ready and valuable to real people. The goal was a platform that helps anyone sharpen how they argue: practising communication, prepping for a group-discussion round, or running structured debates. It scales from a solo learner all the way to a large IT firm organising debates at scale. The learning curve was real-time systems - Socket.IO, live data sync, and race-free room creation that keeps every participant's debate state consistent.",
       problem:
-        "Traditional debate forums are static — you post an argument and wait hours for another human to respond. This creates echo chambers: only users who already agree engage, while the original poster never stress-tests their reasoning. The goal was to build a platform where every argument gets an immediate, intelligent, steelmanned counterpoint — making the act of forming an argument genuinely harder and more productive.",
+        "Traditional debate forums are static - you post an argument and wait hours for another human to respond. This creates echo chambers: only users who already agree engage, while the original poster never stress-tests their reasoning. The goal was to build a platform where every argument gets an immediate, intelligent, steelmanned counterpoint - making the act of forming an argument genuinely harder and more productive.",
       decisions: [
         {
           title: "GPT-4 over fine-tuned model",
@@ -250,7 +250,7 @@ export const projects = [
         {
           title: "Socket.io over polling",
           detail:
-            "In a live debate room, seeing other participants type and post arguments in real time is core to the feel of the product. Polling at 2s intervals would have introduced visible lag and unnecessary server load. Socket.io with room-based namespaces keeps each debate isolated — a message in room A never touches room B.",
+            "In a live debate room, seeing other participants type and post arguments in real time is core to the feel of the product. Polling at 2s intervals would have introduced visible lag and unnecessary server load. Socket.io with room-based namespaces keeps each debate isolated - a message in room A never touches room B.",
         },
         {
           title: "MongoDB over SQL for debate schemas",
@@ -260,7 +260,7 @@ export const projects = [
         {
           title: "JWT with refresh token rotation",
           detail:
-            "Users return to ongoing debates hours later. Short-lived access tokens (15min) with rotating refresh tokens (7 days) keep sessions active without security risk — each refresh invalidates the previous refresh token, so token theft has a narrow window.",
+            "Users return to ongoing debates hours later. Short-lived access tokens (15min) with rotating refresh tokens (7 days) keep sessions active without security risk - each refresh invalidates the previous refresh token, so token theft has a narrow window.",
         },
       ],
       challenges: [
@@ -272,7 +272,7 @@ export const projects = [
         {
           title: "AI rate limiting per user",
           detail:
-            "Without limits, a single user could run up hundreds of GPT-4 calls in minutes. Implemented a Redis sliding window counter (5 AI requests per user per minute, 50 per hour) with graceful degradation — over-limit users see a countdown timer rather than an error, which kept bounce rate low.",
+            "Without limits, a single user could run up hundreds of GPT-4 calls in minutes. Implemented a Redis sliding window counter (5 AI requests per user per minute, 50 per hour) with graceful degradation - over-limit users see a countdown timer rather than an error, which kept bounce rate low.",
         },
         {
           title: "WebSocket memory leak on room cleanup",
@@ -281,9 +281,9 @@ export const projects = [
         },
       ],
       metrics: [
-        { value: "<2s", label: "AI counterargument latency", detail: "GPT-4 response with streaming output — first token appears in ~600ms, full response in under 2 seconds for typical argument length." },
-        { value: "10+", label: "Concurrent debate rooms", detail: "Tested with 10 simultaneous rooms, 3 users each, all running AI calls in parallel — no degradation in response time or message delivery." },
-        { value: "4.5/5", label: "Counterargument quality", detail: "Beta user rating after prompt engineering iterations — up from 3/5 with the naive 'generate a counterargument' prompt." },
+        { value: "<2s", label: "AI counterargument latency", detail: "GPT-4 response with streaming output - first token appears in ~600ms, full response in under 2 seconds for typical argument length." },
+        { value: "10+", label: "Concurrent debate rooms", detail: "Tested with 10 simultaneous rooms, 3 users each, all running AI calls in parallel - no degradation in response time or message delivery." },
+        { value: "4.5/5", label: "Counterargument quality", detail: "Beta user rating after prompt engineering iterations - up from 3/5 with the naive 'generate a counterargument' prompt." },
         { value: "50/hr", label: "Rate limit per user", detail: "Sliding window Redis counter prevents runaway AI spend while keeping the experience fluid for normal usage patterns." },
       ],
       architecture:
@@ -293,7 +293,7 @@ export const projects = [
       {
         src: "/images/argumint-architecture/01-hld.png",
         title: "High-Level Design",
-        caption: "The whole system at a glance — the React SPA, the Express REST API and Socket.IO server, MongoDB/Redis, the peer-to-peer WebRTC audio mesh, and the OpenAI and Razorpay integrations.",
+        caption: "The whole system at a glance - the React SPA, the Express REST API and Socket.IO server, MongoDB/Redis, the peer-to-peer WebRTC audio mesh, and the OpenAI and Razorpay integrations.",
       },
       {
         src: "/images/argumint-architecture/02-debate-lifecycle.png",
@@ -307,22 +307,22 @@ export const projects = [
       },
       {
         src: "/images/argumint-architecture/04-lobby-presence.png",
-        title: "Real-Time Lobby — Presence & Host Controls",
+        title: "Real-Time Lobby - Presence & Host Controls",
         caption: "Room broadcasts keep every client's participant list live; a room:get-state handshake lets a late joiner or reconnecting socket rebuild full lobby state.",
       },
       {
         src: "/images/argumint-architecture/05-alternate-mode.png",
-        title: "Alternate Mode — Turn-by-Turn",
+        title: "Alternate Mode - Turn-by-Turn",
         caption: "The server is authoritative over turn order and timers: it emits turn-started with an endsAt timestamp, accepts the submitted argument (or times out), then advances.",
       },
       {
         src: "/images/argumint-architecture/06-buzzer-mode.png",
-        title: "Buzzer Mode — Grab-the-Mic",
+        title: "Buzzer Mode - Grab-the-Mic",
         caption: "A Redis lock makes 'who holds the mic' race-free; on release or timeout a short re-grab window opens before the floor frees and the mic reopens.",
       },
       {
         src: "/images/argumint-architecture/07-webrtc-audio.png",
-        title: "Live Audio — WebRTC Mesh",
+        title: "Live Audio - WebRTC Mesh",
         caption: "Socket.IO relays only SDP offers/answers and ICE candidates; the audio media itself flows directly browser-to-browser in a full peer mesh, never through the server.",
       },
       {
@@ -332,18 +332,18 @@ export const projects = [
       },
       {
         src: "/images/argumint-architecture/09-ai-judge.png",
-        title: "AI Judge — Scoring Pipeline",
-        caption: "GPT-4o-mini scores each speaker on four 0–25 axes; the service re-computes the total as the sum of parts, clamps each axis, picks a winner, and records token usage and USD cost.",
+        title: "AI Judge - Scoring Pipeline",
+        caption: "GPT-4o-mini scores each speaker on four 0-25 axes; the service re-computes the total as the sum of parts, clamps each axis, picks a winner, and records token usage and USD cost.",
       },
       {
         src: "/images/argumint-architecture/10-credibility.png",
-        title: "Judge Credibility — 6 Pillars",
+        title: "Judge Credibility - 6 Pillars",
         caption: "Each human judge's session is scored across six pillars (two need history), capped by detected bias severity, then folded into a rolling EMA credibility and written as a JudgeSession.",
       },
       {
         src: "/images/argumint-architecture/11-xp-levelling.png",
         title: "XP & Levelling",
-        caption: "Debating earns XP and progresses a 10-tier ladder from Novice to Grand Master via getLevelInfo — a scoring zone entirely separate from judge credibility.",
+        caption: "Debating earns XP and progresses a 10-tier ladder from Novice to Grand Master via getLevelInfo - a scoring zone entirely separate from judge credibility.",
       },
       {
         src: "/images/argumint-architecture/12-payments.png",
@@ -354,7 +354,7 @@ export const projects = [
   },
 ];
 
-/* Logos of companies/teams worked with — used by the motion marquee. */
+/* Logos of companies/teams worked with - used by the motion marquee. */
 export const companyLogos = [
   { name: "SAP Labs", src: "/images/logos/sap-logo.png" },
   { name: "Nagarro", src: "/images/logos/nagarro-logo.png" },
@@ -377,7 +377,7 @@ export const experiences = [
     role: "Independent Full-Stack Developer",
     company: "Self-Employed",
     companyFull: "Independent Full-Stack Developer (Remote)",
-    period: "Sept 2025 – Present",
+    period: "Sept 2025 - Present",
     logo: "",
     description:
       "Built and deployed production-grade applications including a video streaming platform (StreamSphere) and a clinic management system (DentalConnect) with real-world users. Designed end-to-end system architecture covering authentication, scheduling engines, caching strategies, and async workflows. Integrated third-party services - WhatsApp API and OpenAI - for real-time communication and AI-powered features.",
@@ -400,7 +400,7 @@ export const experiences = [
     company: "SAP Labs",
     companyFull: "SAP Labs - iXp Internship (M.Tech MNNIT Allahabad)",
     companyUrl: "https://www.sap.com/index.html",
-    period: "Aug 2024 – Jun 2025",
+    period: "Aug 2024 - Jun 2025",
     logo: "/images/logos/sap-logo.png",
     description:
       "Performed functional and regression testing for SAP Business Application Studio (BAS), ensuring reliability of development workflows and platform features. Developed automated test scripts to convert manual test cases into repeatable validation pipelines. Validated database artifacts using SAP HANA Database Explorer and tested the HANA Vector Engine for correctness and stability.",
@@ -423,7 +423,7 @@ export const experiences = [
     company: "Nagarro",
     companyFull: "Nagarro",
     companyUrl: "https://www.nagarro.com/en/",
-    period: "May 2021 – Sep 2023",
+    period: "May 2021 - Sep 2023",
     logo: "/images/logos/nagarro-logo.png",
     description:
       "Improved frontend performance by 20% TBT reduction using Angular OnPush strategy and reusable component architecture, maintaining 60 FPS under high data load. Designed and developed scalable backend services for a rail asset management system managing 170K+ assets with sub-second real-time updates. Standardised CI/CD pipelines and unit testing (Jasmine), improving deployment speed by 15% and mentoring junior developers.",
@@ -445,7 +445,7 @@ export const experiences = [
     role: "Web Development Intern",
     company: "FoodWagon",
     companyFull: "FoodWagon Private Limited · Internship",
-    period: "Jun 2020 – Jul 2020",
+    period: "Jun 2020 - Jul 2020",
     logo: "/images/logos/Foodwagon-logo.png",
     description:
       "Developed a full-stack web application for FoodWagon, enhancing user experience and functionality. Utilised HTML, CSS, and JavaScript to create a responsive and visually appealing interface. Delivered the project on time, demonstrating strong time management and organisational skills.",
@@ -466,7 +466,7 @@ export const experiences = [
     company: "Coding Ninjas",
     companyFull: "Coding Ninjas India · Internship",
     companyUrl: "https://www.codingninjas.com/",
-    period: "Jun 2019 – Sep 2019",
+    period: "Jun 2019 - Sep 2019",
     logo: "/images/logos/coding_ninjas_logo.png",
     description:
       "Assisted students in understanding and solving problems related to Data Structures and Algorithms using C++. Resolved doubts through chat support, discussion forums, and one-on-one interactions, ensuring conceptual clarity and logical thinking. Guided learners through coding exercises and debugged code to help them build strong problem-solving skills. Contributed to maintaining an engaging and supportive learning environment for better course outcomes.",
@@ -492,12 +492,12 @@ export const education = [
     institution: "MNNIT Allahabad",
     institutionFull: "Motilal Nehru National Institute of Technology, Allahabad",
     universityUrl: "https://www.mnnit.ac.in/",
-    period: "Aug 2023 – Aug 2025",
+    period: "Aug 2023 - Aug 2025",
     grade: "CPI: 8.75 / 10",
     description:
       "Advanced study in algorithms, distributed systems, machine learning, and cloud computing. Completed the SAP Labs iXp internship as part of the programme.",
     highlights: [
-      "SAP Labs iXp Internship (Aug 2024 – Jun 2025)",
+      "SAP Labs iXp Internship (Aug 2024 - Jun 2025)",
       "Research: distributed systems, cloud-native architectures, database internals",
       "CPI: 8.75 / 10",
     ],
@@ -509,7 +509,7 @@ export const education = [
     institutionFull: "Bundelkhand Institute of Engineering and Technology",
     university: "Dr. A.P.J. Abdul Kalam Technical University (AKTU), Lucknow",
     universityUrl: "https://aktu.ac.in/index.html",
-    period: "Aug 2017 – Aug 2021",
+    period: "Aug 2017 - Aug 2021",
     grade: "78.6%",
     description:
       "Core CS fundamentals: Data Structures, Algorithms, DBMS, Operating Systems, Computer Networks, and Software Engineering.",
@@ -524,12 +524,12 @@ export const education = [
     degree: "Intermediate (Class 12th)",
     institution: "Dyal Singh Public School",
     institutionFull: "Dyal Singh Public School, Karnal, Haryana",
-    period: "2016 – 2017",
+    period: "2016 - 2017",
     grade: "87.2%",
     description:
-      "CBSE Boards — Subjects: English Core, Mathematics, Physics, Chemistry, Computer Science, Work Experience, Physical & Health Education, and General Studies.",
+      "CBSE Boards - Subjects: English Core, Mathematics, Physics, Chemistry, Computer Science, Work Experience, Physical & Health Education, and General Studies.",
     highlights: [
-      "School topper in Computer Science — 96/100 in CBSE board exam",
+      "School topper in Computer Science - 96/100 in CBSE board exam",
     ],
   },
   {
@@ -537,10 +537,10 @@ export const education = [
     degree: "High School (Class 10th)",
     institution: "Kendriya Vidyalaya Karnal",
     institutionFull: "Kendriya Vidyalaya Karnal",
-    period: "2014 – 2015",
+    period: "2014 - 2015",
     grade: "CGPA: 9.2 / 10",
     description:
-      "CBSE Boards — Subjects: English, Hindi, Mathematics, Science, and Social Science.",
+      "CBSE Boards - Subjects: English, Hindi, Mathematics, Science, and Social Science.",
     highlights: [],
   },
 ];
@@ -614,6 +614,61 @@ export const openSourceContributions = [
     langColor: "#61DAFB",
     description:
       "Added animated skeleton loaders for Dashboard and Community pages, replacing plain text loading states with layout-matched shimmer rows and a smooth Framer Motion fade-in on data arrival - improving perceived performance across both desktop and mobile views.",
+  },
+];
+
+/* Honors & Awards — early-life / extracurricular achievements
+   (kept separate from the professional Certifications section). */
+export const honors = [
+  {
+    id: 1,
+    title: "Football - Runner-up",
+    category: "Sports",
+    context: "PACE Sports Fest, BIET Jhansi",
+    year: "College",
+    icon: "trophy",
+    color: "#f59e0b",
+    image: "/images/Certificates/Extra_Carricular/PACE_BIET.jpeg",
+  },
+  {
+    id: 2,
+    title: "Computer Science Topper - Class 12",
+    category: "Academics",
+    context: "Dyal Singh Public School · CBSE Boards",
+    year: "Class XII",
+    icon: "award",
+    color: "#22c55e",
+    image: "/images/Certificates/Extra_Carricular/Dyal_Singh_Class_12.jpeg",
+  },
+  {
+    id: 3,
+    title: "National Children's Science Congress - Regional",
+    category: "Science",
+    context: "Selected at the Regional level",
+    year: "School",
+    icon: "atom",
+    color: "#3b82f6",
+    image: "/images/Certificates/Extra_Carricular/NCSC_Regional.jpeg",
+  },
+  {
+    id: 4,
+    title: "National Children's Science Congress - Intra-Regional",
+    category: "Science",
+    context: "Advanced to the Intra-Regional level",
+    year: "School",
+    icon: "atom",
+    color: "#8b5cf6",
+    image: "/images/Certificates/Extra_Carricular/NCSC_intra_regional.jpeg",
+  },
+  {
+    id: 5,
+    title: "Youth Parliament",
+    category: "Leadership",
+    context: "School-level Youth Parliament",
+    year: "School",
+    icon: "landmark",
+    color: "#ec4899",
+    image: "/images/Certificates/Extra_Carricular/youth_parliament.jpeg",
   },
 ];
 
@@ -705,6 +760,17 @@ export const certifications = [
     color: "#00EA64",
     skills: ["C++"],
     image: "/images/Certificates/C++(Basic).png",
+  },
+  {
+    id: 9,
+    title: "C Programming",
+    issuer: "NIIT",
+    date: "",
+    credentialId: "",
+    credentialUrl: "#",
+    color: "#E4002B",
+    skills: ["C", "Programming"],
+    image: "/images/Certificates/NIIT_C_Programming.jpeg",
   },
 ];
 

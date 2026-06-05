@@ -19,7 +19,7 @@ export function Navbar() {
   /* Fade in only after the loading screen has exited */
   useEffect(() => {
     if (!loadingComplete) return;
-    /* No Y transform — keeps position:fixed stable on mobile */
+    /* No Y transform - keeps position:fixed stable on mobile */
     gsap.fromTo(ref.current,
       { opacity: 0 },
       { opacity: 1, duration: 0.7, ease: "power2.out", delay: 0.2 },
@@ -47,7 +47,7 @@ export function Navbar() {
         background: scrolled ? "var(--nav-bg-scrolled)" : "var(--nav-bg)",
         borderBottom: `1px solid ${scrolled ? "var(--border)" : "transparent"}`,
         transition: "background .3s, border-color .3s",
-        /* Force GPU compositing layer — prevents address-bar resize jank on iOS/Android */
+        /* Force GPU compositing layer - prevents address-bar resize jank on iOS/Android */
         transform: "translateZ(0)",
         WebkitTransform: "translateZ(0)",
       }}
@@ -98,7 +98,7 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile dropdown — animated open/close (grid-rows collapse + fade/slide) */}
+      {/* Mobile dropdown - animated open/close (grid-rows collapse + fade/slide) */}
       <div
         className="md:hidden overflow-hidden"
         aria-hidden={!open}

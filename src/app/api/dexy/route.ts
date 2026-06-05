@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   Mr. Dexy — Chat API route
+   Mr. Dexy - Chat API route
    ---------------------------------------------------------------
    POST /api/dexy
    Body: { messages: { role: "user" | "assistant"; content: string }[] }
@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
           }
         }
       } catch {
-        // upstream interrupted — close gracefully
+        // upstream interrupted - close gracefully
       } finally {
         controller.close();
       }

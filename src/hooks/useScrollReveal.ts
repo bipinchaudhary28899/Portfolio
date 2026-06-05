@@ -13,7 +13,7 @@ interface RevealOptions {
   stagger?: number;
   /** duration in seconds (default 0.7) */
   duration?: number;
-  /** ScrollTrigger start — string or function (default: "top 60%" on mobile, "top 82%" on desktop) */
+  /** ScrollTrigger start - string or function (default: "top 60%" on mobile, "top 82%" on desktop) */
   start?: string | (() => string);
   /** delay before first item (default 0) */
   delay?: number;
@@ -42,7 +42,7 @@ export function useScrollReveal(options: RevealOptions) {
         const els = gsap.utils.toArray<HTMLElement>(sel, ref.current ?? undefined);
         if (!els.length) return;
 
-        // Hide immediately — prevents opacity-1 flash before trigger fires
+        // Hide immediately - prevents opacity-1 flash before trigger fires
         gsap.set(els, { opacity: 0, y });
 
         gsap.to(els, {

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   Mr. Dexy — Knowledge Layer
+   Mr. Dexy - Knowledge Layer
    ---------------------------------------------------------------
    Serializes the ENTIRE portfolio dataset into a plain-text
    knowledge context that is injected into every LLM request.

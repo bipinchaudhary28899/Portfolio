@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════
- *  Adaptive Theme Engine — Single Source of Truth
+ *  Adaptive Theme Engine - Single Source of Truth
  *  7 time-based palettes + manual override modes
  * ═══════════════════════════════════════════════════════
  */
@@ -33,7 +33,7 @@ export const TIME_THEME_INFO: Record<TimeTheme, TimeThemeInfo> = {
     id: 'early-morning',
     label: 'Early Morning',
     emoji: '🌄',
-    timeRange: '4 – 7 AM',
+    timeRange: '4 - 7 AM',
     mood: 'Soft pastel sunrise',
     isDark: true,
     hourStart: 4,
@@ -43,7 +43,7 @@ export const TIME_THEME_INFO: Record<TimeTheme, TimeThemeInfo> = {
     id: 'mid-morning',
     label: 'Mid Morning',
     emoji: '🌤️',
-    timeRange: '7 – 10 AM',
+    timeRange: '7 - 10 AM',
     mood: 'Fresh bright energy',
     isDark: false,
     hourStart: 7,
@@ -53,7 +53,7 @@ export const TIME_THEME_INFO: Record<TimeTheme, TimeThemeInfo> = {
     id: 'late-morning',
     label: 'Late Morning',
     emoji: '☀️',
-    timeRange: '10 AM – 12 PM',
+    timeRange: '10 AM - 12 PM',
     mood: 'Clean productive daylight',
     isDark: false,
     hourStart: 10,
@@ -63,7 +63,7 @@ export const TIME_THEME_INFO: Record<TimeTheme, TimeThemeInfo> = {
     id: 'afternoon',
     label: 'Afternoon',
     emoji: '🌞',
-    timeRange: '12 – 5 PM',
+    timeRange: '12 - 5 PM',
     mood: 'Warm amber sunlight',
     isDark: false,
     hourStart: 12,
@@ -73,7 +73,7 @@ export const TIME_THEME_INFO: Record<TimeTheme, TimeThemeInfo> = {
     id: 'evening',
     label: 'Evening',
     emoji: '🌇',
-    timeRange: '5 – 8 PM',
+    timeRange: '5 - 8 PM',
     mood: 'Golden sunset glow',
     isDark: true,
     hourStart: 17,
@@ -83,7 +83,7 @@ export const TIME_THEME_INFO: Record<TimeTheme, TimeThemeInfo> = {
     id: 'night',
     label: 'Night',
     emoji: '🌃',
-    timeRange: '8 PM – 12 AM',
+    timeRange: '8 PM - 12 AM',
     mood: 'Elegant indigo depths',
     isDark: true,
     hourStart: 20,
@@ -93,7 +93,7 @@ export const TIME_THEME_INFO: Record<TimeTheme, TimeThemeInfo> = {
     id: 'late-night',
     label: 'Late Night',
     emoji: '🌌',
-    timeRange: '12 – 4 AM',
+    timeRange: '12 - 4 AM',
     mood: 'Cyber neon minimal',
     isDark: true,
     hourStart: 0,
@@ -117,7 +117,7 @@ export const TIME_THEME_ORDER: TimeTheme[] = [
 /**
  * Derives the time-based theme from the browser's local clock.
  * Uses `new Date().getHours()` which automatically honours the
- * visitor's own OS timezone — no hardcoding needed.
+ * visitor's own OS timezone - no hardcoding needed.
  */
 export function getTimeTheme(): TimeTheme {
   const h = new Date().getHours();
@@ -127,7 +127,7 @@ export function getTimeTheme(): TimeTheme {
   if (h >= 12 && h < 17) return 'afternoon';
   if (h >= 17 && h < 20) return 'evening';
   if (h >= 20)           return 'night';
-  return 'late-night'; // 0–3 AM
+  return 'late-night'; // 0-3 AM
 }
 
 /**
@@ -177,7 +177,7 @@ export function getUserTimezone(): string {
 }
 
 /**
- * Inline script string for injection into <head> — runs synchronously
+ * Inline script string for injection into <head> - runs synchronously
  * before React hydrates to prevent flash of wrong theme.
  */
 export const ANTI_FLASH_SCRIPT = `(function(){try{

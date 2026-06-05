@@ -6,7 +6,7 @@ const COMMANDS = [
   { prompt: "$ git push origin main", output: "✓  Deployed to production" },
   { prompt: "$ node benchmark.js", output: "✓  Latency p99: 42ms  (-40%)" },
   { prompt: "$ ffmpeg -i raw.mp4 -hls_time 4 out.m3u8", output: "✓  3 adaptive bitrate segments ready" },
-  { prompt: "$ redis-cli PING", output: "✓  PONG — cache hot" },
+  { prompt: "$ redis-cli PING", output: "✓  PONG - cache hot" },
   { prompt: "$ docker build -t streamsphere .", output: "✓  Image built in 11.2s" },
   { prompt: "$ psql -c 'EXPLAIN ANALYZE ...'", output: "✓  Query plan: Index Scan  (0.8ms)" },
 ];
@@ -86,7 +86,7 @@ export function TerminalHero() {
         boxShadow:  "var(--shadow-sm)",
       }}
     >
-      {/* dots — fixed height row */}
+      {/* dots - fixed height row */}
       <div className="flex items-center gap-1.5 mb-2" style={{ height: "1rem" }}>
         <span className="w-2 h-2 rounded-full" style={{ background: "#ff5f57" }} />
         <span className="w-2 h-2 rounded-full" style={{ background: "#febc2e" }} />
@@ -94,7 +94,7 @@ export function TerminalHero() {
         <span className="ml-2 text-xs opacity-40">bipin@portfolio ~</span>
       </div>
 
-      {/* prompt line — fixed height, no wrap */}
+      {/* prompt line - fixed height, no wrap */}
       <div
         className="flex items-center overflow-hidden"
         style={{ height: "1.4em", color: "var(--accent)", whiteSpace: "nowrap" }}
@@ -115,7 +115,7 @@ export function TerminalHero() {
         />
       </div>
 
-      {/* output line — fixed height, always rendered */}
+      {/* output line - fixed height, always rendered */}
       <div
         style={{
           height:     "1.4em",

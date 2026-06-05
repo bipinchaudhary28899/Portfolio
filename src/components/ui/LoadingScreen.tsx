@@ -42,7 +42,7 @@ export default function LoadingScreen({
         { scaleX: 1, duration: 0.7, ease: "expo.inOut" }
       )
 
-      /* 2. Name fades + slides up — slight overlap */
+      /* 2. Name fades + slides up - slight overlap */
       .fromTo(
         nameRef.current,
         { opacity: 0, y: 30 },
@@ -93,7 +93,7 @@ export default function LoadingScreen({
         overflow: "hidden",
       }}
     >
-      {/* Accent line — uses project gradient vars */}
+      {/* Accent line - uses project gradient vars */}
       <div
         ref={lineRef}
         style={{
@@ -105,7 +105,7 @@ export default function LoadingScreen({
         }}
       />
 
-      {/* Name — first word in gradient, rest in --fg */}
+      {/* Name - first word in gradient, rest in --fg */}
       <h1
         ref={nameRef}
         style={{

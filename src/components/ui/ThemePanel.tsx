@@ -143,7 +143,7 @@ export function ThemePanel() {
               <p style={{ fontSize: 13, fontWeight: 600, color: "var(--accent)", margin: 0 }}>
                 {info.emoji}&nbsp; {info.label}
                 <span style={{ fontWeight: 400, color: "var(--fg-dim)", fontSize: 12 }}>
-                  {" "}— {info.mood}
+                  {" "}- {info.mood}
                 </span>
               </p>
             </div>

@@ -4,6 +4,7 @@ import { Experience }         from "@/components/sections/Experience";
 import { Projects }           from "@/components/sections/Projects";
 import { Skills }             from "@/components/sections/Skills";
 import { Education }          from "@/components/sections/Education";
+import { HonorsAwards }       from "@/components/sections/HonorsAwards";
 import { OpenSource }         from "@/components/sections/OpenSource";
 import { CodingPlatforms }    from "@/components/sections/CodingPlatforms";
 import { Certifications }     from "@/components/sections/Certifications";
@@ -21,6 +22,7 @@ export default function Home() {
       <Projects />
       <Skills />
       <Education />
+      <HonorsAwards />
       <OpenSource />
       <CodingPlatforms />
       <Certifications />

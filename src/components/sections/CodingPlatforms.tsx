@@ -112,7 +112,7 @@ export function CodingPlatforms() {
       <div className="max-w-6xl mx-auto">
         <div className="cp-header mb-10 sm:mb-14 flex flex-col gap-2">
           <p className="cp-label section-label" style={{ opacity: 0 }}>Competitive</p>
-          <h2 className="cp-title font-black tracking-tight"
+          <h2 className="cp-title heading-accent font-black tracking-tight"
             style={{ fontSize: "clamp(1.8rem,8vw,5rem)", color: "var(--fg)", lineHeight: 1.1, opacity: 0 }}>
             Coding Platforms
           </h2>

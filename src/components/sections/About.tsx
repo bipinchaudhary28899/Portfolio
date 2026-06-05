@@ -111,7 +111,7 @@ export function About() {
           </div>
           <div className="achieve-list flex flex-col gap-4">
             {personalInfo.achievements.map((a, i) => (
-              <div key={i} className="achieve-item opacity-0 flex gap-4 items-start p-5 rounded-xl border"
+              <div key={i} className="achieve-item opacity-0 flex gap-4 items-center p-3 sm:p-5 rounded-xl border"
                 style={{
                   background: "var(--card)",
                   borderColor: "var(--border)",

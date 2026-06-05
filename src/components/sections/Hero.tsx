@@ -53,15 +53,15 @@ export function Hero() {
       {/* Grid */}
       <div className="absolute inset-0 grid-bg pointer-events-none" />
 
-      {/* Radial glow — top-center, theme accent colour */}
+      {/* Radial glow - top-center, theme accent colour */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 70% 50% at 50% -8%, var(--glow), transparent 65%)" }} />
 
-      {/* Ambient orb — bottom-right, secondary accent */}
+      {/* Ambient orb - bottom-right, secondary accent */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 55% 45% at 95% 105%, color-mix(in srgb, var(--accent2) 7%, transparent), transparent 65%)" }} />
 
-      {/* Ambient orb — bottom-left, very faint accent */}
+      {/* Ambient orb - bottom-left, very faint accent */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 40% 35% at -5% 110%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 60%)" }} />
 
@@ -140,10 +140,10 @@ export function Hero() {
           ] as const).map(({ Icon, href, label }) => (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
               className="p-2 rounded-lg border transition-all hover:scale-110"
-              style={{ border: "1px solid var(--border)", color: "var(--muted)", background: "var(--card)" }}
+              style={{ border: "1px solid var(--border-strong, var(--border))", color: "var(--fg)", background: "var(--card)" }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--accent)"; (e.currentTarget as HTMLElement).style.color = "var(--accent)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.color = "var(--muted)"; }}>
-              <Icon width={16} height={16} />
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border-strong, var(--border))"; (e.currentTarget as HTMLElement).style.color = "var(--fg)"; }}>
+              <Icon width={18} height={18} />
             </a>
           ))}
           <span className="hidden sm:block text-xs" style={{ color: "var(--muted)" }}>{personalInfo.location}</span>

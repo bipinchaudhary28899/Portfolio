@@ -76,9 +76,9 @@ export function Skills() {
   const goNext = () => setActiveTab((t) => Math.min(categories.length - 1, t + 1));
 
   return (
-    <>
+    <div id="skills" style={{ scrollMarginTop: "5rem" }}>
       {/* ══ DESKTOP ══════════════════════════════════════════════════════════ */}
-      <section ref={sec} id="skills" className="hidden md:block py-36 px-12 lg:px-20"
+      <section ref={sec} className="hidden md:block py-36 px-12 lg:px-20"
         style={{ background: "var(--bg)" }}>
         <div className="max-w-6xl mx-auto">
           <div className="skills-header mb-14">
@@ -134,17 +134,17 @@ export function Skills() {
         </div>
       </section>
 
-      {/* ══ MOBILE — single-viewport tab layout ══════════════════════════════ */}
-      <section id="skills" className="block md:hidden py-14 px-5"
+      {/* ══ MOBILE - single-viewport tab layout ══════════════════════════════ */}
+      <section className="block md:hidden py-14 px-5"
         style={{ background: "var(--bg)" }}>
 
         {/* Header */}
         <div className="mb-6">
           <p className="section-label mb-2">Stack</p>
-          <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Skills & Tools</h2>
+          <h2 className="heading-accent text-3xl font-black" style={{ color: "var(--fg)" }}>Skills & Tools</h2>
         </div>
 
-        {/* Category tabs — horizontal scroll with < > nav arrows */}
+        {/* Category tabs - horizontal scroll with < > nav arrows */}
         <div className="flex items-center gap-2 mb-5">
 
           {/* Prev arrow */}
@@ -207,24 +207,40 @@ export function Skills() {
 
         </div>
 
-        {/* Active category skills — wrap tags */}
-        <div className="flex flex-wrap gap-2">
-          {categories[activeTab][1].map((skill) => (
-            <span
-              key={skill}
-              className="text-sm px-3 py-1.5 rounded-lg border"
+        {/* Active category skills - wrap tags.
+            All categories are stacked in the same grid cell so the container
+            always sizes to the TALLEST category; only the active one is shown.
+            This keeps the section height fixed regardless of how many skills a
+            category has, so switching tabs never distorts the layout. */}
+        <div style={{ display: "grid" }}>
+          {categories.map(([cat, items], i) => (
+            <div
+              key={cat}
+              aria-hidden={i !== activeTab}
+              className="flex flex-wrap gap-2 content-start"
               style={{
-                borderColor: "var(--border)",
-                color:       "var(--fg-dim)",
-                background:  "var(--card)",
+                gridArea: "1 / 1",
+                visibility: i === activeTab ? "visible" : "hidden",
               }}
             >
-              {skill}
-            </span>
+              {items.map((skill) => (
+                <span
+                  key={skill}
+                  className="text-sm px-3 py-1.5 rounded-lg border"
+                  style={{
+                    borderColor: "var(--border)",
+                    color:       "var(--fg-dim)",
+                    background:  "var(--card)",
+                  }}
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
           ))}
         </div>
 
       </section>
-    </>
+    </div>
   );
 }

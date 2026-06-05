@@ -57,7 +57,7 @@ const PACKAGES = [
     price: "₹1L Onwards",
     delivery: "21 Days",
     description:
-      "Production-ready SaaS MVPs with scalable architecture, cloud deployment, payments, analytics, and optional AI-powered features. ₹1L is a starting price for SaaS MVPs — advanced requirements increase the final cost.",
+      "Production-ready SaaS MVPs with scalable architecture, cloud deployment, payments, analytics, and optional AI-powered features. ₹1L is a starting price for SaaS MVPs - advanced requirements increase the final cost.",
     highlight: false,
     features: [
       { label: "Everything in Growth",            value: true  },
@@ -344,7 +344,7 @@ function MobilePackages() {
                             className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
                             style={{ background: "var(--bg)" }}
                           >
-                            <span style={{ color: "var(--border)", fontSize: 15, lineHeight: 1 }}>–</span>
+                            <span style={{ color: "var(--border)", fontSize: 15, lineHeight: 1 }}>-</span>
                           </span>
                         ) : (
                           <span
@@ -440,7 +440,7 @@ function PackageCard({ pkg }: { pkg: (typeof PACKAGES)[0] }) {
               {f.value === false ? (
                 <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{ background: "var(--bg)" }}>
-                  <span style={{ color: "var(--border)", fontSize: 16, lineHeight: 1 }}>–</span>
+                  <span style={{ color: "var(--border)", fontSize: 16, lineHeight: 1 }}>-</span>
                 </span>
               ) : (
                 <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
@@ -496,7 +496,7 @@ export function FreelanceServices() {
       // Pre-hide to prevent flash before ScrollTrigger fires
       gsap.set([labelRef.current, descRef.current, buildRef.current, ctaRef.current], { opacity: 0 });
 
-      /* Shared title animation — used for every section heading */
+      /* Shared title animation - used for every section heading */
       const titleAnim = (target: Element | null, trigger: Element | null, delay = 0) =>
         gsap.fromTo(target,
           { opacity: 0, y: 44, skewY: 2 },
@@ -528,14 +528,14 @@ export function FreelanceServices() {
         { opacity: 1, x: 0, duration: 0.5, stagger: 0.07, ease: "power2.out",
           scrollTrigger: { trigger: buildRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 3. Package cards — desktop ── */
+      /* ── 3. Package cards - desktop ── */
       gsap.fromTo(
         cardsRef.current?.querySelectorAll(".pkg-card") ?? [],
         { opacity: 0, y: 80, scale: 0.92 },
         { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.14, ease: "power3.out",
           scrollTrigger: { trigger: cardsRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 4. Package accordion cards — mobile ── */
+      /* ── 4. Package accordion cards - mobile ── */
       gsap.fromTo(
         mobileCardsRef.current?.querySelectorAll(".mob-pkg-card") ?? [],
         { opacity: 0, y: 50, scale: 0.96 },
@@ -571,19 +571,19 @@ export function FreelanceServices() {
         { opacity: 1, scale: 1, y: 0, duration: 0.55, stagger: 0.055, ease: "back.out(1.4)",
           scrollTrigger: { trigger: addonsRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 7. FAQ + How I Work headings — both get same title animation ── */
+      /* ── 7. FAQ + How I Work headings - both get same title animation ── */
       (faqRef.current?.querySelectorAll(".faq-heading") ?? []).forEach((el, i) => {
         titleAnim(el, faqRef.current, i * 0.15);
       });
 
-      /* ── 8. FAQ items + work-process rows — slide from right ── */
+      /* ── 8. FAQ items + work-process rows - slide from right ── */
       gsap.fromTo(
         faqRef.current?.querySelectorAll(".faq-item") ?? [],
         { opacity: 0, x: 40 },
         { opacity: 1, x: 0, duration: 0.55, stagger: 0.08, ease: "power3.out",
           scrollTrigger: { trigger: faqRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 9. Work-process connector line — draw downward ── */
+      /* ── 9. Work-process connector line - draw downward ── */
       gsap.fromTo(
         faqRef.current?.querySelector(".work-line") ?? null,
         { scaleY: 0, transformOrigin: "top center" },
@@ -596,7 +596,7 @@ export function FreelanceServices() {
         { opacity: 1, scale: 1, y: 0, duration: 0.75, ease: "power3.out",
           scrollTrigger: { trigger: ctaRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
 
-      /* ── 11. CTA internals — stagger children ── */
+      /* ── 11. CTA internals - stagger children ── */
       gsap.fromTo(
         ctaRef.current?.querySelectorAll(".cta-child") ?? [],
         { opacity: 0, y: 22 },
@@ -622,14 +622,14 @@ export function FreelanceServices() {
           <p ref={labelRef} className="section-label mb-2" style={{ opacity: 0 }}>Available for Hire</p>
           <h2
             ref={titleRef}
-            className="font-bold leading-tight"
-            style={{ fontSize: "clamp(1.8rem,3.5vw,3rem)", color: "var(--fg)", opacity: 0 }}
+            className="heading-accent font-black tracking-tight leading-tight"
+            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}
           >
             Freelance Services
           </h2>
           <p
             ref={descRef}
-            className="mt-3 max-w-xl text-sm leading-relaxed"
+            className="mt-3 max-w-4xl text-sm leading-relaxed"
             style={{ color: "var(--fg-dim)", opacity: 0 }}
           >
             Full-stack engineer available for client projects - from a professional online
@@ -668,14 +668,14 @@ export function FreelanceServices() {
           </div>
         </div>
 
-        {/* ── Package Cards — desktop only ── */}
+        {/* ── Package Cards - desktop only ── */}
         <div ref={cardsRef} className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {PACKAGES.map((pkg) => (
             <PackageCard key={pkg.tier} pkg={pkg} />
           ))}
         </div>
 
-        {/* ── Package Accordion — mobile only ── */}
+        {/* ── Package Accordion - mobile only ── */}
         <div ref={mobileCardsRef} className="block sm:hidden">
           <MobilePackages />
         </div>
@@ -702,23 +702,25 @@ export function FreelanceServices() {
             You&apos;re paying for architecture, deployment, integrations, scalability,
             and ongoing maintainability - not just generated code.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             {WHY_WORK.map(({ Icon, title, description }) => (
               <div
                 key={title}
-                className="why-card rounded-2xl border p-6 flex flex-col gap-3 transition-colors duration-200"
+                className="why-card rounded-xl border p-3 sm:p-4 flex flex-col gap-2 transition-colors duration-200"
                 style={{ borderColor: "var(--border)", background: "var(--card)", opacity: 0 }}
                 onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
                 onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
               >
-                <span
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}
-                >
-                  <Icon size={18} color="#fff" />
-                </span>
-                <span className="text-base font-bold" style={{ color: "var(--fg)" }}>{title}</span>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>{description}</p>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}
+                  >
+                    <Icon size={15} color="#fff" />
+                  </span>
+                  <span className="text-sm font-bold leading-tight" style={{ color: "var(--fg)" }}>{title}</span>
+                </div>
+                <p className="text-xs leading-relaxed" style={{ color: "var(--fg-dim)" }}>{description}</p>
               </div>
             ))}
           </div>
@@ -732,11 +734,11 @@ export function FreelanceServices() {
             </span>
             <h3 className="text-lg font-bold" style={{ color: "var(--fg)", opacity: 0 }}>Add-on Services</h3>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {ADDONS.map((a) => (
               <div
                 key={a.label}
-                className="addon-tile flex flex-col gap-1.5 rounded-xl border p-4 transition-colors duration-200"
+                className="addon-tile flex flex-col gap-1.5 rounded-xl border p-3 sm:p-4 transition-colors duration-200"
                 style={{ borderColor: "var(--border)", background: "var(--card)", opacity: 0 }}
                 onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
                 onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
@@ -754,7 +756,7 @@ export function FreelanceServices() {
         {/* ── FAQ + How I Work ── */}
         <div ref={faqRef} className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
-          {/* Left — FAQ */}
+          {/* Left - FAQ */}
           <div>
             <h3
               className="faq-heading text-lg font-bold mb-6"
@@ -769,7 +771,7 @@ export function FreelanceServices() {
             </div>
           </div>
 
-          {/* Right — How I Work */}
+          {/* Right - How I Work */}
           <div>
             <h3
               className="faq-heading text-lg font-bold mb-6"

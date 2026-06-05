@@ -1,7 +1,7 @@
 "use client";
 
 /* ═══════════════════════════════════════════════════════════════
-   CompanyMarquee — smooth, always-in-motion strip of company
+   CompanyMarquee - smooth, always-in-motion strip of company
    logos for the firms/teams Bipin has worked with. The track is
    rendered twice and translated -50% so the loop is seamless.
    Pauses on hover, respects prefers-reduced-motion.
@@ -94,14 +94,17 @@ export function CompanyMarquee() {
           display: flex;
           align-items: center;
           width: max-content;
-          gap: 1.25rem;
           animation: cm-scroll 32s linear infinite;
         }
+        /* Spacing via per-item margin (not flex gap) so both duplicated
+           halves are exactly equal width - translateX(-50%) then lands on
+           an exact item boundary, giving a seamless, jitter-free loop. */
         .cm-item {
           position: relative;
           flex: 0 0 auto;
           width: 5rem;
           height: 2.4rem;
+          margin-right: 1.25rem;
           opacity: 1;
           transition: opacity .3s ease, transform .3s ease;
         }
@@ -112,8 +115,7 @@ export function CompanyMarquee() {
           padding: 0.35rem;
         }
         @media (min-width: 640px) {
-          .cm-track { gap: 4rem; }
-          .cm-item { width: 12rem; height: 3.75rem; }
+          .cm-item { width: 12rem; height: 3.75rem; margin-right: 4rem; }
           .cm-logo { padding: 0.5rem; }
         }
         /* Grayscale-with-hover reveal: enabled only when JS adds .cm-desktop. */

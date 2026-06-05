@@ -43,7 +43,7 @@ export function ResumeModal({ onClose }: { onClose: () => void }) {
           style={{ borderBottom: "1px solid var(--border)", background: "var(--bg-alt)" }}
         >
           <span className="text-sm font-semibold" style={{ color: "var(--fg)" }}>
-            Resume — {personalInfo.name}
+            Resume - {personalInfo.name}
           </span>
           <div className="flex items-center gap-2">
             <a

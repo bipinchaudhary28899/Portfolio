@@ -79,7 +79,7 @@ export function Certifications() {
       <div className="max-w-6xl mx-auto">
         <div className="cert-header mb-14">
           <p className="cert-label section-label mb-3" style={{ opacity: 0 }}>Credentials</p>
-          <h2 className="cert-title font-black tracking-tight leading-none"
+          <h2 className="cert-title heading-accent font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
             Certifications
           </h2>
@@ -112,14 +112,14 @@ export function Certifications() {
                 </div>
               </div>
 
-              {/* Card body — compact on mobile, full on sm+ */}
+              {/* Card body - compact on mobile, full on sm+ */}
               <div className="p-2.5 sm:p-5 flex flex-col gap-1.5 sm:gap-3 flex-1">
                 <div className="flex-1">
                   <h3 className="text-[10px] sm:text-sm font-semibold leading-snug line-clamp-2 mb-0.5 sm:mb-1" style={{ color: "var(--fg)" }}>
                     {cert.title}
                   </h3>
                   <p className="text-[9px] sm:text-xs" style={{ color: "var(--muted)" }}>
-                    {cert.issuer} · {cert.date}
+                    {cert.date ? `${cert.issuer} · ${cert.date}` : cert.issuer}
                   </p>
                 </div>
 
@@ -133,7 +133,7 @@ export function Certifications() {
                   ))}
                 </div>
 
-                {/* External link — desktop only */}
+                {/* External link - desktop only */}
                 {cert.credentialUrl !== "#" && (
                   <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
@@ -202,7 +202,7 @@ export function Certifications() {
             <div className="flex items-start justify-between gap-4 px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
               <div>
                 <h3 className="text-sm font-semibold" style={{ color: "var(--fg)" }}>{preview.title}</h3>
-                <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>{preview.issuer} · {preview.date}</p>
+                <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>{preview.date ? `${preview.issuer} · ${preview.date}` : preview.issuer}</p>
               </div>
               <button onClick={() => setPreview(null)} className="shrink-0 p-1 rounded-lg transition-colors hover:opacity-60"
                 style={{ color: "var(--muted)" }}>

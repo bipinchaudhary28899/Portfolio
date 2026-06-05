@@ -102,7 +102,7 @@ export function Contact() {
 
         <div className="contact-header opacity-0 mb-14">
           <p className="section-label mb-3">Let's Talk</p>
-          <h2 className="font-black tracking-tight leading-none"
+          <h2 className="heading-accent font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)" }}>
             Get in Touch
           </h2>

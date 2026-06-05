@@ -17,6 +17,7 @@ interface Props {
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.5;
+const SWIPE_THRESHOLD = 45; // px — horizontal swipe distance to change diagram
 
 export function ArchitectureCarousel({ diagrams }: Props) {
   const [idx, setIdx] = useState(0);
@@ -25,6 +26,7 @@ export function ArchitectureCarousel({ diagrams }: Props) {
   const [isDragging, setIsDragging] = useState(false);
 
   const lastPoint = useRef({ x: 0, y: 0 });
+  const startPoint = useRef({ x: 0, y: 0 });
 
   if (!diagrams || diagrams.length === 0) return null;
 
@@ -41,29 +43,41 @@ export function ArchitectureCarousel({ diagrams }: Props) {
     resetView();
   };
 
-  const zoomIn = () => setZoom((z) => Math.min(MAX_ZOOM, +(z + ZOOM_STEP).toFixed(2)));
-  const zoomOut = () =>
-    setZoom((z) => {
-      const next = Math.max(MIN_ZOOM, +(z - ZOOM_STEP).toFixed(2));
-      if (next === MIN_ZOOM) setOffset({ x: 0, y: 0 });
-      return next;
-    });
+  const setZoomLevel = (z: number) => {
+    const next = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, z));
+    setZoom(next);
+    if (next === MIN_ZOOM) setOffset({ x: 0, y: 0 });
+  };
 
-  /* ── Drag-to-pan (only meaningful when zoomed) ── */
+  /* ── Pointer gestures ──
+     • zoomed in  → drag pans the image
+     • not zoomed → horizontal swipe slides to the prev/next diagram (mobile) */
   const onPointerDown = (e: React.PointerEvent) => {
-    if (zoom === 1) return;
-    setIsDragging(true);
+    startPoint.current = { x: e.clientX, y: e.clientY };
     lastPoint.current = { x: e.clientX, y: e.clientY };
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    setIsDragging(true);
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      /* no-op */
+    }
   };
   const onPointerMove = (e: React.PointerEvent) => {
-    if (!isDragging) return;
+    if (!isDragging || zoom === 1) return; // only pan when zoomed
     const dx = e.clientX - lastPoint.current.x;
     const dy = e.clientY - lastPoint.current.y;
     lastPoint.current = { x: e.clientX, y: e.clientY };
     setOffset((o) => ({ x: o.x + dx, y: o.y + dy }));
   };
   const onPointerUp = (e: React.PointerEvent) => {
+    // Swipe to change diagram when not zoomed.
+    if (zoom === 1 && total > 1) {
+      const dx = e.clientX - startPoint.current.x;
+      const dy = e.clientY - startPoint.current.y;
+      if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+        go(dx < 0 ? 1 : -1);
+      }
+    }
     setIsDragging(false);
     try {
       (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
@@ -133,7 +147,7 @@ export function ArchitectureCarousel({ diagrams }: Props) {
           </div>
         </div>
 
-        {/* Prev / Next arrows */}
+        {/* Prev / Next arrows (mobile also supports swipe) */}
         <button
           aria-label="Previous diagram"
           onClick={() => go(-1)}
@@ -151,40 +165,37 @@ export function ArchitectureCarousel({ diagrams }: Props) {
           <ChevronRight size={18} />
         </button>
 
-        {/* Zoom controls */}
-        <div className="absolute top-2 right-2 flex items-center gap-1.5">
-          <button
-            aria-label="Zoom out"
-            onClick={zoomOut}
-            disabled={zoom <= MIN_ZOOM}
-            className="p-1.5 rounded-lg transition-all hover:scale-110 disabled:opacity-40 disabled:hover:scale-100"
-            style={iconBtn}
-          >
-            <ZoomOut size={15} />
-          </button>
+        {/* Zoom slider */}
+        <div
+          className="absolute top-2 right-2 flex items-center gap-2 px-2.5 py-1.5 rounded-lg"
+          style={{ border: "1px solid var(--border)", background: "var(--bg)" }}
+        >
+          <ZoomOut size={14} style={{ color: "var(--muted)", flexShrink: 0 }} />
+          <input
+            type="range"
+            aria-label="Zoom level"
+            min={MIN_ZOOM}
+            max={MAX_ZOOM}
+            step={ZOOM_STEP}
+            value={zoom}
+            onChange={(e) => setZoomLevel(parseFloat(e.target.value))}
+            style={{ width: 80, accentColor: "var(--accent)", cursor: "pointer" }}
+          />
+          <ZoomIn size={14} style={{ color: "var(--muted)", flexShrink: 0 }} />
           <span
-            className="font-mono text-xs px-1 min-w-[34px] text-center"
+            className="font-mono text-xs min-w-[34px] text-center"
             style={{ color: "var(--muted)" }}
           >
             {Math.round(zoom * 100)}%
           </span>
           <button
-            aria-label="Zoom in"
-            onClick={zoomIn}
-            disabled={zoom >= MAX_ZOOM}
-            className="p-1.5 rounded-lg transition-all hover:scale-110 disabled:opacity-40 disabled:hover:scale-100"
-            style={iconBtn}
-          >
-            <ZoomIn size={15} />
-          </button>
-          <button
             aria-label="Reset zoom"
             onClick={resetView}
             disabled={zoom === 1 && offset.x === 0 && offset.y === 0}
-            className="p-1.5 rounded-lg transition-all hover:scale-110 disabled:opacity-40 disabled:hover:scale-100"
-            style={iconBtn}
+            className="rounded-md transition-all hover:scale-110 disabled:opacity-40 disabled:hover:scale-100"
+            style={{ color: "var(--muted)", flexShrink: 0 }}
           >
-            <RotateCcw size={15} />
+            <RotateCcw size={14} />
           </button>
         </div>
       </div>

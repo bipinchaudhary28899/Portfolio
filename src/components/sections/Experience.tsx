@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Briefcase } from "lucide-react";
 import Image from "next/image";
 import { experiences } from "@/data/portfolio";
 import { Highlight } from "@/components/ui/Highlight";
@@ -19,8 +20,6 @@ const PAL = {
 };
 /* All entries use the same theme-aware palette */
 const PALETTE = Array(5).fill(PAL) as typeof PAL[];
-
-const TL_GRADIENT = "linear-gradient(to bottom, var(--grad-a), var(--grad-b))";
 
 type Pal = typeof PAL;
 
@@ -126,14 +125,21 @@ function ExpCard({ exp, pal, side }: { exp: (typeof experiences)[0]; pal: Pal; s
 
 /* ── Timeline dot ─────────────────────────────────────────────────────────── */
 function Dot({ pal }: { pal: Pal }) {
+  /* Simple dot — same style as the Education timeline: a small orange
+     dot sitting on the line, with a thin background-coloured ring that
+     masks the line behind it. No outer ring or glow halo. */
   return (
     <div className="exp-dot relative flex items-center justify-center" style={{ width: 24, height: 24 }}>
-      <div className="absolute rounded-full"
-        style={{ inset: -6, background: `radial-gradient(circle, ${pal.glow}, transparent 70%)` }} />
-      <div className="absolute rounded-full"
-        style={{ inset: -3, border: `1px solid ${pal.border}` }} />
-      <div className="relative rounded-full z-10"
-        style={{ width: 12, height: 12, background: pal.accent, boxShadow: `0 0 8px ${pal.glow}, 0 0 20px ${pal.glow}` }} />
+      <div
+        className="rounded-full"
+        style={{
+          width: 13,
+          height: 13,
+          background: pal.accent,
+          border: "3px solid var(--bg-alt)",
+          boxShadow: `0 0 8px ${pal.glow}`,
+        }}
+      />
     </div>
   );
 }
@@ -147,11 +153,37 @@ function startYear(period: string): string {
 /* ── Main section ─────────────────────────────────────────────────────────── */
 export function Experience() {
   const secRef = useRef<HTMLElement>(null);
-  const [openMobile, setOpenMobile] = useState<number | null>(0);
+  const capDesktopRef = useRef<HTMLDivElement>(null);
+  const capMobileRef  = useRef<HTMLDivElement>(null);
+  /* Multiple cards can be open at once (independent toggles, like Education) */
+  const [openSet, setOpenSet] = useState<Set<number>>(() => new Set([0]));
+  const isOpen = (i: number) => openSet.has(i);
+  const toggle = (i: number) =>
+    setOpenSet((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
   const loadingComplete = useLoadingComplete();
 
   useEffect(() => {
     if (!loadingComplete) return;
+
+    /* ── Sticky briefcase rides the line + rotates with scroll direction ── */
+    const caps = () =>
+      [capDesktopRef.current, capMobileRef.current].filter(Boolean) as HTMLDivElement[];
+    gsap.set(caps(), { rotation: 0 });
+    gsap.to(caps(), { scale: 1.1, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const down = y > lastY;
+      lastY = y;
+      gsap.to(caps(), { rotation: down ? 12 : -12, duration: 0.35, ease: "power2.out", overwrite: "auto" });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     const ctx = gsap.context(() => {
       gsap.set([".exp-label", ".exp-title", ".exp-dot", ".exp-card", ".exp-ach"], { opacity: 0 });
 
@@ -167,12 +199,6 @@ export function Experience() {
         { opacity: 0, y: 44, skewY: 2 },
         { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out",
           scrollTrigger: { trigger: ".exp-header", start: headerStart, toggleActions: "play none none none" } });
-
-      /* ── Timeline line scrub — all devices ── */
-      gsap.fromTo(".tl-line-fill",
-        { scaleY: 0 },
-        { scaleY: 1, ease: "none", transformOrigin: "top center",
-          scrollTrigger: { trigger: ".exp-timeline", start: "top 75%", end: "bottom 25%", scrub: 0.6 } });
 
       /* ── Desktop: alternating left/right card entrances ── */
       mm.add("(min-width: 768px)", () => {
@@ -225,22 +251,25 @@ export function Experience() {
       });
 
     }, secRef);
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [loadingComplete]);
 
   return (
     <section
       ref={secRef}
       id="experience"
-      className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"
-      style={{ background: "var(--bg-alt)" }}
+      className="py-14 sm:py-36 px-6 sm:px-12 lg:px-20"
+      style={{ background: "var(--bg-alt)", borderTop: "1px solid var(--border)" }}
     >
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="exp-header mb-20">
+        <div className="exp-header mb-10 sm:mb-20">
           <p className="exp-label section-label mb-3" style={{ opacity: 0 }}>Career</p>
-          <h2 className="exp-title font-black tracking-tight leading-none"
+          <h2 className="exp-title heading-accent font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
             Work Experience
           </h2>
@@ -249,18 +278,36 @@ export function Experience() {
         {/* Timeline */}
         <div className="exp-timeline relative">
 
-          {/* Desktop center line */}
+          {/* Desktop center line (static) */}
           <div className="absolute hidden md:block top-0 bottom-0"
-            style={{ left: "50%", transform: "translateX(-50%)", width: 1, background: "var(--border)" }}>
-            <div className="tl-line-fill absolute inset-0"
-              style={{ background: TL_GRADIENT, transformOrigin: "top center" }} />
+            style={{ left: "50%", transform: "translateX(-50%)", width: 1, background: "var(--border)" }} />
+
+          {/* Mobile left line (static) */}
+          <div className="absolute block md:hidden top-0 bottom-0"
+            style={{ left: 11, width: 1, background: "var(--border)" }} />
+
+          {/* Sticky briefcase — rides the centre line (desktop) */}
+          <div className="hidden md:block"
+            style={{ position: "sticky", top: "calc(50vh - 16px)", height: 0, zIndex: 30, overflow: "visible" }}>
+            <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%) translateY(-50%)" }}>
+              <div ref={capDesktopRef}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Briefcase size={26} color="var(--accent)"
+                  style={{ filter: "drop-shadow(0 0 8px var(--accent))" }} />
+              </div>
+            </div>
           </div>
 
-          {/* Mobile left line */}
-          <div className="absolute block md:hidden top-0 bottom-0"
-            style={{ left: 11, width: 1, background: "var(--border)" }}>
-            <div className="tl-line-fill absolute inset-0"
-              style={{ background: TL_GRADIENT, transformOrigin: "top center" }} />
+          {/* Sticky briefcase — rides the left line (mobile) */}
+          <div className="block md:hidden"
+            style={{ position: "sticky", top: "calc(50vh - 12px)", height: 0, zIndex: 30, overflow: "visible" }}>
+            <div style={{ position: "absolute", left: 11, transform: "translateX(-50%) translateY(-50%)" }}>
+              <div ref={capMobileRef}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Briefcase size={20} color="var(--accent)"
+                  style={{ filter: "drop-shadow(0 0 7px var(--accent))" }} />
+              </div>
+            </div>
           </div>
 
           {/* Entries */}
@@ -316,16 +363,16 @@ export function Experience() {
 
                     <div className="exp-mob-card rounded-2xl overflow-hidden"
                       style={{
-                        border: `1px solid ${openMobile === i ? pal.border : "var(--border)"}`,
+                        border: `1px solid ${isOpen(i) ? pal.border : "var(--border)"}`,
                         background: "var(--card)",
                         transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-                        boxShadow: openMobile === i ? "var(--shadow-card)" : "none",
+                        boxShadow: isOpen(i) ? "var(--shadow-card)" : "none",
                       }}>
 
                       {/* Collapsed header */}
                       <button
                         className="w-full flex items-center gap-3 px-4 py-3 text-left"
-                        onClick={() => setOpenMobile(openMobile === i ? null : i)}
+                        onClick={() => toggle(i)}
                       >
                         {/* Company logo / initials */}
                         <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
@@ -352,7 +399,7 @@ export function Experience() {
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0"
                           style={{
                             color: "var(--muted)",
-                            transform: openMobile === i ? "rotate(180deg)" : "rotate(0deg)",
+                            transform: isOpen(i) ? "rotate(180deg)" : "rotate(0deg)",
                             transition: "transform 0.3s ease",
                           }}>
                           <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
@@ -363,7 +410,7 @@ export function Experience() {
                       {/* Expandable body */}
                       <div style={{
                         display: "grid",
-                        gridTemplateRows: openMobile === i ? "1fr" : "0fr",
+                        gridTemplateRows: isOpen(i) ? "1fr" : "0fr",
                         transition: "grid-template-rows 0.35s cubic-bezier(0.4,0,0.2,1)",
                       }}>
                         <div style={{ overflow: "hidden" }}>

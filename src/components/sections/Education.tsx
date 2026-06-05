@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, ChevronDown } from "lucide-react";
 import { education } from "@/data/portfolio";
 import { useLoadingComplete } from "@/context/LoadingContext";
 
@@ -23,90 +23,149 @@ function EduCard({
   index: number;
   mobile?: boolean;
 }) {
+  const [open, setOpen] = useState(false);
+  const hasBody = Boolean(edu.description) || edu.highlights.length > 0;
+
+  /* ── Desktop: original always-expanded card (unchanged) ── */
+  if (!mobile) {
+    return (
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{ background: "var(--card)", border: "1.5px solid var(--border)" }}
+      >
+        <div className="flex flex-col gap-4 p-6 sm:p-7">
+          <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold tracking-widest uppercase mb-1 truncate" style={{ color: "var(--muted)" }}>
+                {edu.institutionFull}
+              </p>
+              <h3 className="font-bold leading-snug text-lg sm:text-xl" style={{ color: "var(--fg)" }}>
+                {edu.degree}
+              </h3>
+              {edu.university ? (
+                <a href={edu.universityUrl} target="_blank" rel="noopener noreferrer"
+                  className="text-xs mt-0.5 inline-block hover:underline" style={{ color: "var(--accent)", opacity: 0.8 }}>
+                  {edu.university}
+                </a>
+              ) : edu.universityUrl ? (
+                <a href={edu.universityUrl} target="_blank" rel="noopener noreferrer"
+                  className="text-xs mt-0.5 inline-block hover:underline" style={{ color: "var(--accent)", opacity: 0.8 }}>
+                  {edu.institutionFull}
+                </a>
+              ) : null}
+            </div>
+            <span className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border"
+              style={{ borderColor: "var(--border)", color: "var(--accent)", background: "var(--bg)", whiteSpace: "nowrap" }}>
+              {edu.grade}
+            </span>
+          </div>
+
+          <p className="leading-relaxed text-sm" style={{ color: "var(--fg-dim)" }}>
+            {edu.description}
+          </p>
+
+          {edu.highlights.length > 0 && (
+            <ul className="flex flex-col gap-1.5">
+              {edu.highlights.map((h) => (
+                <li key={h} className="flex items-start gap-2 text-xs" style={{ color: "var(--fg-dim)" }}>
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "var(--accent)" }} />
+                  {h}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Mobile: compact, expandable card ── */
   return (
     <div
       className="rounded-2xl overflow-hidden"
-      style={{
-        background:  "var(--card)",
-        border:      "1.5px solid var(--border)",
-      }}
+      style={{ background: "var(--card)", border: "1.5px solid var(--border)" }}
     >
-      <div className={`flex flex-col gap-4 ${mobile ? "p-5" : "p-6 sm:p-7"}`}>
-        {/* Institution + degree + grade */}
-        <div className="flex items-start justify-between gap-3 flex-wrap">
-          <div className="flex-1 min-w-0">
-            <p
-              className="text-xs font-semibold tracking-widest uppercase mb-1 truncate"
-              style={{ color: "var(--muted)" }}
-            >
-              {mobile ? edu.institution : edu.institutionFull}
-            </p>
-            <h3
-              className={`font-bold leading-snug ${mobile ? "text-base" : "text-lg sm:text-xl"}`}
-              style={{ color: "var(--fg)" }}
-            >
-              {edu.degree}
-            </h3>
-            {edu.university ? (
-              <a
-                href={edu.universityUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs mt-0.5 inline-block hover:underline"
-                style={{ color: "var(--accent)", opacity: 0.8 }}
-              >
-                {edu.university}
-              </a>
-            ) : edu.universityUrl ? (
-              <a
-                href={edu.universityUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs mt-0.5 inline-block hover:underline"
-                style={{ color: "var(--accent)", opacity: 0.8 }}
-              >
-                {mobile ? edu.institution : edu.institutionFull}
-              </a>
-            ) : null}
-          </div>
-          <span
-            className="flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border"
-            style={{
-              borderColor: "var(--border)",
-              color: "var(--accent)",
-              background: "var(--bg)",
-              whiteSpace: "nowrap",
-            }}
-          >
+      {/* Collapsed summary — tap to expand */}
+      <div
+        role={hasBody ? "button" : undefined}
+        tabIndex={hasBody ? 0 : undefined}
+        aria-expanded={hasBody ? open : undefined}
+        onClick={hasBody ? () => setOpen((o) => !o) : undefined}
+        onKeyDown={
+          hasBody
+            ? (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setOpen((o) => !o);
+                }
+              }
+            : undefined
+        }
+        className={`flex items-start justify-between gap-3 p-4 ${hasBody ? "cursor-pointer" : ""}`}
+      >
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-semibold tracking-widest uppercase mb-1 truncate" style={{ color: "var(--muted)" }}>
+            {edu.institution}
+          </p>
+          <h3 className="font-bold leading-snug text-sm" style={{ color: "var(--fg)" }}>
+            {edu.degree}
+          </h3>
+          {edu.university ? (
+            <a href={edu.universityUrl} target="_blank" rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-xs mt-0.5 inline-block hover:underline" style={{ color: "var(--accent)", opacity: 0.8 }}>
+              {edu.university}
+            </a>
+          ) : edu.universityUrl ? (
+            <a href={edu.universityUrl} target="_blank" rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-xs mt-0.5 inline-block hover:underline" style={{ color: "var(--accent)", opacity: 0.8 }}>
+              {edu.institution}
+            </a>
+          ) : null}
+        </div>
+        <div className="flex-shrink-0 flex items-center gap-2">
+          <span className="px-2.5 py-1.5 rounded-lg text-xs font-bold border"
+            style={{ borderColor: "var(--border)", color: "var(--accent)", background: "var(--bg)", whiteSpace: "nowrap" }}>
             {edu.grade}
           </span>
+          {hasBody && (
+            <ChevronDown size={16}
+              style={{ color: "var(--muted)", transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s ease" }} />
+          )}
         </div>
-
-        {/* Description */}
-        <p
-          className={`leading-relaxed ${mobile ? "text-xs" : "text-sm"}`}
-          style={{ color: "var(--fg-dim)" }}
-        >
-          {edu.description}
-        </p>
-
-        {/* Highlights */}
-        {edu.highlights.length > 0 && <ul className="flex flex-col gap-1.5">
-          {edu.highlights.map((h) => (
-            <li
-              key={h}
-              className="flex items-start gap-2 text-xs"
-              style={{ color: "var(--fg-dim)" }}
-            >
-              <span
-                className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0"
-                style={{ background: "var(--accent)" }}
-              />
-              {h}
-            </li>
-          ))}
-        </ul>}
       </div>
+
+      {/* Expandable body — description + highlights */}
+      {hasBody && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateRows: open ? "1fr" : "0fr",
+            transition: "grid-template-rows 0.35s cubic-bezier(0.4,0,0.2,1)",
+          }}
+        >
+          <div style={{ overflow: "hidden" }}>
+            <div className="flex flex-col gap-3 px-4 pb-4 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
+              {edu.description && (
+                <p className="leading-relaxed text-xs" style={{ color: "var(--fg-dim)" }}>
+                  {edu.description}
+                </p>
+              )}
+              {edu.highlights.length > 0 && (
+                <ul className="flex flex-col gap-1.5">
+                  {edu.highlights.map((h) => (
+                    <li key={h} className="flex items-start gap-2 text-xs" style={{ color: "var(--fg-dim)" }}>
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "var(--accent)" }} />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -120,7 +179,7 @@ export function Education() {
 
   useEffect(() => {
     if (!loadingComplete) return;
-    // Scroll-direction rotation — mirrors plane behaviour in Experience
+    // Scroll-direction rotation - mirrors plane behaviour in Experience
     const caps = () =>
       [capDesktopRef.current, capMobileRef.current].filter(Boolean) as HTMLDivElement[];
     gsap.set(caps(), { rotation: 0 });
@@ -284,7 +343,7 @@ export function Education() {
           <div className="edu-hd-desktop opacity-0 mb-20">
             <p className="section-label mb-3">Background</p>
             <h2
-              className="font-black tracking-tight leading-none"
+              className="heading-accent font-black tracking-tight leading-none"
               style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)" }}
             >
               Education
@@ -416,7 +475,7 @@ export function Education() {
         {/* Header */}
         <div className="edu-hd-mobile opacity-0 mb-10">
           <p className="section-label mb-2">Background</p>
-          <h2 className="text-3xl font-bold" style={{ color: "var(--fg)" }}>
+          <h2 className="heading-accent text-3xl font-black" style={{ color: "var(--fg)" }}>
             Education
           </h2>
         </div>

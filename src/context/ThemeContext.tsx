@@ -45,7 +45,7 @@ export function useTheme() {
 
 /* ── Provider ───────────────────────────────────────────────────────────── */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Start with SSR-safe defaults — identical on server and client first render.
+  // Start with SSR-safe defaults - identical on server and client first render.
   // localStorage and window are read only after mount to avoid hydration mismatch.
   const [mode, setModeState]     = useState<ThemeMode>("auto");
   const [timeTheme, setTimeTheme] = useState<TimeTheme>("evening");

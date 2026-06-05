@@ -77,7 +77,7 @@ export function FreelanceBanner() {
         >
           <Image
             src="/images/freelance.png"
-            alt="Full Stack Web App — React, Angular, Node.js, AWS"
+            alt="Full Stack Web App - React, Angular, Node.js, AWS"
             width={1200}
             height={630}
             className="w-full h-auto block"
