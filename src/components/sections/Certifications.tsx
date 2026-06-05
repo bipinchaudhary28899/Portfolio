@@ -165,8 +165,9 @@ export function Certifications() {
               data-share-badge-host="https://www.credly.com"
             />
 
-            {/* LeetCode 50 Days 2026 */}
-            <div style={{ position: "relative", width: 150, height: 270, flexShrink: 0, overflow: "hidden", borderRadius: 8, display: "block" }}>
+            {/* LeetCode 50 Days 2026 — cropped to match the SAP badge height
+                (the lower part of the image is just empty black space) */}
+            <div style={{ position: "relative", width: 150, height: 240, flexShrink: 0, overflow: "hidden", borderRadius: 8, display: "block" }}>
               <Image
                 src="/images/badges/Leetcode_50_days_2026_badge.png"
                 alt="LeetCode 50 Days Badge 2026"
@@ -177,7 +178,7 @@ export function Certifications() {
             </div>
 
             {/* LeetCode 100 Days 2026 */}
-            <div style={{ position: "relative", width: 150, height: 270, flexShrink: 0, overflow: "hidden", borderRadius: 8, display: "block" }}>
+            <div style={{ position: "relative", width: 150, height: 240, flexShrink: 0, overflow: "hidden", borderRadius: 8, display: "block" }}>
               <Image
                 src="/images/badges/Leetcode_100_days_2026_badge.png"
                 alt="LeetCode 100 Days Badge 2026"
