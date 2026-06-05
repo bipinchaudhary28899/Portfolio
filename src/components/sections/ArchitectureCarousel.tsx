@@ -27,6 +27,7 @@ export function ArchitectureCarousel({ diagrams }: Props) {
 
   const lastPoint = useRef({ x: 0, y: 0 });
   const startPoint = useRef({ x: 0, y: 0 });
+  const draggingRef = useRef(false);
 
   if (!diagrams || diagrams.length === 0) return null;
 
@@ -55,6 +56,7 @@ export function ArchitectureCarousel({ diagrams }: Props) {
   const onPointerDown = (e: React.PointerEvent) => {
     startPoint.current = { x: e.clientX, y: e.clientY };
     lastPoint.current = { x: e.clientX, y: e.clientY };
+    draggingRef.current = true;
     setIsDragging(true);
     try {
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
@@ -63,13 +65,18 @@ export function ArchitectureCarousel({ diagrams }: Props) {
     }
   };
   const onPointerMove = (e: React.PointerEvent) => {
-    if (!isDragging || zoom === 1) return; // only pan when zoomed
+    if (!draggingRef.current || zoom === 1) return; // only pan when zoomed
     const dx = e.clientX - lastPoint.current.x;
     const dy = e.clientY - lastPoint.current.y;
     lastPoint.current = { x: e.clientX, y: e.clientY };
     setOffset((o) => ({ x: o.x + dx, y: o.y + dy }));
   };
   const onPointerUp = (e: React.PointerEvent) => {
+    // The ref guard ensures one gesture is handled once — pointerup and the
+    // following pointerleave both fire, but only the first runs the swipe.
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+
     // Swipe to change diagram when not zoomed.
     if (zoom === 1 && total > 1) {
       const dx = e.clientX - startPoint.current.x;
