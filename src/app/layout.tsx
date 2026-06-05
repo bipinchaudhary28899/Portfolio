@@ -5,6 +5,7 @@ import { Navbar } from "@/components/ui/Navbar";
 import LoadingWrapper from "@/components/ui/LoadingWrapper";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { DexyAssistant } from "@/components/ui/DexyAssistant";
+import { ScrollRefresher } from "@/components/ui/ScrollRefresher";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <LoadingWrapper>
             <Navbar />
             <main style={{ overflowX: "clip" }}>{children}</main>
+            <ScrollRefresher />
             <DexyAssistant />
           </LoadingWrapper>
         </ThemeProvider>

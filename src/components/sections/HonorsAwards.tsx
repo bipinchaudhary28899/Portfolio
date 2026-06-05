@@ -7,6 +7,7 @@ import { Maximize2, X } from "lucide-react";
 import Image from "next/image";
 import { honors } from "@/data/portfolio";
 import { useLoadingComplete } from "@/context/LoadingContext";
+import { useCloseOnBack } from "@/hooks/useCloseOnBack";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,6 +26,9 @@ export function HonorsAwards() {
   const sec = useRef<HTMLElement>(null);
   const [preview, setPreview] = useState<Honor | null>(null);
   const loadingComplete = useLoadingComplete();
+
+  /* Back button closes the lightbox instead of leaving the site */
+  useCloseOnBack(preview !== null, () => setPreview(null));
 
   /* Close lightbox on Escape + lock body scroll while open */
   useEffect(() => {

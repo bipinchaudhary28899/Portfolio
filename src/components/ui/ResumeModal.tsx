@@ -4,9 +4,13 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Download, X } from "lucide-react";
 import { personalInfo } from "@/data/portfolio";
+import { useCloseOnBack } from "@/hooks/useCloseOnBack";
 
 export function ResumeModal({ onClose }: { onClose: () => void }) {
   const [mounted, setMounted] = useState(false);
+
+  /* Back button closes the modal instead of leaving the site */
+  useCloseOnBack(true, onClose);
 
   useEffect(() => {
     setMounted(true);

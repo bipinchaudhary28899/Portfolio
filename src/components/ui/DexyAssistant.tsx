@@ -11,6 +11,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Bot, Send, X, Sparkles } from "lucide-react";
 import { personalInfo } from "@/data/portfolio";
+import { useCloseOnBack } from "@/hooks/useCloseOnBack";
 
 type Role = "user" | "assistant";
 interface Msg {
@@ -68,6 +69,9 @@ export function DexyAssistant() {
   const [teaserDismissed, setTeaserDismissed] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  /* Back button closes the chat instead of leaving the site */
+  useCloseOnBack(open, () => setOpen(false));
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });

@@ -7,6 +7,7 @@ import { ExternalLink, X, ZoomIn } from "lucide-react";
 import Image from "next/image";
 import { certifications } from "@/data/portfolio";
 import { useLoadingComplete } from "@/context/LoadingContext";
+import { useCloseOnBack } from "@/hooks/useCloseOnBack";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +17,9 @@ export function Certifications() {
   const sec = useRef<HTMLElement>(null);
   const [preview, setPreview] = useState<Cert | null>(null);
   const loadingComplete = useLoadingComplete();
+
+  /* Back button closes the lightbox instead of leaving the site */
+  useCloseOnBack(preview !== null, () => setPreview(null));
 
   /* Load Credly embed script once */
   useEffect(() => {

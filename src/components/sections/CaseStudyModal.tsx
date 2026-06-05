@@ -6,6 +6,7 @@ import { X, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/components/ui/icons";
 import { projects } from "@/data/portfolio";
 import { ArchitectureCarousel } from "@/components/sections/ArchitectureCarousel";
+import { useCloseOnBack } from "@/hooks/useCloseOnBack";
 
 interface Props {
   projectIndex: number;
@@ -22,6 +23,9 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
   const cs    = p.caseStudy;
   const total = projects.length;
   const diagrams = (p as { diagrams?: { src: string; title: string; caption: string }[] }).diagrams;
+
+  /* Back button closes the modal instead of leaving the site */
+  useCloseOnBack(true, onClose);
 
   /* ── Animate in whenever projectIndex changes ── */
   useEffect(() => {
