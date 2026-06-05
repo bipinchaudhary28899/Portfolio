@@ -623,6 +623,7 @@ export const honors = [
   {
     id: 1,
     title: "Football - Runner-up",
+    headline: "Football Runner-up · PACE Sports Fest, BIET Jhansi",
     category: "Sports",
     context: "PACE Sports Fest, BIET Jhansi",
     year: "College",
@@ -633,6 +634,7 @@ export const honors = [
   {
     id: 2,
     title: "Computer Science Topper - Class 12",
+    headline: "Computer Science School Topper · Class 12, CBSE",
     category: "Academics",
     context: "Dyal Singh Public School · CBSE Boards",
     year: "Class XII",
@@ -643,6 +645,7 @@ export const honors = [
   {
     id: 3,
     title: "National Children's Science Congress - Regional",
+    headline: "National Children's Science Congress · Regional Level",
     category: "Science",
     context: "Selected at the Regional level",
     year: "School",
@@ -653,6 +656,7 @@ export const honors = [
   {
     id: 4,
     title: "National Children's Science Congress - Intra-Regional",
+    headline: "National Children's Science Congress · Intra-Regional Level",
     category: "Science",
     context: "Advanced to the Intra-Regional level",
     year: "School",
@@ -663,6 +667,7 @@ export const honors = [
   {
     id: 5,
     title: "Youth Parliament",
+    headline: "Youth Parliament · Regional Level",
     category: "Leadership",
     context: "School-level Youth Parliament",
     year: "School",

@@ -13,15 +13,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 type Honor = (typeof honors)[number];
 
-/* Mild, category-based accent colours (used subtly, like the Certifications
-   section) to differentiate the categories at a glance. */
-const CATEGORY_COLORS: Record<string, string> = {
-  Sports: "#e08a1e",
-  Academics: "#16a34a",
-  Science: "#2563eb",
-  Leadership: "#9333ea",
-};
-
 export function HonorsAwards() {
   const sec = useRef<HTMLElement>(null);
   const [preview, setPreview] = useState<Honor | null>(null);
@@ -75,64 +66,55 @@ export function HonorsAwards() {
           </h2>
         </div>
 
-        {/* Cards — compact; certificate shown upfront, click opens a larger view */}
-        <div className="ha-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-          {honors.map((h) => {
-            const color = CATEGORY_COLORS[h.category] ?? "#6b7280";
-            return (
-              <button
-                key={h.id}
-                onClick={() => setPreview(h)}
-                aria-label={`View ${h.title} certificate`}
-                className="ha-card group text-left rounded-xl border overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-1"
-                style={{ background: "var(--card)", borderColor: "var(--border)" }}
-              >
-                {/* Certificate image (visible upfront, fills the card) */}
-                <div className="relative w-full" style={{ aspectRatio: "4 / 3", background: "#ffffff" }}>
-                  <Image
-                    src={h.image}
-                    alt={h.title}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-contain"
-                  />
-                  {/* Category accent bar */}
-                  <div className="absolute top-0 left-0 right-0 z-10" style={{ height: 3, background: color, opacity: 0.85 }} />
-                  {/* Year badge — neutral, subtle */}
-                  <span className="absolute top-1.5 right-1.5 text-[9px] font-semibold px-1.5 py-0.5 rounded-full"
-                    style={{ background: "rgba(0,0,0,0.5)", color: "#fff", whiteSpace: "nowrap" }}>
-                    {h.year}
-                  </span>
-                  {/* Hover hint to enlarge */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ background: "rgba(0,0,0,0.4)" }}>
-                    <span className="flex items-center gap-1 text-[11px] font-semibold text-white px-2 py-1 rounded-full"
-                      style={{ background: "rgba(0,0,0,0.55)" }}>
-                      <Maximize2 size={12} /> Enlarge
-                    </span>
-                  </div>
-                </div>
+        {/* Cards — the certificate with a one-line headline over a gradient.
+            Tapping a card opens the full certificate. */}
+        <div className="ha-grid grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          {honors.map((h) => (
+            <button
+              key={h.id}
+              onClick={() => setPreview(h)}
+              aria-label={`View ${h.title} certificate`}
+              className="ha-card group relative rounded-xl overflow-hidden border transition-transform duration-300 hover:-translate-y-1"
+              style={{ aspectRatio: "4 / 3", background: "#0b0b0b", borderColor: "var(--border)" }}
+            >
+              <Image
+                src={h.image}
+                alt={h.title}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                style={{ objectPosition: "top" }}
+              />
 
-                {/* Caption */}
-                <div className="p-2.5 sm:p-3">
-                  <div className="min-w-0">
-                    <h3 className="text-xs font-bold leading-snug" style={{ color: "var(--fg)" }}>
-                      {h.title}
-                    </h3>
-                    <p className="text-[11px] mt-0.5 leading-relaxed" style={{ color: "var(--muted)" }}>
-                      {h.context}
-                    </p>
-                    <span
-                      className="inline-block mt-2 text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                      style={{ background: `${color}1a`, color: color, border: `1px solid ${color}40` }}
-                    >
-                      {h.category}
-                    </span>
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+              {/* Gradient for headline readability */}
+              <div
+                aria-hidden
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 28%, rgba(0,0,0,0.05) 58%, transparent 100%)",
+                }}
+              />
+
+              {/* Headline */}
+              <div className="absolute inset-x-0 bottom-0 p-2.5 sm:p-4 text-left">
+                <h3
+                  className="text-[11px] sm:text-[0.95rem] font-bold leading-snug"
+                  style={{ color: "#fff", textShadow: "0 1px 4px rgba(0,0,0,0.55)" }}
+                >
+                  {h.headline}
+                </h3>
+              </div>
+
+              {/* Enlarge hint (desktop hover) */}
+              <span
+                className="hidden sm:flex absolute top-2 right-2 items-center gap-1 text-[11px] font-semibold text-white px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: "rgba(0,0,0,0.5)" }}
+              >
+                <Maximize2 size={12} /> Enlarge
+              </span>
+            </button>
+          ))}
         </div>
       </div>
 
