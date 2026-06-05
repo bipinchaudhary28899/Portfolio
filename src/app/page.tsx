@@ -13,21 +13,47 @@ import { FreelanceBanner }    from "@/components/sections/FreelanceBanner";
 import { FreelanceServices }  from "@/components/sections/FreelanceServices";
 import { Contact }            from "@/components/sections/Contact";
 
+/* A soft, centered divider shown between two consecutive sections that
+   share the same background, so the boundary reads as a section change
+   (not a new page) without a harsh full-width line. */
+function SectionDivider({ alt = false }: { alt?: boolean }) {
+  return (
+    <div aria-hidden style={{ background: alt ? "var(--bg-alt)" : "var(--bg)" }}>
+      <div
+        style={{
+          width: "72%",
+          maxWidth: "60rem",
+          height: 1,
+          margin: "0 auto",
+          background: "var(--border)",
+          opacity: 0.5,
+        }}
+      />
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <>
       <Hero />
       <About />
+      <SectionDivider alt />
       <Experience />
       <Projects />
+      <SectionDivider />
       <Skills />
+      <SectionDivider />
       <Education />
+      <SectionDivider />
       <HonorsAwards />
+      <SectionDivider />
       <OpenSource />
       <CodingPlatforms />
       <Certifications />
       <CompanyMarquee />
       <FreelanceBanner />
+      <SectionDivider />
       <FreelanceServices />
       <Contact />
     </>

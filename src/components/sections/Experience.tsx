@@ -262,7 +262,7 @@ export function Experience() {
       ref={secRef}
       id="experience"
       className="py-14 sm:py-36 px-6 sm:px-12 lg:px-20"
-      style={{ background: "var(--bg-alt)", borderTop: "1px solid var(--border)" }}
+      style={{ background: "var(--bg-alt)" }}
     >
       <div className="max-w-6xl mx-auto">
 
