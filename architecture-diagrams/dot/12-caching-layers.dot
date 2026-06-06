@@ -1,0 +1,44 @@
+digraph CachingLayers {
+  rankdir=LR; bgcolor=white; nodesep=0.4; ranksep=0.6;
+  node [fontname="Helvetica", fontsize=10, color=black, fontcolor=black];
+  edge [fontname="Helvetica", fontsize=9, color=black];
+  graph [fontname="Helvetica", labelloc=t, label="Three-Layer Caching Architecture  –  StreamSphere"];
+
+  /* ── Client ── */
+  Client [shape=box, label="Browser\n(Angular SPA)", style=filled, fillcolor="#E8F4FD", width=1.4];
+
+  /* ── L1 Browser Cache ── */
+  BC [shape=diamond, label="L1\nBrowser Cache\nhit?", style=filled, fillcolor="#FFF5CC", width=1.6];
+  BChit [shape=box, label="← instant\nserve from\nmemory/disk", style=filled, fillcolor="#FFF5CC"];
+
+  /* ── L2 CloudFront ── */
+  CF [shape=diamond, label="L2\nCloudFront CDN\nhit?", style=filled, fillcolor="#FFE8CC", width=1.6];
+  CFhit [shape=box, label="← ~10–30 ms\nserve from\nedge node", style=filled, fillcolor="#FFE8CC"];
+
+  /* ── L3 Redis ── */
+  RD [shape=diamond, label="L3\nRedis Cache\nhit?", style=filled, fillcolor="#CCFFE8", width=1.6];
+  RDhit [shape=box, label="← ~30–60 ms\nreturn\ncached value", style=filled, fillcolor="#CCFFE8"];
+
+  /* ── Origin ── */
+  Mongo [shape=cylinder, label="MongoDB\n(source of truth)\n80–200 ms", style=filled, fillcolor="#E8CCFF", width=1.6];
+
+  /* ── Main miss path (left to right) ── */
+  Client -> BC;
+  BC -> CF   [label="miss"];
+  CF -> RD   [label="miss"];
+  RD -> Mongo [label="miss"];
+
+  /* ── Hit responses (above the main flow) ── */
+  BC -> BChit   [label="hit", color=gray50, fontcolor=gray30];
+  CF -> CFhit   [label="hit", color=gray50, fontcolor=gray30];
+  RD -> RDhit   [label="hit", color=gray50, fontcolor=gray30];
+
+  /* ── TTL / details ── */
+  subgraph cluster_ttls {
+    label="Cached keys & TTLs"; fontname="Helvetica"; style=filled; fillcolor="#F7F7F7"; color="#BBBBBB";
+    T1 [shape=none, label="L1 Browser  |  Cache-Control: max-age\nfeed pages: 60 s   assets / HLS: long-lived"];
+    T2 [shape=none, label="L2 CloudFront  |  HLS segments: immutable\nthumbnails: 24 h   origin: S3 + Express"];
+    T3 [shape=none, label="L3 Redis  |  ss:feed (2 min)  ss:video:id (10 min)\nss:search (1 min)  ss:top-liked (5 min)"];
+    T1 -> T2 -> T3 [style=invis];
+  }
+}

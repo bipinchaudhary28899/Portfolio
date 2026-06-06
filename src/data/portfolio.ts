@@ -46,7 +46,7 @@ export const projects = [
     cardMetrics: [
       { value: "40%", label: "faster startup" },
       { value: "3", label: "adaptive bitrates" },
-      { value: "30-40%", label: "feed latency cut" },
+      { value: "3", label: "caching layers" },
     ],
     caseStudy: {
       origin:
@@ -91,7 +91,7 @@ export const projects = [
         { value: "40%", label: "Startup latency reduction", detail: "From ~3.2s to ~1.9s average first-frame time, measured across 50 test uploads on varied network conditions." },
         { value: "70%", label: "Transcoding cost cut", detail: "Lambda + FFmpeg vs AWS Elastic Transcoder on equivalent workload - from $0.015/min to ~$0.004/min equivalent." },
         { value: "<800ms", label: "Lambda cold start", detail: "After UPX compression of the FFmpeg binary and scheduled pre-warm Lambda invocations." },
-        { value: "30-40%", label: "Feed latency reduction", detail: "Redis cursor cache vs MongoDB offset pagination on a collection of 10,000+ videos." },
+        { value: "3", label: "Caching layers", detail: "Browser Cache-Control → CloudFront CDN edge → Redis app cache, before a request ever reaches MongoDB." },
       ],
       architecture:
         "Upload → S3 (raw) → S3 Event → Lambda (FFmpeg) → S3 (HLS segments) → CloudFront CDN → Angular Player\n\nParallel: S3 Event → Lambda (Whisper + GPT) → MongoDB (metadata)\n\nFeed API: Angular → Node.js → Redis (cursor) → MongoDB → Response",
@@ -152,6 +152,11 @@ export const projects = [
         title: "Resilience & Fallbacks",
         caption: "Every subsystem degrades gracefully - AI, Redis, and player failures are isolated so a single fault never takes the whole app down.",
       },
+      {
+        src: "/images/streamsphere-architecture/12-caching-layers.png",
+        title: "Three-Layer Caching Architecture",
+        caption: "Requests are served from the earliest cache hit: L1 Browser (instant, Cache-Control), L2 CloudFront edge (~10–30 ms, HLS segments + thumbnails), or L3 Redis (~30–60 ms, feed/video/search keys). Only a full miss reaches MongoDB.",
+      },
     ],
   },
   {
@@ -165,7 +170,7 @@ export const projects = [
     image: "/images/DentalCare.png",
     cardMetrics: [
       { value: "0", label: "double bookings" },
-      { value: "~30%", label: "no-show reduction" },
+      { value: "100%", label: "WhatsApp delivery" },
       { value: "Live", label: "queue management" },
     ],
     caseStudy: {
@@ -214,9 +219,7 @@ export const projects = [
       ],
       metrics: [
         { value: "0", label: "Double bookings since launch", detail: "Conflict detection runs at the database level with exclusion constraints - no two appointments can share the same doctor + time slot." },
-        { value: "~30%", label: "No-show reduction", detail: "WhatsApp OTP confirmation acts as a soft commitment. Patients who complete OTP verification show up at a significantly higher rate." },
-        { value: "<200ms", label: "Queue update latency", detail: "Supabase Realtime LISTEN/NOTIFY delivers appointment status changes to the doctor dashboard in under 200ms." },
-        { value: "100%", label: "WhatsApp delivery rate", detail: "Compared to ~80% for SMS in India due to DND filters. Zero failed OTP deliveries since launch." },
+        { value: "100%", label: "WhatsApp delivery rate", detail: "Compared to ~80% for SMS in India due to DND filters. Zero failed OTP deliveries." },
       ],
       architecture:
         "Patient → Next.js → /api/book → Zod validation → Supabase (slot conflict check + RLS) → WhatsApp API (OTP)\n\nDoctor Dashboard → Supabase Realtime subscription → Live queue (LISTEN/NOTIFY)\n\nCron → /api/cleanup → Supabase → Log retention (7-day rolling)",
@@ -232,9 +235,9 @@ export const projects = [
     githubUrl: "https://github.com/bipinchaudhary28899/Argumint",
     image: "/images/Argumint.png",
     cardMetrics: [
-      { value: "<2s", label: "AI response time" },
+      { value: "<2s", label: "AI judge latency" },
       { value: "10+", label: "concurrent rooms" },
-      { value: "GPT-4", label: "counterarguments" },
+      { value: "GPT-4", label: "AI scorer" },
     ],
     caseStudy: {
       origin:
@@ -245,7 +248,7 @@ export const projects = [
         {
           title: "GPT-4 over fine-tuned model",
           detail:
-            "A fine-tuned model would need a large, high-quality debate dataset to match GPT-4's reasoning depth. Given the project scope, the quality gap was too large. GPT-4 with a carefully crafted system prompt (steelman the opposing view, stay factual, no strawmen) produced counterarguments that beta users rated significantly higher than GPT-3.5 in quality and nuance.",
+            "A fine-tuned model would need a large, high-quality debate dataset to match GPT-4's reasoning depth. Given the project scope, the quality gap was too large. GPT-4 with a carefully crafted judging prompt (evaluate logic, evidence, and delivery; stay neutral) produced scores that beta users rated significantly more credible than GPT-3.5 verdicts.",
         },
         {
           title: "Socket.io over polling",
@@ -265,9 +268,9 @@ export const projects = [
       ],
       challenges: [
         {
-          title: "Prompt engineering for quality counterarguments",
+          title: "Prompt engineering for quality AI judging",
           detail:
-            "Early prompts produced generic responses that restated the original argument. After 30+ iterations, settled on a structured prompt:\n\n  1. identify the core claim\n  2. find the strongest real-world evidence against it\n  3. steelman the opposite position\n  4. respond in the same tone and length as the original\n\nQuality jumped from ~3/5 to ~4.5/5 in user ratings.",
+            "Early prompts produced vague verdicts with no clear reasoning. After 30+ iterations, settled on a structured scoring prompt:\n\n  1. identify the core claim each side made\n  2. evaluate logical consistency and evidence quality\n  3. assess delivery and clarity\n  4. return a structured score with per-criterion breakdown\n\nScoring quality jumped from ~3/5 to ~4.5/5 in user ratings.",
         },
         {
           title: "AI rate limiting per user",
@@ -281,9 +284,9 @@ export const projects = [
         },
       ],
       metrics: [
-        { value: "<2s", label: "AI counterargument latency", detail: "GPT-4 response with streaming output - first token appears in ~600ms, full response in under 2 seconds for typical argument length." },
-        { value: "10+", label: "Concurrent debate rooms", detail: "Tested with 10 simultaneous rooms, 3 users each, all running AI calls in parallel - no degradation in response time or message delivery." },
-        { value: "4.5/5", label: "Counterargument quality", detail: "Beta user rating after prompt engineering iterations - up from 3/5 with the naive 'generate a counterargument' prompt." },
+        { value: "<2s", label: "AI judge latency", detail: "GPT-4 scores each argument - first token appears in ~600ms, full verdict delivered in under 2 seconds for typical argument length." },
+        { value: "10+", label: "Concurrent debate rooms", detail: "Tested with 10 simultaneous rooms, 3 users each, all running AI scoring calls in parallel - no degradation in response time or message delivery." },
+        { value: "4.5/5", label: "AI scoring quality", detail: "Beta user rating of AI judge verdicts after prompt engineering iterations - up from 3/5 with the initial naive scoring prompt." },
         { value: "50/hr", label: "Rate limit per user", detail: "Sliding window Redis counter prevents runaway AI spend while keeping the experience fluid for normal usage patterns." },
       ],
       architecture:

@@ -13,7 +13,12 @@ import { useEffect, useRef } from "react";
  * the history stays clean.
  */
 export function useCloseOnBack(isOpen: boolean, onClose: () => void) {
-  const onCloseRef = useRef(onClose);
+  const onCloseRef   = useRef(onClose);
+  // Tracks when WE called history.back() in cleanup so we can ignore the
+  // resulting popstate — avoids a React Strict Mode double-invoke bug where
+  // the cleanup's async back() fires into the re-mounted effect's listener.
+  const ignoringPopRef = useRef(false);
+
   useEffect(() => {
     onCloseRef.current = onClose;
   });
@@ -26,6 +31,10 @@ export function useCloseOnBack(isOpen: boolean, onClose: () => void) {
     window.history.pushState({ overlay: true }, "");
 
     const onPop = () => {
+      if (ignoringPopRef.current) {
+        ignoringPopRef.current = false;
+        return;
+      }
       poppedByBack = true;
       onCloseRef.current();
     };
@@ -35,7 +44,10 @@ export function useCloseOnBack(isOpen: boolean, onClose: () => void) {
       window.removeEventListener("popstate", onPop);
       // If the overlay was closed via the UI (not the Back button), remove
       // the history entry we added so a later Back press behaves normally.
-      if (!poppedByBack) window.history.back();
+      if (!poppedByBack) {
+        ignoringPopRef.current = true;
+        window.history.back();
+      }
     };
   }, [isOpen]);
 }
