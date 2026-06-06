@@ -136,7 +136,7 @@ export default function OgImage() {
             {[
               { value: "3+",   label: "Years exp"    },
               { value: "40%",  label: "Latency cut"  },
-              { value: "350+", label: "DSA solved"   },
+              { value: "385+", label: "DSA solved"   },
             ].map(s => (
               <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <span style={{ fontSize: 32, fontWeight: 900, color: "#ff6535" }}>{s.value}</span>

@@ -13,7 +13,7 @@ export const personalInfo = {
   stats: [
     { value: "3+",    label: "Years experience" },
     { value: "40%",   label: "Latency cut" },
-    { value: "350+",  label: "DSA problems" },
+    { value: "385+",  label: "DSA problems" },
   ],
   email: "bkumar28899@gmail.com",
   phone: "+91-8787230009",
@@ -519,7 +519,7 @@ export const education = [
     highlights: [
       "Graduated with 78.6% aggregate",
       "Built first full-stack projects during coursework",
-      "Solved 350+ DSA problems on LeetCode",
+      "Solved 385+ DSA problems on LeetCode",
     ],
   },
   {
@@ -554,9 +554,9 @@ export const codingPlatforms = [
     name: "LeetCode",
     handle: "bkumar28899",
     url: "https://leetcode.com/u/bkumar28899/",
-    stat: "350+",
+    stat: "385+",
     statLabel: "Problems Solved",
-    badge: "350+ Solved",
+    badge: "385+ Solved",
     color: "#FFA116",
     description: "Focus on arrays, dynamic programming, graphs, trees, and system design patterns.",
   },
