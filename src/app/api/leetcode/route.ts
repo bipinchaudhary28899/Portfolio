@@ -3,10 +3,12 @@ import { NextResponse } from "next/server";
 const LEETCODE_GQL = "https://leetcode.com/graphql/";
 const USERNAME     = "bkumar28899";
 
+// submitStats (non-global) matches the count shown on the public profile page.
+// submitStatsGlobal aggregates differently and can lag behind.
 const QUERY = `
   query getUserProfile($username: String!) {
     matchedUser(username: $username) {
-      submitStats: submitStatsGlobal {
+      submitStats {
         acSubmissionNum {
           difficulty
           count

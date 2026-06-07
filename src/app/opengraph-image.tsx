@@ -13,7 +13,7 @@ export default async function OgImage() {
       method:  "POST",
       headers: { "Content-Type": "application/json", "Referer": "https://leetcode.com" },
       body: JSON.stringify({
-        query: `query($u:String!){matchedUser(username:$u){submitStats:submitStatsGlobal{acSubmissionNum{difficulty count}}}}`,
+        query: `query($u:String!){matchedUser(username:$u){submitStats{acSubmissionNum{difficulty count}}}}`,
         variables: { u: "bkumar28899" },
       }),
       next: { revalidate: 900 },
