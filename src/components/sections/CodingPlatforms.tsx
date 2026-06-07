@@ -8,6 +8,7 @@ import type { SVGProps } from "react";
 import { codingPlatforms } from "@/data/portfolio";
 import { GithubIcon, LeetCodeIcon, HackerRankIcon } from "@/components/ui/icons";
 import { useLoadingComplete } from "@/context/LoadingContext";
+import { useLeetCodeSolved } from "@/hooks/useLeetCodeSolved";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,6 +33,14 @@ export function CodingPlatforms() {
   const sec = useRef<HTMLElement>(null);
   const counted = useRef<Set<Element>>(new Set());
   const loadingComplete = useLoadingComplete();
+  const { data: lcData } = useLeetCodeSolved();
+
+  // Merge live LeetCode stat into the platforms list (falls back to static data)
+  const platforms = codingPlatforms.map((p) =>
+    p.name === "LeetCode" && lcData
+      ? { ...p, stat: lcData.stat, badge: `${lcData.stat} Solved` }
+      : p
+  );
 
   useEffect(() => {
     if (!loadingComplete) return;
@@ -120,7 +129,7 @@ export function CodingPlatforms() {
 
         {/* ── Desktop / tablet: full cards ── */}
         <div className="cp-grid hidden sm:grid sm:grid-cols-3 gap-6">
-          {codingPlatforms.map((p) => {
+          {platforms.map((p) => {
             const { prefix, target, suffix, decimals } = parseStat(p.stat);
             const Icon = PLATFORM_ICONS[p.name];
             return (
@@ -163,7 +172,7 @@ export function CodingPlatforms() {
 
         {/* ── Mobile: compact cards ── */}
         <div className="cp-grid grid grid-cols-1 gap-3 sm:hidden">
-          {codingPlatforms.map((p) => {
+          {platforms.map((p) => {
             const { prefix, target, suffix, decimals } = parseStat(p.stat);
             const Icon = PLATFORM_ICONS[p.name];
             return (

@@ -6,12 +6,19 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { personalInfo } from "@/data/portfolio";
 import { Highlight } from "@/components/ui/Highlight";
 import { useLoadingComplete } from "@/context/LoadingContext";
+import { useLeetCodeSolved } from "@/hooks/useLeetCodeSolved";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function About() {
   const sec = useRef<HTMLElement>(null);
   const loadingComplete = useLoadingComplete();
+  const { data: lcData } = useLeetCodeSolved();
+
+  // Override the DSA stat with live LeetCode count (falls back to static value)
+  const stats = personalInfo.stats.map((s) =>
+    s.label === "DSA problems" && lcData ? { ...s, value: lcData.stat } : s
+  );
 
   useEffect(() => {
     if (!loadingComplete) return;
@@ -80,7 +87,7 @@ export function About() {
 
         {/* Stats */}
         <div className="stat-grid grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16">
-          {personalInfo.stats.map((s) => (
+          {stats.map((s) => (
             <div key={s.label} className="stat-item opacity-0 rounded-2xl p-6 border"
               style={{
                 background: "var(--card)",

@@ -5,7 +5,26 @@ export const alt     = "Bipin Chaudhary - Full Stack AI Engineer";
 export const size    = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OgImage() {
+export default async function OgImage() {
+  // Fetch live LeetCode count; fall back to static value on failure
+  let dsaStat = "385+";
+  try {
+    const res = await fetch("https://leetcode.com/graphql/", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json", "Referer": "https://leetcode.com" },
+      body: JSON.stringify({
+        query: `query($u:String!){matchedUser(username:$u){submitStats:submitStatsGlobal{acSubmissionNum{difficulty count}}}}`,
+        variables: { u: "bkumar28899" },
+      }),
+      next: { revalidate: 900 },
+    });
+    const json = await res.json();
+    const rows: { difficulty: string; count: number }[] =
+      json?.data?.matchedUser?.submitStats?.acSubmissionNum ?? [];
+    const total = rows.find((r) => r.difficulty === "All")?.count;
+    if (total) dsaStat = `${Math.floor(total / 10) * 10}+`;
+  } catch { /* use fallback */ }
+
   return new ImageResponse(
     (
       <div
@@ -136,7 +155,7 @@ export default function OgImage() {
             {[
               { value: "3+",   label: "Years exp"    },
               { value: "40%",  label: "Latency cut"  },
-              { value: "385+", label: "DSA solved"   },
+              { value: dsaStat, label: "DSA solved"   },
             ].map(s => (
               <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <span style={{ fontSize: 32, fontWeight: 900, color: "#ff6535" }}>{s.value}</span>
