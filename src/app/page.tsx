@@ -22,7 +22,7 @@ function SectionDivider({ alt = false, full = false }: { alt?: boolean; full?: b
     <div aria-hidden style={{ background: alt ? "var(--bg-alt)" : "var(--bg)" }}>
       <div
         style={{
-          width: "85%",
+          width: "100%",
           maxWidth: full ? "none" : "60rem",
           height: 1.5,
           margin: "0 auto",
