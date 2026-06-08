@@ -19,6 +19,8 @@ import {
   codingPlatforms,
   openSourceContributions,
   certifications,
+  interviewExperiences,
+  blogPosts,
 } from "@/data/portfolio";
 
 /** Pretty-print any value into readable, indented text. */
@@ -60,6 +62,8 @@ function render(value: unknown, depth = 0): string {
 const NOISE_KEYS = new Set([
   "id",
   "logo",
+  "logoUrl",
+  "brandColor",
   "image",
   "numeric",
   "suffix",
@@ -99,6 +103,18 @@ export function buildKnowledgeContext(): string {
   parts.push(section("CODING PLATFORMS", render(codingPlatforms)));
   parts.push(
     section("OPEN SOURCE CONTRIBUTIONS", render(openSourceContributions)),
+  );
+  parts.push(
+    section(
+      "INTERVIEW EXPERIENCES (companies, rounds, DSA/behavioral questions, outcomes, takeaways)",
+      render(interviewExperiences),
+    ),
+  );
+  parts.push(
+    section(
+      "BLOG POSTS / WRITING (full articles — title, summary, tags, and section-by-section content)",
+      render(blogPosts),
+    ),
   );
 
   return parts.join("\n");
