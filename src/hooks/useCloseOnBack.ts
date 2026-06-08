@@ -1,23 +1,20 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { registerOverlay } from "./backGesture";
 
 /**
  * Makes the browser Back button (or the mobile swipe-back gesture) close an
  * open overlay — a modal, lightbox, or chat panel — instead of navigating
  * away from the site.
  *
- * While `isOpen` is true it pushes a synthetic history entry and listens for
- * `popstate`; pressing Back pops that entry and calls `onClose` instead of
- * leaving the page. Closing the overlay via the UI removes the entry again so
- * the history stays clean.
+ * Closing the overlay (Back button OR an in-UI close) leaves the page exactly
+ * where it was: it never scrolls to the top or re-renders the page. All of the
+ * history coordination lives in the shared back-gesture module so multiple
+ * overlays can't fight over the Back button.
  */
 export function useCloseOnBack(isOpen: boolean, onClose: () => void) {
-  const onCloseRef   = useRef(onClose);
-  // Tracks when WE called history.back() in cleanup so we can ignore the
-  // resulting popstate — avoids a React Strict Mode double-invoke bug where
-  // the cleanup's async back() fires into the re-mounted effect's listener.
-  const ignoringPopRef = useRef(false);
+  const onCloseRef = useRef(onClose);
 
   useEffect(() => {
     onCloseRef.current = onClose;
@@ -25,29 +22,19 @@ export function useCloseOnBack(isOpen: boolean, onClose: () => void) {
 
   useEffect(() => {
     if (!isOpen) return;
-    let poppedByBack = false;
 
-    // Add a history entry that the Back button can pop.
-    window.history.pushState({ overlay: true }, "");
+    // Some overlays lock <body> scrolling while open, which can make mobile
+    // browsers jump to the top. Snapshot the scroll position and restore it on
+    // close as a safety net (no-op for overlays that don't lock scroll).
+    const savedY = window.scrollY;
 
-    const onPop = () => {
-      if (ignoringPopRef.current) {
-        ignoringPopRef.current = false;
-        return;
-      }
-      poppedByBack = true;
-      onCloseRef.current();
-    };
-    window.addEventListener("popstate", onPop);
+    const unregister = registerOverlay(() => onCloseRef.current());
 
     return () => {
-      window.removeEventListener("popstate", onPop);
-      // If the overlay was closed via the UI (not the Back button), remove
-      // the history entry we added so a later Back press behaves normally.
-      if (!poppedByBack) {
-        ignoringPopRef.current = true;
-        window.history.back();
-      }
+      unregister();
+      requestAnimationFrame(() =>
+        window.scrollTo({ top: savedY, behavior: "instant" as ScrollBehavior }),
+      );
     };
   }, [isOpen]);
 }

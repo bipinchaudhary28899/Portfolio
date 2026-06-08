@@ -9,6 +9,29 @@ import { useLoadingComplete } from "@/context/LoadingContext";
 import { ResumeModal } from "@/components/ui/ResumeModal";
 import { useScrollToTopOnBack } from "@/hooks/useScrollToTopOnBack";
 
+/* JS-driven smooth scroll. Native window.scrollTo({behavior:"smooth"}) is
+   unreliable on mobile Safari when triggered from a tap handler (it's often
+   silently dropped), which made the in-page nav links appear broken on mobile.
+   A requestAnimationFrame tween behaves identically across every browser. */
+function smoothScrollTo(targetY: number, duration = 600) {
+  const startY = window.scrollY;
+  const diff = Math.round(targetY) - startY;
+  if (Math.abs(diff) < 2) {
+    window.scrollTo(0, targetY);
+    return;
+  }
+  const ease = (t: number) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  let startTs: number | null = null;
+  const step = (ts: number) => {
+    if (startTs === null) startTs = ts;
+    const p = Math.min((ts - startTs) / duration, 1);
+    window.scrollTo(0, startY + diff * ease(p));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 export function Navbar() {
   const ref                         = useRef<HTMLElement>(null);
   const moreRef                     = useRef<HTMLDivElement>(null);
@@ -54,16 +77,20 @@ export function Navbar() {
     setMoreOpen(false);
     if (href.startsWith("/")) {
       window.location.href = href;
-    } else {
-      const el = document.getElementById(href.slice(1));
-      if (el) {
-        // Offset by the fixed navbar height so the section divider
-        // (which sits just above each section) is visible at the top.
-        const NAV_H = ref.current?.offsetHeight ?? 64;
-        const top = el.getBoundingClientRect().top + window.scrollY - NAV_H;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
+      return;
     }
+    const el = document.getElementById(href.slice(1));
+    if (!el) return;
+    // Always use the fixed bar height (h-16 = 64px), NOT offsetHeight —
+    // offsetHeight includes the mobile dropdown while it's still animating
+    // closed, which throws off the scroll target. The header is position:fixed
+    // so the open/closing mobile menu doesn't shift the target's position;
+    // a single rAF is enough to let the close state commit before we measure.
+    const NAV_H = 64;
+    requestAnimationFrame(() => {
+      const top = el.getBoundingClientRect().top + window.scrollY - NAV_H;
+      smoothScrollTo(top);
+    });
   };
 
   return (

@@ -53,6 +53,34 @@ function CompanyLogo({ src, company, pal }: { src: string; company: string; pal:
   );
 }
 
+/* ── Mobile company logo (shows image when available, initials when not) ──── */
+function MobileCompanyLogo({ src, company, pal }: { src: string; company: string; pal: Pal }) {
+  const [error, setError] = useState(false);
+  const showImage = src && !error;
+  return (
+    <div
+      className="relative shrink-0 w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden"
+      style={{ background: showImage ? "#ffffff" : pal.bg, border: `1px solid ${pal.border}` }}
+    >
+      {showImage ? (
+        <Image
+          src={src}
+          alt={company}
+          width={22}
+          height={22}
+          className="relative"
+          style={{ objectFit: "contain", width: "100%", height: "100%", display: "block", padding: 5 }}
+          onError={() => setError(true)}
+        />
+      ) : (
+        <span className="text-[10px] font-black select-none" style={{ color: pal.accent }}>
+          {company.slice(0, 2).toUpperCase()}
+        </span>
+      )}
+    </div>
+  );
+}
+
 /* ── Desktop card ─────────────────────────────────────────────────────────── */
 function ExpCard({ exp, pal, side }: { exp: (typeof experiences)[0]; pal: Pal; side: "left" | "right" }) {
   return (
@@ -384,18 +412,8 @@ export function Experience() {
                         className="w-full flex items-center gap-3 px-4 py-3 text-left"
                         onClick={() => toggle(i)}
                       >
-                        {/* Company logo / initials — letter badge always behind image */}
-                        <div className="relative shrink-0 w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden"
-                          style={{ background: exp.logo ? "#ffffff" : pal.bg, border: `1px solid ${pal.border}` }}>
-                          <span className="absolute text-[10px] font-black select-none" style={{ color: pal.accent }}>
-                            {exp.company.slice(0, 2).toUpperCase()}
-                          </span>
-                          {exp.logo && (
-                            <Image src={exp.logo} alt={exp.company} width={22} height={22}
-                              className="relative"
-                              style={{ objectFit: "contain", width: "100%", height: "100%", display: "block", padding: 5 }} />
-                          )}
-                        </div>
+                        {/* Company logo / initials */}
+                        <MobileCompanyLogo src={exp.logo} company={exp.company} pal={pal} />
 
                         <div className="flex-1 min-w-0">
                           <p className="text-[11px] font-medium" style={{ color: "var(--muted)" }}>

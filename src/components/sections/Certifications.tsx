@@ -39,10 +39,15 @@ export function Certifications() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  /* Lock body scroll when modal open */
+  /* Lock body scroll when modal open, restore scroll position on close */
   useEffect(() => {
-    document.body.style.overflow = preview ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (!preview) return;
+    const savedY = window.scrollY;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+      window.scrollTo({ top: savedY, behavior: "instant" });
+    };
   }, [preview]);
 
   useEffect(() => {

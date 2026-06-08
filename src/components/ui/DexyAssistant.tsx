@@ -78,7 +78,9 @@ export function DexyAssistant() {
   }, [messages, loading]);
 
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 120);
+    // preventScroll stops mobile browsers scrolling the document to
+    // bring the input into view (it's in a fixed panel so no scroll needed).
+    if (open) setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 120);
   }, [open]);
 
   /* Reveal the teaser shortly after load so it animates in gently. */

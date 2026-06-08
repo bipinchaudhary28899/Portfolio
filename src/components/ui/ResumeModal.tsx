@@ -14,12 +14,14 @@ export function ResumeModal({ onClose }: { onClose: () => void }) {
 
   useEffect(() => {
     setMounted(true);
+    const savedY = window.scrollY;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prev;
+      window.scrollTo({ top: savedY, behavior: "instant" });
       window.removeEventListener("keydown", onKey);
     };
   }, [onClose]);

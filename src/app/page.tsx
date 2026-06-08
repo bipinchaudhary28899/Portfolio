@@ -17,13 +17,13 @@ import { Contact }                from "@/components/sections/Contact";
 /* A soft, centered divider shown between two consecutive sections that
    share the same background, so the boundary reads as a section change
    (not a new page) without a harsh full-width line. */
-function SectionDivider({ alt = false }: { alt?: boolean }) {
+function SectionDivider({ alt = false, full = false }: { alt?: boolean; full?: boolean }) {
   return (
     <div aria-hidden style={{ background: alt ? "var(--bg-alt)" : "var(--bg)" }}>
       <div
         style={{
-          width: "78%",
-          maxWidth: "60rem",
+          width: "85%",
+          maxWidth: full ? "none" : "60rem",
           height: 1.5,
           margin: "0 auto",
           background: "var(--border)",

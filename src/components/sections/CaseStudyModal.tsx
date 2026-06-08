@@ -46,9 +46,15 @@ export function CaseStudyModal({ projectIndex, onClose, onNext, onPrev }: Props)
 
   /* ── Prevent body scroll while open ── */
   useEffect(() => {
-    const prev = document.body.style.overflow;
+    // Save position before locking — mobile browsers scroll to top when
+    // overflow:hidden is applied to <body>, so we must restore it on close.
+    const savedY = window.scrollY;
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.scrollTo({ top: savedY, behavior: "instant" });
+    };
   }, []);
 
   /* ── Close on backdrop click ── */
