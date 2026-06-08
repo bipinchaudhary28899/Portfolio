@@ -1,6 +1,7 @@
 import { Hero }                   from "@/components/sections/Hero";
 import { About }                  from "@/components/sections/About";
 import { Experience }             from "@/components/sections/Experience";
+import { GitaTicker }             from "@/components/sections/GitaTicker";
 import { Projects }               from "@/components/sections/Projects";
 import { Skills }                 from "@/components/sections/Skills";
 import { Education }              from "@/components/sections/Education";
@@ -39,7 +40,7 @@ export default function Home() {
     <>
       <Hero />
       <About />
-      <SectionDivider alt />
+      <GitaTicker />
       <Experience />
       <Projects />
       <SectionDivider />

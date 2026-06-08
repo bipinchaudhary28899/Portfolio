@@ -6,9 +6,19 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Check, ChevronDown, Zap, Clock, Package,
   Workflow, Code2, Sparkles, Rocket, TrendingUp, FileCode,
+  Wrench, Puzzle, Bug,
 } from "lucide-react";
+import { useCurrency } from "@/context/CurrencyContext";
+import { formatPrice, type CurrencyCode } from "@/lib/pricing";
+import { CurrencySwitcher } from "@/components/ui/CurrencySwitcher";
 
 gsap.registerPlugin(ScrollTrigger);
+
+/** Format a base-INR amount in the active currency. */
+type PriceFmt = (inr: number, compact?: boolean) => string;
+function makeFmt(currency: CurrencyCode): PriceFmt {
+  return (inr, compact = true) => formatPrice(inr, currency, { compact });
+}
 
 /* ── Data ───────────────────────────────────────────────────────────────── */
 
@@ -16,7 +26,7 @@ const PACKAGES = [
   {
     tier: "LAUNCH",
     name: "Launch Package",
-    price: "₹15K Onwards",
+    priceInr: 15000,
     delivery: "5 Days",
     description:
       "Perfect for startups, personal brands, portfolios, and small businesses looking to establish a professional online presence.",
@@ -30,12 +40,13 @@ const PACKAGES = [
       { label: "Payments & subscriptions",         value: false },
       { label: "Full source code ownership",       value: true  },
     ],
-    extra: "Rush delivery: 3 days for +₹2,500",
+    rushDays: "3 days",
+    rushAddInr: 2500,
   },
   {
     tier: "GROWTH",
     name: "Growth Package",
-    price: "₹50K Onwards",
+    priceInr: 50000,
     delivery: "10 Days",
     description:
       "Custom web applications with authentication, dashboards, database integration, and business workflows designed for real users.",
@@ -49,15 +60,16 @@ const PACKAGES = [
       { label: "Payments & subscriptions",         value: false },
       { label: "Full source code ownership",       value: true  },
     ],
-    extra: "Rush delivery: 6 days for +₹8,000",
+    rushDays: "6 days",
+    rushAddInr: 8000,
   },
   {
     tier: "SCALE",
     name: "Scale Package",
-    price: "₹1L Onwards",
+    priceInr: 100000,
     delivery: "21 Days",
     description:
-      "Production-ready SaaS MVPs with scalable architecture, cloud deployment, payments, analytics, and optional AI-powered features. ₹1L is a starting price for SaaS MVPs - advanced requirements increase the final cost.",
+      "Production-ready SaaS MVPs with scalable architecture, cloud deployment, payments, analytics, and optional AI-powered features. The listed price is a starting point for SaaS MVPs - advanced requirements increase the final cost.",
     highlight: false,
     features: [
       { label: "Everything in Growth",            value: true  },
@@ -68,25 +80,53 @@ const PACKAGES = [
       { label: "Performance & security hardening", value: true  },
       { label: "Full source code ownership",       value: true  },
     ],
-    extra: "Rush delivery: 14 days for +₹17,000",
+    rushDays: "14 days",
+    rushAddInr: 17000,
   },
 ];
 
 const ADDONS = [
-  { label: "Additional Page",          price: "+₹2,000",  note: "+1 day"  },
-  { label: "Additional Revision",      price: "+₹800",    note: "+1 day"  },
-  { label: "Additional Plugin",        price: "+₹1,200",  note: "+1 day"  },
-  { label: "Payment Integration",      price: "+₹3,500",  note: "+2 days" },
-  { label: "E-commerce Functionality", price: "+₹12,000", note: "+3 days" },
-  { label: "Speed Optimization",       price: "+₹5,000",  note: "+1 day"  },
-  { label: "UI/UX Design",             price: "+₹8,000",  note: "+2 days" },
-  { label: "3 Month Support",          price: "+₹25,000", note: "ongoing" },
+  { label: "Additional Page",          addInr: 2000,  note: "+1 day"  },
+  { label: "Additional Revision",      addInr: 800,   note: "+1 day"  },
+  { label: "Additional Plugin",        addInr: 1200,  note: "+1 day"  },
+  { label: "Payment Integration",      addInr: 3500,  note: "+2 days" },
+  { label: "E-commerce Functionality", addInr: 12000, note: "+3 days" },
+  { label: "Speed Optimization",       addInr: 5000,  note: "+1 day"  },
+  { label: "UI/UX Design",             addInr: 8000,  note: "+2 days" },
+  { label: "3 Month Support",          addInr: 30000, note: "ongoing" },
+];
+
+const QUICK_SERVICES = [
+  {
+    Icon: Wrench,
+    name: "Bug Fixing",
+    priceInr: 1500,
+    note: "priced per bug",
+    description:
+      "Something broken on your live website or app? I diagnose and fix it. The cost scales with how deep the bug goes - a quick UI or logic fix sits at the lower end, trickier backend, data, or integration issues cost more.",
+  },
+  {
+    Icon: Puzzle,
+    name: "New Feature",
+    priceInr: 5000,
+    note: "scoped per feature",
+    description:
+      "Need to add just one thing to an existing site or app - a new page, form, integration, dashboard widget, or API endpoint? Final price depends on the size and complexity of the feature, quoted before we start.",
+  },
+  {
+    Icon: Bug,
+    name: "Bug Audit & QA",
+    priceInr: 3000,
+    note: "per site / app",
+    description:
+      "I go through your website or app, hunt down bugs, broken flows, and edge-case issues, and hand you a clear report. Fixing the findings is available on top, quoted by severity.",
+  },
 ];
 
 const WHAT_I_BUILD = [
   "React / Angular / Next.js frontends with clean, responsive UI",
   "Node.js + Express REST APIs and authentication systems",
-  "PostgreSQL / MongoDB database design and integration",
+  "Database design & integration - PostgreSQL, MongoDB, or any publicly available database",
   "AWS / Vercel / Netlify deployment with CI/CD pipelines",
   "Real-time features using WebSockets",
   "AI integrations (OpenAI, LangChain, custom models)",
@@ -137,30 +177,36 @@ const WORK_PROCESS = [
   },
   {
     step: "02",
+    title: "Service Agreement",
+    description:
+      "Once requirements are clear, we lock them into a simple service agreement - scope, deliverables, pricing, timeline, revisions, and payment terms - so both sides are aligned before any work begins.",
+  },
+  {
+    step: "03",
     title: "Planning & Wireframing",
     description:
       "I analyze the requirements, finalize the project structure, and create wireframes or UI concepts for approval.",
   },
   {
-    step: "03",
+    step: "04",
     title: "Design & Development",
     description:
       "I develop the website/application with responsive design, required features, animations, integrations, and optimizations.",
   },
   {
-    step: "04",
+    step: "05",
     title: "Review & Feedback",
     description:
       "Client reviews the delivered work and shares feedback or revision requests if needed.",
   },
   {
-    step: "05",
+    step: "06",
     title: "Revisions & Final Delivery",
     description:
       "I implement the requested revisions, perform final testing, and deliver the completed project files/live deployment.",
   },
   {
-    step: "06",
+    step: "07",
     title: "Deployment & Support",
     description:
       "I assist with deployment, hosting setup, bug fixes, and post-delivery support if included in the package.",
@@ -178,11 +224,12 @@ const FAQS = [
   },
   {
     q: "Do I need to have a design ready before ordering?",
-    a: "No - you can choose whether you have Figma/XD designs, rough wireframes, a reference site, or nothing at all. UI/UX design is also available as an add-on (+₹8,000).",
+    a: (p: PriceFmt) =>
+      `No - you can choose whether you have Figma/XD designs, rough wireframes, a reference site, or nothing at all. UI/UX design is also available as an add-on (+${p(8000, false)}).`,
   },
   {
     q: "What tech stack do you use?",
-    a: "I default to React + Node.js or Next.js + Node.js, but Angular + Node.js is available too. Databases: PostgreSQL or MongoDB. Cloud: AWS, Vercel, or Netlify based on your needs.",
+    a: "I default to React + Node.js or Next.js + Node.js, but Angular + Node.js is available too. Databases: PostgreSQL and MongoDB are my go-to, but I'm hands-on with databases in general and can work with any publicly available database your project needs. Cloud: AWS, Vercel, or Netlify based on your needs.",
   },
   {
     q: "Will I own the full source code after delivery?",
@@ -190,7 +237,13 @@ const FAQS = [
   },
   {
     q: "What happens if I need changes after delivery?",
-    a: "Each package includes revisions. Beyond that, additional revisions are +₹800 each, or opt for the 3-Month Support add-on (+₹25,000) for ongoing fixes and technical help.",
+    a: (p: PriceFmt) =>
+      `Each package includes revisions. Beyond that, additional revisions are +${p(800, false)} each, or opt for the 3-Month Support add-on (+${p(30000, false)}) for ongoing fixes and technical help.`,
+  },
+  {
+    q: "Do you take on small jobs - just a bug fix or one feature?",
+    a: (p: PriceFmt) =>
+      `Yes. See the Quick Services above - I take on one-off bug fixes, single feature additions, and bug audits, not just full builds. These are priced by scope: bug fixes start around ${p(1500, false)} (by complexity), a single feature from ${p(5000, false)}, and a full bug audit from ${p(3000, false)}. You always get an exact quote before any work begins.`,
   },
   {
     q: "How do you handle communication during the project?",
@@ -200,9 +253,8 @@ const FAQS = [
 
 /* ── Helper ─────────────────────────────────────────────────────────────── */
 
-function scrollToContact(packageName: string) {
-  const msg = `Hi, I'm interested in building an application with your ${packageName} package and want to connect for it.`;
-  window.dispatchEvent(new CustomEvent("prefill-contact", { detail: { message: msg } }));
+function goToContact(message: string) {
+  window.dispatchEvent(new CustomEvent("prefill-contact", { detail: { message } }));
   const el = document.getElementById("contact");
   if (el) {
     const navH = (document.querySelector("header") as HTMLElement)?.offsetHeight ?? 64;
@@ -210,17 +262,38 @@ function scrollToContact(packageName: string) {
   }
 }
 
+function scrollToContact(packageName: string) {
+  goToContact(
+    `Hi, I'm interested in building an application with your ${packageName} package and want to connect for it.`,
+  );
+}
+
+function requestQuickService(name: string) {
+  goToContact(
+    `Hi, I'm interested in your "${name}" quick service and would like to discuss the scope and pricing.`,
+  );
+}
+
 /* ── FAQ Item ───────────────────────────────────────────────────────────── */
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
+function FaqItem({
+  q,
+  a,
+  isOpen,
+  onToggle,
+}: {
+  q: string;
+  a: string;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
   return (
     <div
       className="faq-item border rounded-xl overflow-hidden transition-colors duration-200"
-      style={{ borderColor: open ? "var(--accent)" : "var(--border)", background: "var(--card)" }}
+      style={{ borderColor: isOpen ? "var(--accent)" : "var(--border)", background: "var(--card)" }}
     >
       <button
         className="w-full flex items-center justify-between px-5 py-4 text-left gap-4"
-        onClick={() => setOpen((v) => !v)}
+        onClick={onToggle}
       >
         <span className="text-sm font-semibold leading-snug" style={{ color: "var(--fg)" }}>{q}</span>
         <ChevronDown
@@ -228,12 +301,12 @@ function FaqItem({ q, a }: { q: string; a: string }) {
           style={{
             color: "var(--accent)",
             flexShrink: 0,
-            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
             transition: "transform 0.25s ease",
           }}
         />
       </button>
-      {open && (
+      {isOpen && (
         <div className="px-5 pb-4 text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
           {a}
         </div>
@@ -245,6 +318,8 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 /* ── Mobile Package Accordion ───────────────────────────────────────────── */
 function MobilePackages() {
   const [open, setOpen] = useState<number | null>(null);
+  const { currency } = useCurrency();
+  const fmt = makeFmt(currency);
 
   return (
     <div className="flex flex-col gap-3">
@@ -297,13 +372,15 @@ function MobilePackages() {
               {/* Price row */}
               <div className="flex items-end gap-4">
                 <span className="text-3xl font-black leading-none" style={{ color: "var(--fg)" }}>
-                  {pkg.price}
+                  {fmt(pkg.priceInr)} Onwards
                 </span>
                 <div className="flex flex-col gap-0.5 mb-0.5">
                   <span className="text-xs flex items-center gap-1" style={{ color: "var(--fg-dim)" }}>
                     <Clock size={11} /> {pkg.delivery} delivery
                   </span>
-                  <span className="text-xs" style={{ color: "var(--muted)" }}>{pkg.extra}</span>
+                  <span className="text-xs" style={{ color: "var(--muted)" }}>
+                    Rush: {pkg.rushDays} for +{fmt(pkg.rushAddInr, false)}
+                  </span>
                 </div>
               </div>
 
@@ -398,6 +475,8 @@ function MobilePackages() {
 
 /* ── Package Card ───────────────────────────────────────────────────────── */
 function PackageCard({ pkg }: { pkg: (typeof PACKAGES)[0] }) {
+  const { currency } = useCurrency();
+  const fmt = makeFmt(currency);
   return (
     <div
       className="pkg-card relative flex flex-col rounded-2xl border overflow-hidden"
@@ -427,12 +506,14 @@ function PackageCard({ pkg }: { pkg: (typeof PACKAGES)[0] }) {
         </div>
 
         <div className="flex items-end gap-3">
-          <span className="text-4xl font-black" style={{ color: "var(--fg)" }}>{pkg.price}</span>
+          <span className="text-4xl font-black" style={{ color: "var(--fg)" }}>{fmt(pkg.priceInr)} Onwards</span>
           <div className="flex flex-col gap-0.5 mb-1">
             <span className="text-xs flex items-center gap-1" style={{ color: "var(--fg-dim)" }}>
               <Clock size={11} /> {pkg.delivery} delivery
             </span>
-            <span className="text-xs" style={{ color: "var(--muted)" }}>{pkg.extra}</span>
+            <span className="text-xs" style={{ color: "var(--muted)" }}>
+              Rush delivery: {pkg.rushDays} for +{fmt(pkg.rushAddInr, false)}
+            </span>
           </div>
         </div>
 
@@ -490,10 +571,18 @@ export function FreelanceServices() {
   const buildRef        = useRef<HTMLDivElement>(null);
   const cardsRef        = useRef<HTMLDivElement>(null);
   const mobileCardsRef  = useRef<HTMLDivElement>(null);
+  const quickRef        = useRef<HTMLDivElement>(null);
   const whyRef          = useRef<HTMLDivElement>(null);
   const addonsRef       = useRef<HTMLDivElement>(null);
   const faqRef          = useRef<HTMLDivElement>(null);
   const ctaRef          = useRef<HTMLDivElement>(null);
+
+  /* Only one FAQ open at a time (accordion behaviour). */
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  /* Localized pricing based on the visitor's (or chosen) currency. */
+  const { currency } = useCurrency();
+  const fmt = makeFmt(currency);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -545,6 +634,17 @@ export function FreelanceServices() {
         { opacity: 0, y: 50, scale: 0.96 },
         { opacity: 1, y: 0, scale: 1, duration: 0.65, stagger: 0.13, ease: "power3.out",
           scrollTrigger: { trigger: mobileCardsRef.current, start: () => window.innerWidth < 768 ? "top 60%" : "top bottom", toggleActions: "play none none none" } });
+
+      /* ── 4a. "Quick Services" heading + cards ── */
+      titleAnim(
+        quickRef.current?.querySelector(".quick-heading") ?? null,
+        quickRef.current,
+      );
+      gsap.fromTo(
+        quickRef.current?.querySelectorAll(".quick-card") ?? [],
+        { opacity: 0, y: 36, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.1, ease: "power3.out",
+          scrollTrigger: { trigger: quickRef.current, start: () => window.innerWidth < 768 ? "top 75%" : "top bottom", toggleActions: "play none none none" } });
 
       /* ── 4b. "Why Work With Me?" heading + cards ── */
       titleAnim(
@@ -623,7 +723,10 @@ export function FreelanceServices() {
 
         {/* ── Header ── */}
         <div>
-          <p ref={labelRef} className="section-label mb-2" style={{ opacity: 0 }}>Available for Hire</p>
+          <div className="flex items-start justify-between gap-4">
+            <p ref={labelRef} className="section-label mb-2" style={{ opacity: 0 }}>Available for Hire</p>
+            <CurrencySwitcher />
+          </div>
           <h2
             ref={titleRef}
             className="heading-accent font-black tracking-tight leading-tight"
@@ -694,6 +797,66 @@ export function FreelanceServices() {
           and deployment needs.
         </p>
 
+        {/* ── Quick Services ── */}
+        <div ref={quickRef}>
+          <div className="flex items-center gap-2 mb-2">
+            <Wrench size={16} style={{ color: "var(--accent)" }} />
+            <h3
+              className="quick-heading text-lg font-bold"
+              style={{ color: "var(--fg)", opacity: 0 }}
+            >
+              Quick Services
+            </h3>
+          </div>
+          <p className="max-w-3xl text-sm leading-relaxed mb-6" style={{ color: "var(--fg-dim)" }}>
+            Don&apos;t need a full build? I also take on small, one-off jobs - fix a bug,
+            add a single feature, or get your site audited. Pricing scales with the
+            work, and you always get an exact quote before anything starts.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {QUICK_SERVICES.map(({ Icon, name, priceInr, note, description }) => (
+              <div
+                key={name}
+                className="quick-card flex flex-col gap-3 rounded-xl border p-4 sm:p-5 transition-colors duration-200"
+                style={{ borderColor: "var(--border)", background: "var(--card)", opacity: 0 }}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
+              >
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ background: "linear-gradient(135deg,var(--grad-a),var(--grad-b))" }}
+                  >
+                    <Icon size={16} color="#fff" />
+                  </span>
+                  <span className="text-sm font-bold leading-tight" style={{ color: "var(--fg)" }}>
+                    {name}
+                  </span>
+                </div>
+
+                <div className="flex items-end gap-2">
+                  <span className="text-2xl font-black leading-none" style={{ color: "var(--accent)" }}>
+                    From {fmt(priceInr, false)}
+                  </span>
+                  <span className="text-xs mb-0.5" style={{ color: "var(--muted)" }}>{note}</span>
+                </div>
+
+                <p className="text-xs leading-relaxed flex-1" style={{ color: "var(--fg-dim)" }}>
+                  {description}
+                </p>
+
+                <button
+                  onClick={() => requestQuickService(name)}
+                  className="mt-1 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold border transition-opacity hover:opacity-85 cursor-pointer"
+                  style={{ borderColor: "var(--border)", color: "var(--fg)", background: "transparent" }}
+                >
+                  Request a Quote
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* ── Why Work With Me? ── */}
         <div ref={whyRef}>
           <h3
@@ -749,7 +912,7 @@ export function FreelanceServices() {
               >
                 <span className="text-sm font-semibold" style={{ color: "var(--fg)" }}>{a.label}</span>
                 <div className="flex items-center justify-between">
-                  <span className="text-base font-black" style={{ color: "var(--accent)" }}>{a.price}</span>
+                  <span className="text-base font-black" style={{ color: "var(--accent)" }}>+{fmt(a.addInr, false)}</span>
                   <span className="text-xs" style={{ color: "var(--muted)" }}>{a.note}</span>
                 </div>
               </div>
@@ -769,8 +932,14 @@ export function FreelanceServices() {
               Frequently Asked Questions
             </h3>
             <div className="flex flex-col gap-3">
-              {FAQS.map((f) => (
-                <FaqItem key={f.q} q={f.q} a={f.a} />
+              {FAQS.map((f, i) => (
+                <FaqItem
+                  key={f.q}
+                  q={f.q}
+                  a={typeof f.a === "function" ? f.a(fmt) : f.a}
+                  isOpen={openFaq === i}
+                  onToggle={() => setOpenFaq(openFaq === i ? null : i)}
+                />
               ))}
             </div>
           </div>
@@ -784,7 +953,7 @@ export function FreelanceServices() {
               How I Work
             </h3>
             <p className="faq-item text-xs mb-6 leading-relaxed" style={{ color: "var(--fg-dim)" }}>
-              Bipin works on your project following the steps below.
+              I work on your project following the steps below.
               Revisions may occur after the delivery date.
             </p>
             <div className="relative flex flex-col">

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/ui/Navbar";
 import LoadingWrapper from "@/components/ui/LoadingWrapper";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 import { DexyAssistant } from "@/components/ui/DexyAssistant";
 import { ScrollRefresher } from "@/components/ui/ScrollRefresher";
 
@@ -35,12 +36,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>
-          <LoadingWrapper>
-            <Navbar />
-            <main style={{ overflowX: "clip" }}>{children}</main>
-            <ScrollRefresher />
-            <DexyAssistant />
-          </LoadingWrapper>
+          <CurrencyProvider>
+            <LoadingWrapper>
+              <Navbar />
+              <main style={{ overflowX: "clip" }}>{children}</main>
+              <ScrollRefresher />
+              <DexyAssistant />
+            </LoadingWrapper>
+          </CurrencyProvider>
         </ThemeProvider>
       </body>
     </html>
