@@ -203,7 +203,11 @@ const FAQS = [
 function scrollToContact(packageName: string) {
   const msg = `Hi, I'm interested in building an application with your ${packageName} package and want to connect for it.`;
   window.dispatchEvent(new CustomEvent("prefill-contact", { detail: { message: msg } }));
-  document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  const el = document.getElementById("contact");
+  if (el) {
+    const navH = (document.querySelector("header") as HTMLElement)?.offsetHeight ?? 64;
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - navH, behavior: "smooth" });
+  }
 }
 
 /* ── FAQ Item ───────────────────────────────────────────────────────────── */
@@ -612,7 +616,7 @@ export function FreelanceServices() {
     <section
       id="freelance"
       ref={sectionRef}
-      className="py-24 px-5 sm:px-10"
+      className="pt-12 pb-24 px-5 sm:px-10"
       style={{ background: "var(--bg)" }}
     >
       <div className="max-w-6xl mx-auto flex flex-col gap-8 sm:gap-16">

@@ -116,7 +116,7 @@ export function CodingPlatforms() {
   }, [loadingComplete]);
 
   return (
-    <section ref={sec} id="coding" className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"
+    <section ref={sec} id="coding" className="pt-12 sm:pt-[4.5rem] pb-24 sm:pb-36 px-6 sm:px-12 lg:px-20"
       style={{ background: "var(--bg-alt)" }}>
       <div className="max-w-6xl mx-auto">
         <div className="cp-header mb-10 sm:mb-14 flex flex-col gap-2">

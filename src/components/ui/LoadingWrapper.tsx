@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { LoadingContext } from "@/context/LoadingContext";
@@ -16,8 +17,19 @@ interface LoadingWrapperProps {
 }
 
 export default function LoadingWrapper({ children }: LoadingWrapperProps) {
-  const [loading, setLoading] = useState(true);
-  const contentRef            = useRef<HTMLDivElement>(null);
+  const pathname   = usePathname();
+  const isHomePage = pathname === "/";
+  const [loading, setLoading] = useState(isHomePage); // skip loading screen on sub-pages
+  const contentRef    = useRef<HTMLDivElement>(null);
+  const isFirstNav = useRef(true);
+
+  /* Scroll to top on every client-side navigation. */
+  useEffect(() => {
+    if (isFirstNav.current) { isFirstNav.current = false; return; }
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [pathname]);
 
   /* Disable browser scroll restoration so it never jumps mid-page on reload */
   useEffect(() => {
@@ -153,7 +165,7 @@ export default function LoadingWrapper({ children }: LoadingWrapperProps) {
 
   return (
     <LoadingContext.Provider value={!loading}>
-      {loading && <LoadingScreen onComplete={handleComplete} />}
+      {loading && isHomePage && <LoadingScreen onComplete={handleComplete} />}
 
       {/*
         opacity starts at 0; the inline transition lets it fade in smoothly.

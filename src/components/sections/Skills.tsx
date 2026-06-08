@@ -78,7 +78,7 @@ export function Skills() {
   return (
     <div id="skills" style={{ scrollMarginTop: "5rem" }}>
       {/* ══ DESKTOP ══════════════════════════════════════════════════════════ */}
-      <section ref={sec} className="hidden md:block py-36 px-12 lg:px-20"
+      <section ref={sec} className="hidden md:block pt-[4.5rem] pb-36 px-12 lg:px-20"
         style={{ background: "var(--bg)" }}>
         <div className="max-w-6xl mx-auto">
           <div className="skills-header mb-14">
@@ -135,7 +135,7 @@ export function Skills() {
       </section>
 
       {/* ══ MOBILE - single-viewport tab layout ══════════════════════════════ */}
-      <section className="block md:hidden py-14 px-5"
+      <section className="block md:hidden pt-7 pb-14 px-5"
         style={{ background: "var(--bg)" }}>
 
         {/* Header */}

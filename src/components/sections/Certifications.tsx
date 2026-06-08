@@ -23,7 +23,9 @@ export function Certifications() {
 
   /* Load Credly embed script once */
   useEffect(() => {
-    if (document.querySelector('script[src*="credly.com"]')) return;
+   const existing = document.querySelector('script[src*="credly.com"]');
+    if (existing) existing.remove(); // remove stale script so it re-runs
+
     const script = document.createElement("script");
     script.src = "https://cdn.credly.com/assets/utilities/embed.js";
     script.async = true;
@@ -78,7 +80,7 @@ export function Certifications() {
   }, [loadingComplete]);
 
   return (
-    <section ref={sec} id="certifications" className="py-24 sm:py-36 px-6 sm:px-12 lg:px-20"
+    <section ref={sec} id="certifications" className="pt-12 sm:pt-[4.5rem] pb-24 sm:pb-36 px-6 sm:px-12 lg:px-20"
       style={{ background: "var(--bg)" }}>
       <div className="max-w-6xl mx-auto">
         <div className="cert-header mb-14">

@@ -25,20 +25,30 @@ type Pal = typeof PAL;
 
 /* ── Company logo ─────────────────────────────────────────────────────────── */
 function CompanyLogo({ src, company, pal }: { src: string; company: string; pal: Pal }) {
-  if (!src) {
-    /* Self-Employed fallback — initials badge */
-    return (
-      <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black"
-        style={{ background: pal.bg, border: `1px solid ${pal.border}`, color: pal.accent }}>
-        {company.slice(0, 2).toUpperCase()}
-      </div>
-    );
-  }
+  const [loaded, setLoaded] = useState(false);
+  const [error,  setError]  = useState(false);
+
+  /* Letter badge always rendered behind the image — ensures nothing ever
+     shows as a broken icon while the image is loading or if it fails. */
   return (
-    <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
-      style={{ background: "#ffffff", border: `1px solid ${pal.border}`, padding: 6 }}>
-      <Image src={src} alt={company} width={28} height={28}
-        style={{ objectFit: "contain", width: "100%", height: "100%", display: "block" }} />
+    <div
+      className="relative shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black overflow-hidden"
+      style={{ background: src && !error ? "#ffffff" : pal.bg, border: `1px solid ${pal.border}`, color: pal.accent }}
+    >
+      <span className="absolute select-none">{company.slice(0, 2).toUpperCase()}</span>
+      {src && !error && (
+        <Image
+          src={src}
+          alt={company}
+          width={28}
+          height={28}
+          className="relative"
+          style={{ objectFit: "contain", width: "100%", height: "100%", display: "block", padding: 6,
+            opacity: loaded ? 1 : 0, transition: "opacity 0.2s ease" }}
+          onLoad={() => setLoaded(true)}
+          onError={() => setError(true)}
+        />
+      )}
     </div>
   );
 }
@@ -261,7 +271,7 @@ export function Experience() {
     <section
       ref={secRef}
       id="experience"
-      className="py-14 sm:py-36 px-6 sm:px-12 lg:px-20"
+      className="pt-7 sm:pt-[4.5rem] pb-14 sm:pb-36 px-6 sm:px-12 lg:px-20"
       style={{ background: "var(--bg-alt)" }}
     >
       <div className="max-w-6xl mx-auto">
@@ -374,16 +384,16 @@ export function Experience() {
                         className="w-full flex items-center gap-3 px-4 py-3 text-left"
                         onClick={() => toggle(i)}
                       >
-                        {/* Company logo / initials */}
-                        <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
-                          style={{ background: exp.logo ? "#ffffff" : pal.bg, border: `1px solid ${pal.border}`, padding: exp.logo ? 5 : 0 }}>
-                          {exp.logo ? (
+                        {/* Company logo / initials — letter badge always behind image */}
+                        <div className="relative shrink-0 w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden"
+                          style={{ background: exp.logo ? "#ffffff" : pal.bg, border: `1px solid ${pal.border}` }}>
+                          <span className="absolute text-[10px] font-black select-none" style={{ color: pal.accent }}>
+                            {exp.company.slice(0, 2).toUpperCase()}
+                          </span>
+                          {exp.logo && (
                             <Image src={exp.logo} alt={exp.company} width={22} height={22}
-                              style={{ objectFit: "contain", width: "100%", height: "100%", display: "block" }} />
-                          ) : (
-                            <span className="text-[10px] font-black" style={{ color: pal.accent }}>
-                              {exp.company.slice(0, 2).toUpperCase()}
-                            </span>
+                              className="relative"
+                              style={{ objectFit: "contain", width: "100%", height: "100%", display: "block", padding: 5 }} />
                           )}
                         </div>
 

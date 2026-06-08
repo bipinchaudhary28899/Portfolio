@@ -469,7 +469,7 @@ export function Education() {
 
       {/* ══ MOBILE ═══════════════════════════════════════════════════════════ */}
       <section
-        className="block md:hidden py-20 px-5"
+        className="block md:hidden pt-10 pb-20 px-5"
         style={{ background: "var(--bg)", overflowX: "clip" }}
       >
         {/* Header */}

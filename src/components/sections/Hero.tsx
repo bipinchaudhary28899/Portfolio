@@ -123,7 +123,13 @@ export function Hero() {
             <Download size={14} /> View Resume
           </button>
           <button
-            onClick={() => document.getElementById("freelance")?.scrollIntoView({ behavior: "smooth" })}
+            onClick={() => {
+              const el = document.getElementById("freelance");
+              if (el) {
+                const navH = (document.querySelector("header") as HTMLElement)?.offsetHeight ?? 64;
+                window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - navH, behavior: "smooth" });
+              }
+            }}
             className="inline-flex items-center gap-1.5 text-sm font-medium transition-opacity hover:opacity-70"
             style={{ color: "var(--accent)" }}>
             Also available for freelance →

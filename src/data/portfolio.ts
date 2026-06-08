@@ -782,13 +782,381 @@ export const certifications = [
   },
 ];
 
+/* ── Interview Experiences ─────────────────────────────────────────────────── */
+
+export interface InterviewRound {
+  label: string;          // e.g. "Round 1 (Onsite)"
+  type:  "oa" | "onsite" | "virtual";
+  date:  string;
+  dsa:   string[];
+  behavioral: string[];
+  concepts?:  string[];
+  notes?:     string;
+}
+
+export interface InterviewExperience {
+  id:           number;
+  company:      string;
+  role:         string;
+  appliedDate:  string;
+  resultDate:   string;
+  result:       "selected" | "rejected" | "internal-policy";
+  logoUrl:      string;
+  brandColor:   string;
+  summary:      string;
+  rounds:       InterviewRound[];
+  whatWentWell: string[];
+  challenges:   string[];
+  keyTakeaways: string[];
+  personalNote?: string;
+}
+
+export const interviewExperiences: InterviewExperience[] = [
+  {
+    id: 1,
+    company: "Amazon",
+    role: "SDE 1",
+    appliedDate: "December 2025",
+    resultDate: "March 2026",
+    result: "rejected",
+    logoUrl: "https://logo.clearbit.com/amazon.com",
+    brandColor: "#FF9900",
+    summary:
+      "A four-round process spanning three months — OA in December, two onsite rounds in January, a GenAI virtual round in March, and a Bar Raiser virtual round — ultimately ending in rejection after reaching the final stage.",
+    rounds: [
+      {
+        label: "Online Assessment",
+        type: "oa",
+        date: "6th December 2025",
+        dsa: [
+          "Tree-based problem",
+          "Graph problem",
+        ],
+        behavioral: [
+          "Multiple Leadership Principles (LP)-based questions",
+        ],
+      },
+      {
+        label: "Round 1 — Onsite",
+        type: "onsite",
+        date: "23rd January 2026",
+        dsa: [
+          "Remove K consecutive identical characters from a string",
+          "Minimum cost to color N cakes using 3 colors (DP)",
+        ],
+        behavioral: [
+          "Delivered under a tight deadline",
+          "Went beyond responsibilities and got recognized",
+        ],
+      },
+      {
+        label: "Round 2 — Onsite",
+        type: "onsite",
+        date: "23rd January 2026",
+        dsa: [
+          "Merge two sorted linked lists (framed in a real-world scenario)",
+          "Minimum length subarray with sum ≥ target",
+        ],
+        behavioral: [
+          "Solving a problem with an out-of-the-box approach",
+        ],
+      },
+      {
+        label: "Round 3 — GenAI Round",
+        type: "virtual",
+        date: "6th March 2026",
+        dsa: [
+          "Design a system to delete personal information from records (linked list approach)",
+          "Split large-scale data into two parts efficiently (optimized single-pass)",
+        ],
+        behavioral: [
+          "Career decisions and recent gap explanation",
+        ],
+        concepts: [
+          "Use cases of GenAI on large datasets",
+          "Limitations of GenAI — hallucination, cost, data dependency",
+          "Deep dive into one of my projects, architecture, and contributions",
+        ],
+      },
+      {
+        label: "Round 4 — Bar Raiser",
+        type: "virtual",
+        date: "20th March 2026",
+        dsa: [],
+        behavioral: [
+          "Deep behavioral questions with multiple follow-ups",
+          "Ownership, decision-making, and clarity of thought",
+          "How you think, not just what you know",
+        ],
+        notes:
+          "Heavily LP-focused. The Bar Raiser evaluates cultural fit and long-term potential above everything else.",
+      },
+    ],
+    whatWentWell: [
+      "Cleared the OA and both onsite rounds comfortably",
+      "Reached the Bar Raiser stage — a strong signal of overall performance",
+      "GenAI concepts discussion felt natural given my project background",
+    ],
+    challenges: [
+      "Bar Raiser round is unpredictable — emphasis shifts entirely to depth of thought",
+      "Months-long process requires sustained energy and mental stamina",
+    ],
+    keyTakeaways: [
+      "Amazon's LPs aren't just interview prep — internalize them as a decision-making framework",
+      "STAR format matters, but the depth of reflection matters more in a Bar Raiser",
+      "Reaching the final round without converting is still meaningful progress",
+      "Preparation for DSA should stay sharp across the entire multi-month timeline",
+    ],
+    personalNote:
+      "This one hurts more than I expected. After going through all four rounds and reaching the Bar Raiser stage, there was a real sense of hope — that after months of preparation, learning, and a long phase of unemployment, things might finally fall into place. But sometimes, even when you come close, it doesn't convert. This setback hit hard. It shakes your confidence, and for a moment, the motivation dips. That said, I know this journey isn't over. There's still more to learn, improve, and come back stronger. On to the next opportunity.",
+  },
+  {
+    id: 4,
+    company: "Amazon",
+    role: "Client Interview via Varite INC",
+    appliedDate: "April 2026",
+    resultDate: "April 2026",
+    result: "rejected",
+    logoUrl: "https://logo.clearbit.com/amazon.com",
+    brandColor: "#FF9900",
+    summary:
+      "A single client interview round sourced through Varite INC. Covered a recursive tree pruning problem, a distributed smart locker HLD, and two Leadership Principle questions.",
+    rounds: [
+      {
+        label: "Round 1 — Client Interview",
+        type: "virtual",
+        date: "28th April 2026",
+        dsa: [
+          "Recursive tree pruning: given a nested parent-child JSON structure, remove nodes with null data and no valid descendants. Parent nodes that become empty after pruning should also be removed. Concepts: Recursion, DFS, Tree Traversal, Object Manipulation.",
+        ],
+        concepts: [
+          "HLD — Distributed Smart Locker System: design a locker network accessible across geographical locations. Discussed system components, locker allocation strategy, availability tracking, scalability, and user access mechanisms.",
+        ],
+        behavioral: [
+          "Two Leadership Principle questions focused on past experiences, decision-making, ownership, and problem-solving approach.",
+        ],
+        notes: "Started with a brief self-introduction and discussion of previous projects and technical background before moving into the coding and design questions.",
+      },
+    ],
+    whatWentWell: [
+      "Recursive DFS approach for tree pruning was clear and well-reasoned",
+      "HLD discussion covered core components — allocation, availability, and geo-distribution",
+    ],
+    challenges: [
+      "Combining recursion with in-place object mutation requires careful handling of empty parent cleanup",
+    ],
+    keyTakeaways: [
+      "For tree pruning problems, process children first (post-order DFS) before deciding if a parent should be removed",
+      "Distributed locker systems need clear answers on consistency vs availability trade-offs across regions",
+      "LP questions via agency rounds are just as rigorous — prepare STAR stories regardless of the interview source",
+    ],
+  },
+  {
+    id: 3,
+    company: "Amazon",
+    role: "SDE 1",
+    appliedDate: "May 2026",
+    resultDate: "May 2026",
+    result: "rejected",
+    logoUrl: "https://logo.clearbit.com/amazon.com",
+    brandColor: "#FF9900",
+    summary:
+      "Second attempt at Amazon SDE 1. Cleared a detailed OA covering a medium-hard DP problem and a Node.js debugging challenge, alongside a comprehensive Work Style Assessment. Further rounds pending.",
+    rounds: [
+      {
+        label: "Online Assessment",
+        type: "oa",
+        date: "29th May 2026",
+        dsa: [
+          "Q1 (~40 min) — DP: 'Get Minimum Conflicts'. Merge two source-control branches (primary, secondary) preserving relative order while minimising inversions (lower-priority commit before higher-priority). dp[i][j] = min conflicts after consuming i chars from primary, j from secondary. Precompute conflict contributions to reduce O(n³) → O(n²). Difficulty: Medium-Hard.",
+          "Q2 (~60 min) — Node.js Debugging: fix bugs in a partially implemented Express project so all 6–8 test cases pass. Bugs: userId read from req.body instead of req.user.id, field name mismatches in DTOs (commentText vs text), incomplete object construction in service calls, wrong argument format from controller to service. No algorithms — pure request-flow tracing.",
+        ],
+        behavioral: [
+          "Work Style Assessment (~60–80 questions): 4 scenario-based sections, 15–20 Likert-scale ratings each. Evaluated against Amazon LPs — Customer Obsession, Ownership, Dive Deep, Bias for Action, Earn Trust, Deliver Results, Learn and Be Curious.",
+          "Behavioral Questionnaire (10–15 min): personality consistency checks — 'I enjoy solving difficult problems', 'I prefer working independently', 'I frequently take initiative'. Rated Strongly Agree → Strongly Disagree.",
+        ],
+        notes: "Sequential OA — Question 1 must be saved and submitted before Question 2 unlocks. No toggling back once submitted. Total duration ~100 minutes.",
+      },
+    ],
+    whatWentWell: [
+      "Q2 (Node.js debugging) felt confident — request flow tracing and Express fundamentals were solid",
+      "DP state definition for Q1 was approached systematically despite time pressure",
+    ],
+    challenges: [
+      "Q1 required reducing an O(n³) solution to O(n²) — conflict contribution precomputation was the key insight and took time to arrive at",
+      "Sequential OA format adds pressure — no going back to revisit Q1 after moving to Q2",
+    ],
+    keyTakeaways: [
+      "For interleaving DP problems, nail the state definition first before thinking about transitions",
+      "Express.js debugging is about tracing the request lifecycle — middleware → controller → service → DTO",
+      "Amazon's Work Style Assessment is consistent across attempts; study LPs deeply, not just for interviews",
+      "Sequential OAs reward planning — solve, verify, then submit each section deliberately",
+    ],
+  },
+  {
+    id: 2,
+    company: "SAP",
+    role: "CAP Developer",
+    appliedDate: "July 2025",
+    resultDate: "July 2025",
+    result: "internal-policy",
+    logoUrl: "https://logo.clearbit.com/sap.com",
+    brandColor: "#009FE3",
+    summary:
+      "Two strong technical rounds covering OOP, core and advanced JavaScript, DSA, and SAP ecosystem concepts. Rejected due to an internal policy — I had interviewed with the same team within the previous six months.",
+    rounds: [
+      {
+        label: "Round 1 — OOPs, Core JS & DSA",
+        type: "virtual",
+        date: "July 2025",
+        dsa: [
+          "Checking balanced parentheses",
+        ],
+        behavioral: [
+          "Discussion about internship experience at SAP Labs and work done there",
+        ],
+        concepts: [
+          "OOP concepts and fundamentals",
+          "Core JavaScript — hoisting, I/O behavior, basics",
+        ],
+        notes:
+          "No deep CAP hands-on experience at the time, but the discussion went well and I was shortlisted for Round 2.",
+      },
+      {
+        label: "Round 2 — Advanced JS, SAP & DSA (Deep Dive)",
+        type: "virtual",
+        date: "July 2025",
+        dsa: [
+          "Array-based problem — deep dive into approach, edge cases, and optimization",
+        ],
+        behavioral: [],
+        concepts: [
+          "Advanced JavaScript — Event Loop, Closures, I/O questions, fetch API",
+          "SAP BTP, HANA, CAP exposure, application architecture at SAP",
+        ],
+        notes:
+          "Two interviewers. One mentioned being impressed with my depth in JavaScript, which was very motivating.",
+      },
+    ],
+    whatWentWell: [
+      "JavaScript depth was well-received — one interviewer explicitly called it out",
+      "SAP internship background gave context to ecosystem questions",
+      "Both rounds felt engaging and technically rewarding",
+    ],
+    challenges: [
+      "Limited hands-on CAP experience at the time of the interview",
+      "No official feedback received from HR after the result",
+    ],
+    keyTakeaways: [
+      "Deep JavaScript fundamentals — Event Loop, closures, async — are high-signal in frontend-heavy roles",
+      "Prior internship experience is a double-edged sword: it gives context but also creates re-interview policies",
+      "Always ask HR upfront about cooldown periods if you've interviewed at the same company before",
+    ],
+    personalNote:
+      "Although the result wasn't in my favor, the experience reaffirmed my strengths in JavaScript, problem-solving, and SAP ecosystem understanding. Grateful for the learning, the conversations, and the growth that comes with every interview.",
+  },
+];
+
+/* ── Blog Posts ────────────────────────────────────────────────────────────── */
+
+export interface BlogSection {
+  heading: string;
+  body:    string;
+  bullets?: string[];
+  quote?:   string;
+}
+
+export interface BlogPost {
+  id:          number;
+  slug:        string;
+  title:       string;
+  date:        string;
+  summary:     string;
+  readingTime: string;
+  tags:        string[];
+  sections:    BlogSection[];
+}
+
+export const blogPosts: BlogPost[] = [
+  {
+    id: 1,
+    slug: "signed-urls-s3-file-uploads",
+    title: "Why I Used Signed URLs for File Uploads in AWS S3",
+    date: "2025",
+    summary:
+      "Building a video streaming platform forced me to rethink how file uploads work. Here's why routing uploads through the backend was a mistake — and how signed URLs changed everything.",
+    readingTime: "5 min read",
+    tags: ["AWS", "S3", "Node.js", "System Design", "Performance"],
+    sections: [
+      {
+        heading: "The Problem",
+        body: "While building StreamSphere — my full-stack video streaming platform — I needed a way for users to upload videos directly to AWS S3. My first instinct was simple: user uploads to backend, backend receives the file, backend pushes it to S3. It sounded clean. It wasn't.",
+        bullets: [
+          "Videos can be hundreds of megabytes or several gigabytes",
+          "Every upload passed through the server twice — once in, once out to S3",
+          "This created unnecessary CPU, memory, and bandwidth load on the backend",
+        ],
+      },
+      {
+        heading: "Discovering Signed URLs",
+        body: "AWS provides something called a Pre-Signed URL. Instead of sending the file through the backend, the backend generates a temporary secure URL and hands it to the frontend. The frontend uploads the file directly to S3 using that URL. The actual file never touches the backend.",
+        quote: "User → Backend (get signed URL) → AWS S3 (upload directly). The backend becomes a key dispenser, not a file highway.",
+      },
+      {
+        heading: "Why This Approach Is Better",
+        body: "Once I understood signed URLs, the benefits were hard to ignore.",
+        bullets: [
+          "Reduced server load — the backend only generates a URL, not process gigabytes of video",
+          "Faster uploads — files go straight to S3 without a double-hop through the server",
+          "Better scalability — 10 users or 10,000, the backend workload stays flat",
+          "Improved security — no AWS credentials reach the frontend, and the URL expires in minutes",
+        ],
+      },
+      {
+        heading: "How I Implemented It",
+        body: "The implementation turned out to be surprisingly straightforward, broken into five clear steps.",
+        bullets: [
+          "Step 1: User selects a video in the browser",
+          "Step 2: Frontend requests a signed URL from the backend, sending file name, type, and upload folder",
+          "Step 3: Backend uses the AWS SDK to generate a pre-signed URL with an expiry time, returning the upload URL, file key, and S3 object location",
+          "Step 4: Frontend uploads the file directly to S3 using the signed URL — backend is completely bypassed",
+          "Step 5: On success, the app saves video title, description, S3 path, and upload date to the database",
+        ],
+      },
+      {
+        heading: "Challenges I Faced",
+        body: "Like most things in development, it didn't work perfectly on the first attempt. Three issues cost me the most time.",
+        bullets: [
+          "CORS configuration — the browser blocked upload requests because S3 wasn't set to accept requests from my frontend domain. Updating the bucket's CORS policy fixed it.",
+          "Content-Type mismatches — the file type sent during URL generation had to exactly match the type used during upload, or AWS rejected the request.",
+          "Expiration time — setting the expiry too short failed large uploads. I had to balance security against usability.",
+        ],
+      },
+      {
+        heading: "What I Learned",
+        body: "Before building this, I thought of file uploads as a minor feature. After shipping it, I understood it was an architectural decision disguised as a feature request.",
+        quote: "Writing code is only part of software engineering. Understanding how data flows through a system — and removing unnecessary bottlenecks — can have a far bigger impact than adding more code.",
+      },
+      {
+        heading: "Final Thoughts",
+        body: "If you're building anything that handles image uploads, video uploads, documents, or large files — signed URLs are worth the extra hour it takes to understand them. They improve performance, reduce backend load, tighten security, and make applications easier to scale. For StreamSphere, switching to signed URL uploads transformed file handling from a server-heavy process into a lightweight, scalable solution. Sometimes the best optimization isn't writing faster code — it's removing work that your system didn't need to do in the first place.",
+      },
+    ],
+  },
+];
+
 export const navLinks = [
   { label: "About",       href: "#about" },
   { label: "Experience",  href: "#experience" },
   { label: "Projects",    href: "#projects" },
   { label: "Skills",      href: "#skills" },
-  { label: "Education",   href: "#education" },
-  { label: "Contributions", href: "#opensource" },
-  { label: "Hire Me",     href: "#freelance" },
   { label: "Contact",     href: "#contact" },
+];
+
+export const navMoreLinks = [
+  { label: "Education",     href: "#education" },
+  { label: "Contributions", href: "#opensource" },
+  { label: "Interviews",    href: "/interviews" },
+  { label: "Blog",          href: "/blog" },
+  { label: "Hire Me",       href: "#freelance" },
 ];
