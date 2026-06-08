@@ -22,11 +22,17 @@ export function TerminalHero() {
   const [showCursor, setShowCursor]   = useState(true);
   const [showOutput, setShowOutput]   = useState(false);
   const cmdIdx  = useRef(0);
-  const mounted = useRef(false);
 
   useEffect(() => {
-    if (mounted.current) return;
-    mounted.current = true;
+    // NOTE: do NOT guard this with a "already mounted" ref. On desktop, Next's
+    // client-side back/forward cache restores this component when you return to
+    // the home page from /blog or /interviews and re-runs this effect. A mount
+    // guard would bail here while the previous run's cleanup has already set
+    // `cancelled = true`, freezing the terminal. The per-run `cancelled` flag
+    // below already makes a double-invoke (React StrictMode) safe on its own.
+
+    // restart cleanly from the first command on every (re)mount / restore
+    cmdIdx.current = 0;
 
     // blinking cursor
     const cursorInterval = setInterval(() => setShowCursor(c => !c), 530);
