@@ -56,7 +56,6 @@ export default function Home() {
       <SectionDivider alt />
       <CompanyMarquee />
       <FreelanceBanner />
-      <SectionDivider />
       <FreelanceServices />
       <Contact />
     </>
