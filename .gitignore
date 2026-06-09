@@ -37,6 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local-only agreement templates & build artifacts (not part of the site)
+/Agreements/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
