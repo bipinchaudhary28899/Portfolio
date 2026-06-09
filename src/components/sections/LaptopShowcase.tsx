@@ -70,7 +70,7 @@ export function LaptopShowcase() {
         repeat: -1,
         yoyo: true,
         repeatDelay: 0.6,
-        paused: true,
+        paused: false,
         invalidateOnRefresh: true,
         onUpdate: () => {
           const dMax = maxScroll(scrollRef.current, viewportRef.current);
@@ -80,14 +80,7 @@ export function LaptopShowcase() {
         },
       });
       tweenRef.current = tween;
-
-      /* Only animate while the devices are actually on screen (perf + feel) */
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        onToggle: (self) => (self.isActive ? tween.play() : tween.pause()),
-      });
+      /* Runs continuously, forever — scrolling in/out of view never pauses it. */
     }, sectionRef);
 
     /* Recalculate on resize / orientation change (debounced via rAF). */
@@ -185,7 +178,7 @@ export function LaptopShowcase() {
               ref={viewportRef}
               className="relative w-full overflow-hidden"
               style={{
-                aspectRatio: "16 / 10",
+                aspectRatio: "2940 / 1605",
                 borderRadius: "6px",
                 background: "#000",
                 boxShadow: "0 0 0 1px rgba(0,0,0,0.8) inset",
@@ -193,10 +186,10 @@ export function LaptopShowcase() {
             >
               <div ref={scrollRef} style={{ willChange: "transform" }}>
                 <Image
-                  src="/images/restaurant.png"
+                  src="/images/restaurant-desktop.png"
                   alt="Restaurant website — full-page desktop UI built and designed end to end"
-                  width={1996}
-                  height={10712}
+                  width={2940}
+                  height={10562}
                   sizes="(max-width: 768px) 92vw, 700px"
                   className="block w-full h-auto select-none"
                   draggable={false}
