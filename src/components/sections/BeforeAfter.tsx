@@ -16,8 +16,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Left (revealed) = Spider-Man, right (base) = Venom. Both ~4:3, so they sit
 // in a 4/3 box with object-cover and line up cleanly.
-const AFTER_SRC  = "/images/venom.jpeg";      // base layer — right side
-const BEFORE_SRC = "/images/spiderman.jpeg";  // clipped on top — left side
+const AFTER_SRC  = "/images/venom.jpg";      // base layer — right side
+const BEFORE_SRC = "/images/spiderman.jpg";  // clipped on top — left side
 const ASPECT = "7 / 5";
 // Vertical anchor per image (object-position Y) — the 7/5 box is slightly wider
 // than the ~4/3 images, so there's vertical slack to nudge each head into line.
