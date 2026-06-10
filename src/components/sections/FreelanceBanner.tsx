@@ -65,7 +65,7 @@ export function FreelanceBanner() {
       style={{ background: "var(--bg)" }}
       className="px-5 sm:px-10 pt-10 opacity-0"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Image container */}
         <div
           ref={imgRef}

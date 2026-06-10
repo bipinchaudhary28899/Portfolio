@@ -388,3 +388,10 @@ input:disabled:active {
   border-bottom: 80px solid transparent !important;
   align-items: center !important;
 }
+
+/* ── Experience detail panel: replays on tab switch (key change remounts) ── */
+@keyframes expPanelIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.exp-panel-in { animation: expPanelIn 0.4s ease both; }

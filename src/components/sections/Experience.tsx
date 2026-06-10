@@ -18,30 +18,26 @@ const PAL = {
   glow:   "color-mix(in srgb, var(--accent) 22%, transparent)",
   border: "color-mix(in srgb, var(--accent) 32%, transparent)",
 };
-/* All entries use the same theme-aware palette */
-const PALETTE = Array(5).fill(PAL) as typeof PAL[];
-
 type Pal = typeof PAL;
 
 /* ── Company logo ─────────────────────────────────────────────────────────── */
-function CompanyLogo({ src, company, pal }: { src: string; company: string; pal: Pal }) {
+function CompanyLogo({ src, company, pal, size = 40 }: { src: string; company: string; pal: Pal; size?: number }) {
   const [loaded, setLoaded] = useState(false);
   const [error,  setError]  = useState(false);
-
-  /* Letter badge always rendered behind the image — ensures nothing ever
-     shows as a broken icon while the image is loading or if it fails. */
   return (
     <div
-      className="relative shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black overflow-hidden"
-      style={{ background: src && !error ? "#ffffff" : pal.bg, border: `1px solid ${pal.border}`, color: pal.accent }}
+      className="relative shrink-0 rounded-xl flex items-center justify-center text-xs font-black overflow-hidden"
+      style={{ width: size, height: size, background: src && !error ? "#ffffff" : pal.bg, border: `1px solid ${pal.border}`, color: pal.accent }}
     >
-      <span className="absolute select-none">{company.slice(0, 2).toUpperCase()}</span>
+      {(!src || error || !loaded) && (
+        <span className="absolute select-none">{company.slice(0, 2).toUpperCase()}</span>
+      )}
       {src && !error && (
         <Image
           src={src}
           alt={company}
-          width={28}
-          height={28}
+          width={size - 12}
+          height={size - 12}
           className="relative"
           style={{ objectFit: "contain", width: "100%", height: "100%", display: "block", padding: 6,
             opacity: loaded ? 1 : 0, transition: "opacity 0.2s ease" }}
@@ -81,75 +77,45 @@ function MobileCompanyLogo({ src, company, pal }: { src: string; company: string
   );
 }
 
-/* ── Desktop card ─────────────────────────────────────────────────────────── */
-function ExpCard({ exp, pal, side }: { exp: (typeof experiences)[0]; pal: Pal; side: "left" | "right" }) {
+/* ── Timeline dot (mobile) ────────────────────────────────────────────────── */
+function Dot({ pal }: { pal: Pal }) {
   return (
-    <div
-      className="exp-card relative rounded-2xl overflow-hidden flex flex-col gap-5 p-6 sm:p-8"
-      style={{
-        background: "var(--card)",
-        border: `1px solid ${pal.border}`,
-        boxShadow: "var(--shadow-card), var(--inset-highlight)",
-      }}
-    >
-      {/* Top accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-[2px]"
-        style={{ background: `linear-gradient(to right, ${pal.accent}, transparent)` }} />
+    <div className="exp-dot relative flex items-center justify-center" style={{ width: 24, height: 24 }}>
+      <div
+        className="rounded-full"
+        style={{ width: 13, height: 13, background: pal.accent, border: "3px solid var(--bg-alt)", boxShadow: `0 0 8px ${pal.glow}` }}
+      />
+    </div>
+  );
+}
 
-      {/* Header: logo + company pill + role + period */}
-      <div className="relative flex items-start gap-3">
-        <CompanyLogo src={exp.logo} company={exp.company} pal={pal} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            {exp.companyUrl ? (
-              <a href={exp.companyUrl} target="_blank" rel="noopener noreferrer"
-                className="text-xs font-bold px-2.5 py-1 rounded-full transition-opacity hover:opacity-75"
-                style={{ background: pal.bg, color: pal.accent, border: `1px solid ${pal.border}` }}>
-                {exp.company}
-              </a>
-            ) : (
-              <span className="text-xs font-bold px-2.5 py-1 rounded-full"
-                style={{ background: pal.bg, color: pal.accent, border: `1px solid ${pal.border}` }}>
-                {exp.company}
-              </span>
-            )}
-            <span className="text-xs font-medium px-3 py-1 rounded-full shrink-0"
-              style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
-              {exp.period}
-            </span>
-          </div>
-          <h3 className="text-xl sm:text-2xl font-black leading-tight mt-2" style={{ color: "var(--fg)" }}>
-            {exp.role}
-          </h3>
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="h-px" style={{ background: `linear-gradient(to right, ${pal.border}, transparent)` }} />
-
+/* ── Shared detail content (achievements / metrics / tech) ─────────────────── */
+function DetailBody({ exp }: { exp: (typeof experiences)[number] }) {
+  return (
+    <>
       {/* Achievements */}
-      <ul className="relative flex flex-col gap-2.5">
+      <ul className="flex flex-col gap-2.5">
         {exp.achievements.map((a, j) => (
-          <li key={j} className="exp-ach flex items-start gap-3 text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
-            <span className="mt-[7px] shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: pal.accent }} />
+          <li key={j} className="flex items-start gap-3 text-sm leading-relaxed" style={{ color: "var(--fg-dim)" }}>
+            <span className="mt-[7px] shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: PAL.accent }} />
             <span><Highlight text={a} /></span>
           </li>
         ))}
       </ul>
 
       {/* Metrics */}
-      <div className="relative flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2">
         {exp.metrics.map((m, j) => (
           <div key={j} className="flex-1 min-w-[80px] rounded-xl px-3 py-2.5 text-center"
-            style={{ background: pal.bg, border: `1px solid ${pal.border}` }}>
-            <p className="text-lg font-black tabular-nums leading-none mb-0.5" style={{ color: pal.accent }}>{m.value}</p>
+            style={{ background: PAL.bg, border: `1px solid ${PAL.border}` }}>
+            <p className="text-lg font-black tabular-nums leading-none mb-0.5" style={{ color: PAL.accent }}>{m.value}</p>
             <p className="text-[11px] leading-tight" style={{ color: "var(--muted)" }}>{m.label}</p>
           </div>
         ))}
       </div>
 
       {/* Tech pills */}
-      <div className="relative flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1.5">
         {exp.tech.map((t) => (
           <span key={t} className="text-[11px] px-2.5 py-1 rounded-full"
             style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
@@ -157,143 +123,93 @@ function ExpCard({ exp, pal, side }: { exp: (typeof experiences)[0]; pal: Pal; s
           </span>
         ))}
       </div>
-    </div>
+    </>
   );
-}
-
-/* ── Timeline dot ─────────────────────────────────────────────────────────── */
-function Dot({ pal }: { pal: Pal }) {
-  /* Simple dot — same style as the Education timeline: a small orange
-     dot sitting on the line, with a thin background-coloured ring that
-     masks the line behind it. No outer ring or glow halo. */
-  return (
-    <div className="exp-dot relative flex items-center justify-center" style={{ width: 24, height: 24 }}>
-      <div
-        className="rounded-full"
-        style={{
-          width: 13,
-          height: 13,
-          background: pal.accent,
-          border: "3px solid var(--bg-alt)",
-          boxShadow: `0 0 8px ${pal.glow}`,
-        }}
-      />
-    </div>
-  );
-}
-
-/* ── Extract start year from period string ────────────────────────────────── */
-function startYear(period: string): string {
-  const m = period.match(/\d{4}/);
-  return m ? m[0] : "";
 }
 
 /* ── Main section ─────────────────────────────────────────────────────────── */
 export function Experience() {
   const secRef = useRef<HTMLElement>(null);
-  const capDesktopRef = useRef<HTMLDivElement>(null);
-  const capMobileRef  = useRef<HTMLDivElement>(null);
-  /* Multiple cards can be open at once (independent toggles, like Education) */
+  const capMobileRef = useRef<HTMLDivElement>(null);
+
+  /* Desktop: one role selected at a time (tab/list-select). */
+  const [selected, setSelected] = useState(0);
+
+  /* Mobile: independent accordion toggles (unchanged). */
   const [openSet, setOpenSet] = useState<Set<number>>(() => new Set([0]));
   const isOpen = (i: number) => openSet.has(i);
   const toggle = (i: number) =>
     setOpenSet((prev) => {
       const next = new Set(prev);
-      if (next.has(i)) next.delete(i);
-      else next.add(i);
+      if (next.has(i)) next.delete(i); else next.add(i);
       return next;
     });
+
   const loadingComplete = useLoadingComplete();
 
   useEffect(() => {
     if (!loadingComplete) return;
 
-    /* ── Sticky briefcase rides the line + rotates with scroll direction ── */
-    const caps = () =>
-      [capDesktopRef.current, capMobileRef.current].filter(Boolean) as HTMLDivElement[];
-    gsap.set(caps(), { rotation: 0 });
-    gsap.to(caps(), { scale: 1.1, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    /* Sticky briefcase (mobile timeline) — pulses + tilts with scroll. */
+    const cap = capMobileRef.current;
+    let killPulse: gsap.core.Tween | null = null;
+    if (cap) {
+      gsap.set(cap, { rotation: 0 });
+      killPulse = gsap.to(cap, { scale: 1.1, duration: 1.4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    }
     let lastY = window.scrollY;
     const onScroll = () => {
-      const y = window.scrollY;
-      const down = y > lastY;
-      lastY = y;
-      gsap.to(caps(), { rotation: down ? 12 : -12, duration: 0.35, ease: "power2.out", overwrite: "auto" });
+      const y = window.scrollY; const down = y > lastY; lastY = y;
+      if (cap) gsap.to(cap, { rotation: down ? 12 : -12, duration: 0.35, ease: "power2.out", overwrite: "auto" });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
     const ctx = gsap.context(() => {
-      gsap.set([".exp-label", ".exp-title", ".exp-dot", ".exp-card", ".exp-ach"], { opacity: 0 });
-
+      gsap.set([".exp-label", ".exp-title"], { opacity: 0 });
       const mm = gsap.matchMedia();
 
-      /* ── Header — all devices ── */
-      const headerStart = () => window.innerWidth < 768 ? "top 60%" : "top 82%";
-      gsap.fromTo(".exp-label",
-        { opacity: 0, x: -24 },
-        { opacity: 1, x: 0, duration: 0.5, ease: "power3.out",
+      /* Header — all devices */
+      const headerStart = () => (window.innerWidth < 768 ? "top 70%" : "top 82%");
+      gsap.fromTo(".exp-label", { opacity: 0, y: -16, filter: "blur(6px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power3.out", clearProps: "filter",
           scrollTrigger: { trigger: ".exp-header", start: headerStart, toggleActions: "play none none none" } });
-      gsap.fromTo(".exp-title",
-        { opacity: 0, y: 44, skewY: 2 },
-        { opacity: 1, y: 0, skewY: 0, duration: 0.75, ease: "power4.out",
+      gsap.fromTo(".exp-title", { opacity: 0, y: 36 },
+        { opacity: 1, y: 0, duration: 0.75, ease: "power4.out",
           scrollTrigger: { trigger: ".exp-header", start: headerStart, toggleActions: "play none none none" } });
 
-      /* ── Desktop: alternating left/right card entrances ── */
+      /* Desktop: rail items slide in, panel rises */
       mm.add("(min-width: 768px)", () => {
-        gsap.utils.toArray<HTMLElement>(".exp-entry").forEach((el, i) => {
-          const fromRight = i % 2 !== 0;
-
-          gsap.fromTo(el.querySelector(".exp-dot"),
-            { scale: 0, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.5)",
-              scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
-
-          gsap.fromTo(el.querySelector(".exp-card"),
-            { opacity: 0, x: fromRight ? 70 : -70, y: 12 },
-            { opacity: 1, x: 0, y: 0, duration: 0.85, ease: "power3.out", delay: 0.08,
-              scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
-
-          gsap.fromTo(el.querySelectorAll(".exp-ach"),
-            { opacity: 0, x: -14 },
-            { opacity: 1, x: 0, stagger: 0.07, duration: 0.45, ease: "power2.out", delay: 0.3,
-              scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
-        });
+        gsap.fromTo(".exp-rail-item", { opacity: 0, x: -24 },
+          { opacity: 1, x: 0, stagger: 0.08, duration: 0.5, ease: "power3.out",
+            scrollTrigger: { trigger: ".exp-desktop", start: "top 80%", toggleActions: "play none none none" } });
+        gsap.fromTo(".exp-panel", { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", delay: 0.15,
+            scrollTrigger: { trigger: ".exp-desktop", start: "top 80%", toggleActions: "play none none none" } });
       });
 
-      /* ── Mobile: animate dots in the mobile accordion layout ──
-           gsap.set hides ALL .exp-dot (including mobile ones), so we
-           must explicitly animate the mobile dot back to visible.
-           Each .exp-entry has two .exp-dot nodes: [0] desktop (display:none),
-           [1] mobile (visible). We target the last one.              ── */
+      /* Mobile: dot pops + accordion card rises (per entry) */
       mm.add("(max-width: 767px)", () => {
         gsap.utils.toArray<HTMLElement>(".exp-entry").forEach((el) => {
-          const dots = el.querySelectorAll<HTMLElement>(".exp-dot");
-          const mobileDot = dots[dots.length - 1]; // last = mobile dot
-          if (mobileDot) {
-            gsap.fromTo(mobileDot,
-              { scale: 0, opacity: 0 },
-              { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)",
-                scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
-          }
-
-          /* The mobile accordion card itself had no entrance animation —
-             fade + slide it up so the section doesn't feel static. */
+          const dot = el.querySelector<HTMLElement>(".exp-dot");
+          if (dot) gsap.fromTo(dot, { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)",
+              scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none none" } });
           const card = el.querySelector<HTMLElement>(".exp-mob-card");
-          if (card) {
-            gsap.fromTo(card,
-              { opacity: 0, y: 32 },
-              { opacity: 1, y: 0, duration: 0.6, ease: "power3.out",
-                scrollTrigger: { trigger: el, start: "top 82%", toggleActions: "play none none none" } });
-          }
+          if (card) gsap.fromTo(card, { opacity: 0, y: 32 },
+            { opacity: 1, y: 0, duration: 0.6, ease: "power3.out",
+              scrollTrigger: { trigger: el, start: "top 82%", toggleActions: "play none none none" } });
         });
       });
-
     }, secRef);
+
     return () => {
       ctx.revert();
+      killPulse?.kill();
       window.removeEventListener("scroll", onScroll);
     };
   }, [loadingComplete]);
+
+  const sel = experiences[selected];
 
   return (
     <section
@@ -305,7 +221,7 @@ export function Experience() {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="exp-header mb-10 sm:mb-20 text-center flex flex-col items-center">
+        <div className="exp-header mb-10 sm:mb-16 text-center flex flex-col items-center">
           <p className="exp-label section-label mb-3" style={{ opacity: 0 }}>Career</p>
           <h2 className="exp-title font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
@@ -316,176 +232,187 @@ export function Experience() {
           </p>
         </div>
 
-        {/* Timeline */}
-        <div className="exp-timeline relative">
+        {/* ── DESKTOP: tab / list-select ── */}
+        <div className="exp-desktop hidden md:grid gap-8 items-start"
+          style={{ gridTemplateColumns: "minmax(255px, 330px) 1fr" }}
+          role="tablist" aria-label="Work experience">
 
-          {/* Desktop center line (static) */}
-          <div className="absolute hidden md:block top-0 bottom-0"
-            style={{ left: "50%", transform: "translateX(-50%)", width: 1, background: "var(--border)" }} />
-
-          {/* Mobile left line (static) */}
-          <div className="absolute block md:hidden top-0 bottom-0"
-            style={{ left: 11, width: 1, background: "var(--border)" }} />
-
-          {/* Sticky briefcase — rides the centre line (desktop) */}
-          <div className="hidden md:block"
-            style={{ position: "sticky", top: "calc(50vh - 16px)", height: 0, zIndex: 30, overflow: "visible" }}>
-            <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%) translateY(-50%)" }}>
-              <div ref={capDesktopRef}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Briefcase size={26} color="var(--accent)"
-                  style={{ filter: "drop-shadow(0 0 8px var(--accent))" }} />
-              </div>
-            </div>
-          </div>
-
-          {/* Sticky briefcase — rides the left line (mobile) */}
-          <div className="block md:hidden"
-            style={{ position: "sticky", top: "calc(50vh - 12px)", height: 0, zIndex: 30, overflow: "visible" }}>
-            <div style={{ position: "absolute", left: 11, transform: "translateX(-50%) translateY(-50%)" }}>
-              <div ref={capMobileRef}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Briefcase size={20} color="var(--accent)"
-                  style={{ filter: "drop-shadow(0 0 7px var(--accent))" }} />
-              </div>
-            </div>
-          </div>
-
-          {/* Entries */}
-          <div className="flex flex-col" style={{ gap: "clamp(1.5rem, 5vw, 5rem)" }}>
+          {/* Left rail — company selector */}
+          <div className="flex flex-col gap-2.5">
             {experiences.map((exp, i) => {
-              const pal       = PALETTE[i % PALETTE.length];
-              const cardRight = i % 2 !== 0;
-
+              const active = selected === i;
               return (
-                <div key={exp.id} className="exp-entry relative">
-
-                  {/* ── DESKTOP zigzag ── */}
-                  <div className="hidden md:grid items-center"
-                    style={{ gridTemplateColumns: "1fr 48px 1fr" }}>
-
-                    {/* Left cell: card or year */}
-                    <div className="pr-10 flex items-center justify-end">
-                      {!cardRight
-                        ? <ExpCard exp={exp} pal={pal} side="left" />
-                        : <span
-                            className="gradient-text font-black font-mono select-none pointer-events-none w-full text-right"
-                            style={{ fontSize: "clamp(5rem,9vw,9rem)", lineHeight: 1, opacity: 0.13 }}
-                          >
-                            {startYear(exp.period)}
-                          </span>
-                      }
-                    </div>
-
-                    {/* Center dot */}
-                    <div className="flex justify-center">
-                      <Dot pal={pal} />
-                    </div>
-
-                    {/* Right cell: card or year */}
-                    <div className="pl-10 flex items-center justify-start">
-                      {cardRight
-                        ? <ExpCard exp={exp} pal={pal} side="right" />
-                        : <span
-                            className="gradient-text font-black font-mono select-none pointer-events-none w-full"
-                            style={{ fontSize: "clamp(5rem,9vw,9rem)", lineHeight: 1, opacity: 0.13 }}
-                          >
-                            {startYear(exp.period)}
-                          </span>
-                      }
-                    </div>
+                <button
+                  key={exp.id}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setSelected(i)}
+                  className="exp-rail-item relative text-left rounded-xl p-3 pl-4 flex items-center gap-3 transition-all duration-300"
+                  style={{
+                    background: active ? PAL.bg : "var(--card)",
+                    border: `1px solid ${active ? PAL.border : "var(--border)"}`,
+                    boxShadow: active ? "var(--shadow-card)" : "none",
+                  }}
+                >
+                  {/* Active accent bar */}
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full"
+                    style={{ width: 3, height: active ? "62%" : "0%", background: PAL.accent, transition: "height 0.3s ease" }} />
+                  <CompanyLogo src={exp.logo} company={exp.company} pal={PAL} size={40} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold truncate" style={{ color: "var(--fg)" }}>{exp.company}</p>
+                    <p className="text-[11px] truncate leading-snug" style={{ color: "var(--muted)" }}>{exp.role}</p>
+                    <p className="text-[10px] font-semibold mt-0.5" style={{ color: active ? PAL.accent : "var(--muted)" }}>{exp.period}</p>
                   </div>
-
-                  {/* ── MOBILE accordion ── */}
-                  <div className="block md:hidden" style={{ paddingLeft: 36 }}>
-                    <div className="absolute" style={{ left: 0, top: 18 }}>
-                      <Dot pal={pal} />
-                    </div>
-
-                    <div className="exp-mob-card rounded-2xl overflow-hidden"
-                      style={{
-                        border: `1px solid ${isOpen(i) ? pal.border : "var(--border)"}`,
-                        background: "var(--card)",
-                        transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-                        boxShadow: isOpen(i) ? "var(--shadow-card)" : "none",
-                      }}>
-
-                      {/* Collapsed header */}
-                      <button
-                        className="w-full flex items-center gap-3 px-4 py-3 text-left"
-                        onClick={() => toggle(i)}
-                      >
-                        {/* Company logo / initials */}
-                        <MobileCompanyLogo src={exp.logo} company={exp.company} pal={pal} />
-
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[11px] font-medium" style={{ color: "var(--muted)" }}>
-                            {exp.company} · {exp.period}
-                          </p>
-                          <p className="text-sm font-bold truncate leading-snug mt-0.5" style={{ color: "var(--fg)" }}>
-                            {exp.role}
-                          </p>
-                        </div>
-
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0"
-                          style={{
-                            color: "var(--muted)",
-                            transform: isOpen(i) ? "rotate(180deg)" : "rotate(0deg)",
-                            transition: "transform 0.3s ease",
-                          }}>
-                          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
-                            strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </button>
-
-                      {/* Expandable body */}
-                      <div style={{
-                        display: "grid",
-                        gridTemplateRows: isOpen(i) ? "1fr" : "0fr",
-                        transition: "grid-template-rows 0.35s cubic-bezier(0.4,0,0.2,1)",
-                      }}>
-                        <div style={{ overflow: "hidden" }}>
-                          <div className="px-4 pb-4 flex flex-col gap-3"
-                            style={{ borderTop: `1px solid ${pal.border}` }}>
-
-                            <ul className="flex flex-col gap-2 pt-3">
-                              {exp.achievements.map((a, j) => (
-                                <li key={j} className="flex items-start gap-2.5 text-xs leading-relaxed"
-                                  style={{ color: "var(--fg-dim)" }}>
-                                  <span className="mt-[6px] shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: pal.accent }} />
-                                  <span><Highlight text={a} /></span>
-                                </li>
-                              ))}
-                            </ul>
-
-                            <div className="flex flex-wrap gap-2">
-                              {exp.metrics.map((m, j) => (
-                                <div key={j} className="flex-1 min-w-[72px] rounded-xl px-2.5 py-2 text-center"
-                                  style={{ background: pal.bg, border: `1px solid ${pal.border}` }}>
-                                  <p className="text-sm font-black tabular-nums leading-none mb-0.5" style={{ color: pal.accent }}>{m.value}</p>
-                                  <p className="text-[10px] leading-tight" style={{ color: "var(--muted)" }}>{m.label}</p>
-                                </div>
-                              ))}
-                            </div>
-
-                            <div className="flex flex-wrap gap-1.5">
-                              {exp.tech.map((t) => (
-                                <span key={t} className="text-[10px] px-2 py-0.5 rounded-full"
-                                  style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </div>
+                </button>
               );
             })}
+          </div>
+
+          {/* Right detail panel */}
+          <div className="exp-panel relative rounded-2xl overflow-hidden p-7 lg:p-8"
+            role="tabpanel"
+            style={{
+              background: "var(--card)",
+              border: `1px solid ${PAL.border}`,
+              boxShadow: "var(--shadow-card), var(--inset-highlight)",
+              minHeight: "clamp(380px, 40vw, 460px)",
+            }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]"
+              style={{ background: `linear-gradient(to right, ${PAL.accent}, transparent)` }} />
+
+            {/* Faded company-logo watermark filling the top-right quadrant */}
+            {sel.logo && (
+              <div
+                key={`wm-${selected}`}
+                aria-hidden
+                className="pointer-events-none absolute"
+                style={{ top: 0, right: 0, width: "50%", height: "50%", zIndex: 0 }}
+              >
+                <Image
+                  src={sel.logo}
+                  alt=""
+                  fill
+                  className="select-none"
+                  style={{ objectFit: "contain", objectPosition: "top right", opacity: 0.07, filter: "grayscale(1)" }}
+                />
+              </div>
+            )}
+
+            <div key={selected} className="exp-panel-in relative z-10 flex flex-col gap-5">
+              {/* Header: logo + company pill + period + role */}
+              <div className="flex items-start gap-3">
+                <CompanyLogo src={sel.logo} company={sel.company} pal={PAL} size={48} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    {sel.companyUrl ? (
+                      <a href={sel.companyUrl} target="_blank" rel="noopener noreferrer"
+                        className="text-xs font-bold px-2.5 py-1 rounded-full transition-opacity hover:opacity-75"
+                        style={{ background: PAL.bg, color: PAL.accent, border: `1px solid ${PAL.border}` }}>
+                        {sel.company}
+                      </a>
+                    ) : (
+                      <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                        style={{ background: PAL.bg, color: PAL.accent, border: `1px solid ${PAL.border}` }}>
+                        {sel.company}
+                      </span>
+                    )}
+                    <span className="text-xs font-medium px-3 py-1 rounded-full shrink-0"
+                      style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
+                      {sel.period}
+                    </span>
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-black leading-tight mt-2" style={{ color: "var(--fg)" }}>
+                    {sel.role}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="h-px" style={{ background: `linear-gradient(to right, ${PAL.border}, transparent)` }} />
+
+              <DetailBody exp={sel} />
+            </div>
+          </div>
+        </div>
+
+        {/* ── MOBILE: timeline + accordion (unchanged behaviour) ── */}
+        <div className="block md:hidden relative">
+          {/* Left line */}
+          <div className="absolute top-0 bottom-0" style={{ left: 11, width: 1, background: "var(--border)" }} />
+
+          {/* Sticky briefcase rides the line */}
+          <div style={{ position: "sticky", top: "calc(50vh - 12px)", height: 0, zIndex: 30, overflow: "visible" }}>
+            <div style={{ position: "absolute", left: 11, transform: "translateX(-50%) translateY(-50%)" }}>
+              <div ref={capMobileRef} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Briefcase size={20} color="var(--accent)" style={{ filter: "drop-shadow(0 0 7px var(--accent))" }} />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col" style={{ gap: "clamp(1.5rem, 5vw, 3rem)" }}>
+            {experiences.map((exp, i) => (
+              <div key={exp.id} className="exp-entry relative" style={{ paddingLeft: 36 }}>
+                <div className="absolute" style={{ left: 0, top: 18 }}>
+                  <Dot pal={PAL} />
+                </div>
+
+                <div className="exp-mob-card rounded-2xl overflow-hidden"
+                  style={{
+                    border: `1px solid ${isOpen(i) ? PAL.border : "var(--border)"}`,
+                    background: "var(--card)",
+                    transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                    boxShadow: isOpen(i) ? "var(--shadow-card)" : "none",
+                  }}>
+                  <button className="w-full flex items-center gap-3 px-4 py-3 text-left" onClick={() => toggle(i)}>
+                    <MobileCompanyLogo src={exp.logo} company={exp.company} pal={PAL} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-medium" style={{ color: "var(--muted)" }}>
+                        {exp.company} · {exp.period}
+                      </p>
+                      <p className="text-sm font-bold truncate leading-snug mt-0.5" style={{ color: "var(--fg)" }}>
+                        {exp.role}
+                      </p>
+                    </div>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0"
+                      style={{ color: "var(--muted)", transform: isOpen(i) ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s ease" }}>
+                      <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+
+                  <div style={{ display: "grid", gridTemplateRows: isOpen(i) ? "1fr" : "0fr", transition: "grid-template-rows 0.35s cubic-bezier(0.4,0,0.2,1)" }}>
+                    <div style={{ overflow: "hidden" }}>
+                      <div className="px-4 pb-4 flex flex-col gap-3" style={{ borderTop: `1px solid ${PAL.border}` }}>
+                        <ul className="flex flex-col gap-2 pt-3">
+                          {exp.achievements.map((a, j) => (
+                            <li key={j} className="flex items-start gap-2.5 text-xs leading-relaxed" style={{ color: "var(--fg-dim)" }}>
+                              <span className="mt-[6px] shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: PAL.accent }} />
+                              <span><Highlight text={a} /></span>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="flex flex-wrap gap-2">
+                          {exp.metrics.map((m, j) => (
+                            <div key={j} className="flex-1 min-w-[72px] rounded-xl px-2.5 py-2 text-center"
+                              style={{ background: PAL.bg, border: `1px solid ${PAL.border}` }}>
+                              <p className="text-sm font-black tabular-nums leading-none mb-0.5" style={{ color: PAL.accent }}>{m.value}</p>
+                              <p className="text-[10px] leading-tight" style={{ color: "var(--muted)" }}>{m.label}</p>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {exp.tech.map((t) => (
+                            <span key={t} className="text-[10px] px-2 py-0.5 rounded-full"
+                              style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
