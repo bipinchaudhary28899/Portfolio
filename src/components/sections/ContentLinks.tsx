@@ -13,7 +13,7 @@ export function ContentLinks() {
       className="px-6 sm:px-12 lg:px-20 py-10 sm:py-12"
       style={{ background: "var(--bg-alt)", borderTop: "1px solid var(--border)" }}
     >
-      <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ background: "var(--border)" }}>
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ background: "var(--border)" }}>
 
         {/* Interview Experiences */}
         <Link

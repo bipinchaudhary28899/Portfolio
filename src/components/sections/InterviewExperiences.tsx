@@ -230,7 +230,7 @@ export function InterviewExperiences({ preview = false }: { preview?: boolean })
   return (
     <section ref={sec} id="interviews" className="pt-10 pb-24 sm:pt-14 sm:pb-36 px-6 sm:px-12 lg:px-20"
       style={{ background: "var(--bg)" }}>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="iv-header mb-10 sm:mb-14">
           <p className="iv-label section-label mb-2" style={{ opacity: 0 }}>Journey</p>
           <h2

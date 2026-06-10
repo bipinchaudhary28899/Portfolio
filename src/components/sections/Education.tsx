@@ -337,7 +337,7 @@ export function Education() {
         className="hidden md:block py-28 px-6 sm:px-12 lg:px-20"
         style={{ background: "var(--bg)" }}
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
 
           {/* Header */}
           <div className="edu-hd-desktop opacity-0 mb-20">

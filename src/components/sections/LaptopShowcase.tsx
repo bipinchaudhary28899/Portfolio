@@ -26,7 +26,10 @@ export function LaptopShowcase() {
      loaded and laid out — image decode timing differs on mobile, so the
      first measurement can be 0 / wrong without this. */
   const remeasure = () => {
-    tweenRef.current?.invalidate();
+    /* The loop reads its travel distance live every frame (see onUpdate), so we
+       must NOT invalidate the proxy tween here — doing so re-records its start
+       value mid-flight and progressively shrinks the 0→1 range until it stops
+       reaching the top/bottom. Just refresh the reveal trigger's positions. */
     ScrollTrigger.refresh();
   };
 
@@ -63,15 +66,16 @@ export function LaptopShowcase() {
          laptop and phone always begin (p=0) and finish (p=1) at the same
          instant — regardless of their different screenshot heights. */
       const proxy = { p: 0 };
-      const tween = gsap.to(proxy, {
+      const tween = gsap.fromTo(
+        proxy,
+        { p: 0 },
+        {
         p: 1,
         duration: 16,
         ease: "power1.inOut",
         repeat: -1,
         yoyo: true,
         repeatDelay: 0.6,
-        paused: false,
-        invalidateOnRefresh: true,
         onUpdate: () => {
           const dMax = maxScroll(scrollRef.current, viewportRef.current);
           const mMax = maxScroll(phoneScrollRef.current, phoneViewportRef.current);

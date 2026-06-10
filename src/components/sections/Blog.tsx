@@ -95,7 +95,7 @@ export function Blog() {
   return (
     <section ref={sec} id="blog" className="pt-12 sm:pt-[4.5rem] pb-24 sm:pb-36 px-6 sm:px-12 lg:px-20"
       style={{ background: "var(--bg-alt)" }}>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="blog-header mb-10 sm:mb-14 flex items-end justify-between gap-4 flex-wrap">
           <div>
             <p className="blog-label section-label mb-2" style={{ opacity: 0 }}>Writing</p>
