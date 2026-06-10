@@ -89,9 +89,9 @@ export function About() {
         </div>
 
         {/* Stats */}
-        <div className="stat-grid grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16">
+        <div className="stat-grid grid grid-cols-3 gap-2.5 sm:gap-4 mb-16">
           {stats.map((s) => (
-            <div key={s.label} className="stat-item opacity-0 rounded-2xl p-6 border"
+            <div key={s.label} className="stat-item opacity-0 rounded-xl sm:rounded-2xl px-2 py-4 sm:p-6 border min-h-[96px] sm:min-h-0 flex flex-col items-center justify-center text-center gap-1 sm:gap-0 sm:items-start sm:justify-start sm:text-left"
               style={{
                 background: "var(--card)",
                 borderColor: "var(--border)",
@@ -101,11 +101,11 @@ export function About() {
                 `,
                 boxShadow: "var(--shadow-card), var(--inset-highlight)",
               }}>
-              <span className="block font-black tracking-tight leading-none mb-1 gradient-text"
-                style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}>
+              <span className="block font-black tracking-tight leading-none sm:mb-1 gradient-text"
+                style={{ fontSize: "clamp(1.5rem,7vw,3.2rem)" }}>
                 {s.value}
               </span>
-              <span className="text-xs font-medium uppercase tracking-wider" style={{ color: "var(--muted)" }}>
+              <span className="block text-[10px] sm:text-xs font-medium uppercase tracking-wider leading-tight" style={{ color: "var(--muted)" }}>
                 {s.label}
               </span>
             </div>
