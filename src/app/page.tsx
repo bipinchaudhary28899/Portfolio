@@ -4,6 +4,7 @@ import { Experience }             from "@/components/sections/Experience";
 import { GitaTicker }             from "@/components/sections/GitaTicker";
 import { Projects }               from "@/components/sections/Projects";
 import { LaptopShowcase }         from "@/components/sections/LaptopShowcase";
+import { BeforeAfter }            from "@/components/sections/BeforeAfter";
 import { Skills }                 from "@/components/sections/Skills";
 import { Education }              from "@/components/sections/Education";
 import { HonorsAwards }           from "@/components/sections/HonorsAwards";
@@ -47,6 +48,8 @@ export default function Home() {
       <LaptopShowcase />
       <SectionDivider />
       <Skills />
+      <SectionDivider />
+      <BeforeAfter />
       <SectionDivider />
       <Education />
       <SectionDivider />
