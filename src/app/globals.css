@@ -388,6 +388,15 @@ input:disabled:active {
   border-bottom: 80px solid transparent !important;
   align-items: center !important;
 }
+@media (max-width: 767px) {
+  .cp-header { border-bottom-width: 16px !important; }
+}
+
+/* ── Credentials badges: shrink to fit all three in one row on mobile ── */
+.cert-badges { --bw: 150px; --bs: 1; }
+@media (max-width: 767px) {
+  .cert-badges { --bw: 100px; --bs: 0.6667; }
+}
 
 /* ── Experience detail panel: replays on tab switch (key change remounts) ── */
 @keyframes expPanelIn {

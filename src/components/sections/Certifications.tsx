@@ -218,21 +218,25 @@ export function Certifications() {
       {/* ── Credly Badges ── */}
       <div className="px-6 sm:px-12 lg:px-20 mt-14">
         <div className="max-w-6xl mx-auto">
-        <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: "var(--muted)" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-6 text-center" style={{ color: "var(--muted)" }}>
           Badges
         </p>
-        <div className="flex flex-wrap gap-6 items-start">
-          {/* Credly badge */}
-          <div
-            data-iframe-width="150"
-            data-iframe-height="270"
-            data-share-badge-id="24e4cb5d-c629-467f-b918-da1b04948219"
-            data-share-badge-host="https://www.credly.com"
-          />
+        <div className="cert-badges flex flex-nowrap sm:flex-wrap gap-2.5 sm:gap-6 items-start justify-center">
+          {/* Credly badge — scaled to the shared badge width (iframe renders at a fixed 150px) */}
+          <div style={{ width: "var(--bw)", height: "calc(var(--bw) * 270 / 150)", flexShrink: 0, overflow: "hidden" }}>
+            <div style={{ transformOrigin: "top left", transform: "scale(var(--bs))" }}>
+              <div
+                data-iframe-width="150"
+                data-iframe-height="270"
+                data-share-badge-id="24e4cb5d-c629-467f-b918-da1b04948219"
+                data-share-badge-host="https://www.credly.com"
+              />
+            </div>
+          </div>
 
           {/* LeetCode 50 Days 2026 — cropped to match the SAP badge height
               (the lower part of the image is just empty black space) */}
-          <div style={{ position: "relative", width: 150, height: 240, flexShrink: 0, overflow: "hidden", borderRadius: 8, display: "block" }}>
+          <div style={{ position: "relative", width: "var(--bw)", aspectRatio: "150 / 240", flexShrink: 0, overflow: "hidden", borderRadius: 8, display: "block" }}>
             <Image
               src="/images/badges/Leetcode_50_days_2026_badge.png"
               alt="LeetCode 50 Days Badge 2026"
@@ -243,7 +247,7 @@ export function Certifications() {
           </div>
 
           {/* LeetCode 100 Days 2026 */}
-          <div style={{ position: "relative", width: 150, height: 240, flexShrink: 0, overflow: "hidden", borderRadius: 8, display: "block" }}>
+          <div style={{ position: "relative", width: "var(--bw)", aspectRatio: "150 / 240", flexShrink: 0, overflow: "hidden", borderRadius: 8, display: "block" }}>
             <Image
               src="/images/badges/Leetcode_100_days_2026_badge.png"
               alt="LeetCode 100 Days Badge 2026"

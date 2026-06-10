@@ -92,16 +92,16 @@ export function OpenSource() {
         </div>
 
         {/* Stats bar */}
-        <div className="os-stats flex flex-wrap gap-4 mb-12">
+        <div className="os-stats flex gap-2 sm:gap-4 mb-12">
           {[
             { v: openSourceContributions.length, l: "Total PRs" },
             { v: merged,                          l: "Merged"    },
             { v: new Set(openSourceContributions.map((c) => c.repo)).size, l: "Repos" },
           ].map(({ v, l }) => (
-            <div key={l} className="os-stat opacity-0 flex items-center gap-3 px-5 py-3 rounded-xl border"
+            <div key={l} className="os-stat opacity-0 flex-1 min-w-0 flex flex-col sm:flex-row items-center justify-center sm:gap-3 gap-0.5 px-2 sm:px-5 py-2.5 sm:py-3 rounded-xl border"
               style={{ background: "var(--card)", borderColor: "var(--border)" }}>
-              <span className="text-xl font-black" style={{ color: "var(--accent)" }}>{v}</span>
-              <span className="text-xs font-medium uppercase tracking-wider" style={{ color: "var(--muted)" }}>{l}</span>
+              <span className="text-lg sm:text-xl font-black leading-none" style={{ color: "var(--accent)" }}>{v}</span>
+              <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-center leading-tight" style={{ color: "var(--muted)" }}>{l}</span>
             </div>
           ))}
         </div>
