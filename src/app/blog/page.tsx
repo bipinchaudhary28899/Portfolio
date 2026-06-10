@@ -23,15 +23,15 @@ export default function BlogPage() {
         </Link>
 
         {/* Header */}
-        <div className="mb-12">
+        <div className="mb-12 text-center flex flex-col items-center">
           <p className="section-label mb-2">Writing</p>
           <h1
-            className="heading-accent font-black tracking-tight"
+            className="font-black tracking-tight"
             style={{ fontSize: "clamp(2rem,6vw,4rem)", color: "var(--fg)", lineHeight: 1.1 }}
           >
             Blog
           </h1>
-          <p className="mt-3 text-sm max-w-lg" style={{ color: "var(--fg-dim)" }}>
+          <p className="mt-3 text-sm max-w-lg mx-auto" style={{ color: "var(--fg-dim)" }}>
             Lessons from building real systems — written for engineers, recruiters, and anyone who likes to understand the why behind technical decisions.
           </p>
         </div>

@@ -144,7 +144,7 @@ export function Skills() {
         {/* Header */}
         <div className="mb-6 text-center flex flex-col items-center">
           <p className="section-label mb-2">Stack</p>
-          <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Skills & Tools</h2>
+          <h2 className="text-[2.4rem] leading-none font-black" style={{ color: "var(--fg)" }}>Skills & Tools</h2>
           <p className="mt-3 text-sm leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "32rem" }}>
             The tools I reach for to take ideas from design to deployment.
           </p>

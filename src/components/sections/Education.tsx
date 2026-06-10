@@ -478,7 +478,7 @@ export function Education() {
         {/* Header */}
         <div className="edu-hd-mobile opacity-0 mb-10 text-center flex flex-col items-center">
           <p className="section-label mb-2">Background</p>
-          <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>
+          <h2 className="text-[2.4rem] leading-none font-black" style={{ color: "var(--fg)" }}>
             Education
           </h2>
           <p className="mt-3 text-sm leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "32rem" }}>

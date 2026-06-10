@@ -122,7 +122,7 @@ export function CodingPlatforms() {
         <div className="cp-header mb-10 sm:mb-14 flex flex-col items-center gap-2 text-center">
           <p className="cp-label section-label" style={{ opacity: 0 }}>Competitive</p>
           <h2 className="cp-title font-black tracking-tight"
-            style={{ fontSize: "clamp(1.8rem,8vw,5rem)", color: "var(--fg)", lineHeight: 1.1, opacity: 0 }}>
+            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", lineHeight: 1.1, opacity: 0 }}>
             Coding Platforms
           </h2>
           <p className="mt-2 text-sm md:text-base leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "44rem" }}>

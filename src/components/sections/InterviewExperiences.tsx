@@ -235,7 +235,7 @@ export function InterviewExperiences({ preview = false }: { preview?: boolean })
           <p className="iv-label section-label mb-2" style={{ opacity: 0 }}>Journey</p>
           <h2
             className="iv-title font-black tracking-tight"
-            style={{ fontSize: "clamp(1.8rem,8vw,5rem)", color: "var(--fg)", lineHeight: 1.1, opacity: 0 }}
+            style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", lineHeight: 1.1, opacity: 0 }}
           >
             Interview Experiences
           </h2>

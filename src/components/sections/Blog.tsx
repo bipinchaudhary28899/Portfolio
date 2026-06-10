@@ -101,7 +101,7 @@ export function Blog() {
             <p className="blog-label section-label mb-2" style={{ opacity: 0 }}>Writing</p>
             <h2
               className="blog-title font-black tracking-tight"
-              style={{ fontSize: "clamp(1.8rem,8vw,5rem)", color: "var(--fg)", lineHeight: 1.1, opacity: 0 }}
+              style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", lineHeight: 1.1, opacity: 0 }}
             >
               Blog
             </h2>
