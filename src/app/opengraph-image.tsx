@@ -143,7 +143,7 @@ export default async function OgImage() {
 
           {/* tagline */}
           <span style={{ fontSize: 20, color: "#a8a6c4", marginTop: 8 }}>
-            Building scalable web systems that move metrics.
+            Building scalable web systems that drive results and turn visitors into customers.
           </span>
         </div>
 

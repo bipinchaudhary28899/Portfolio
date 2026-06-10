@@ -18,14 +18,14 @@ export const metadata: Metadata = {
   authors: [{ name: "Bipin Chaudhary" }],
   openGraph: {
     title: "Bipin Chaudhary | Full Stack AI Engineer",
-    description: "Building scalable web systems that move metrics.",
+    description: "Building scalable web systems that drive results and turn visitors into customers.",
     type: "website",
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: {
     card:        "summary_large_image",
     title:       "Bipin Chaudhary | Full Stack AI Engineer",
-    description: "Building scalable web systems that move metrics.",
+    description: "Building scalable web systems that drive results and turn visitors into customers.",
     images:      ["/opengraph-image"],
   },
 };

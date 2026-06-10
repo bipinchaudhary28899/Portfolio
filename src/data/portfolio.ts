@@ -3,7 +3,7 @@ export const personalInfo = {
   firstName: "Bipin",
   lastName: "Chaudhary",
   role: "Full Stack AI Engineer",
-  tagline: "Building scalable web systems that move metrics.",
+  tagline: "Building scalable web systems that drive results and turn visitors into customers.",
   bio: "M.Tech graduate from MNNIT Allahabad with 3+ years in the industry - including 10 months at SAP Labs and 2.5 years as a Full Stack Developer at Nagarro - I like building things that real users actually depend on. Full Stack AI Engineer with 3+ years of experience building scalable web systems across video streaming, enterprise analytics, and cloud-native applications. Improved video startup latency by 40% using HLS-based adaptive streaming, reduced database query latency by 30%, and enhanced UI performance by 20% through Angular rendering strategies. Strong in system design, distributed systems, and AI-powered features.",
   achievements: [
     "Improved video playback startup time by 40% via serverless HLS adaptive streaming (S3 → Lambda → FFmpeg)",
