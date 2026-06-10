@@ -255,9 +255,12 @@ function MobileProjects({ onOpenCaseStudy }: { onOpenCaseStudy: (i: number) => v
     <section className="block md:hidden py-14" style={{ background: "var(--bg)" }}>
 
       {/* Header */}
-      <div className="proj-mob-hd mb-6 px-5" style={{ opacity: 0 }}>
+      <div className="proj-mob-hd mb-6 px-5 text-center flex flex-col items-center" style={{ opacity: 0 }}>
         <p className="section-label mb-2">Work</p>
-        <h2 className="heading-accent text-3xl font-black" style={{ color: "var(--fg)" }}>Selected Projects</h2>
+        <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Selected Projects</h2>
+        <p className="mt-3 text-sm leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "32rem" }}>
+          A few products I&apos;ve designed and engineered from the ground up.
+        </p>
       </div>
 
       {/* ── Project cards ── */}
@@ -584,11 +587,14 @@ export function Projects() {
           ref={headRef}
           className="absolute top-0 left-0 right-0 z-20 opacity-0 px-14 pt-24 pb-5"
         >
-          <div>
+          <div className="text-center">
             <p className="section-label mb-1">Work</p>
-            <h2 className="heading-accent font-black tracking-tight leading-none" style={{ fontSize: "clamp(2rem,4vw,3.5rem)", color: "var(--fg)" }}>
+            <h2 className="font-black tracking-tight leading-none" style={{ fontSize: "clamp(2rem,4vw,3.5rem)", color: "var(--fg)" }}>
               Selected Projects
             </h2>
+            <p className="mt-3 text-sm leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "40rem" }}>
+              A selection of products I&apos;ve designed and engineered end to end.
+            </p>
           </div>
         </div>
 

@@ -386,5 +386,5 @@ input:disabled:active {
 
 .cp-header {
   border-bottom: 80px solid transparent !important;
-  align-items: flex-start !important;
+  align-items: center !important;
 }

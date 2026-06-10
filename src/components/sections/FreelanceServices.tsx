@@ -722,21 +722,18 @@ export function FreelanceServices() {
       <div className="max-w-6xl mx-auto flex flex-col gap-8 sm:gap-16">
 
         {/* ── Header ── */}
-        <div>
-          <div className="flex items-start justify-between gap-4">
-            <p ref={labelRef} className="section-label mb-2" style={{ opacity: 0 }}>Available for Hire</p>
-            <CurrencySwitcher />
-          </div>
+        <div className="text-center flex flex-col items-center">
+          <p ref={labelRef} className="section-label mb-2" style={{ opacity: 0 }}>Available for Hire</p>
           <h2
             ref={titleRef}
-            className="heading-accent font-black tracking-tight leading-tight"
+            className="font-black tracking-tight leading-tight"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}
           >
             Freelance Services
           </h2>
           <p
             ref={descRef}
-            className="mt-3 max-w-4xl text-sm leading-relaxed"
+            className="mt-3 max-w-4xl mx-auto text-sm leading-relaxed"
             style={{ color: "var(--fg-dim)", opacity: 0 }}
           >
             Full-stack engineer available for client projects - from a professional online
@@ -744,6 +741,9 @@ export function FreelanceServices() {
             you get architecture, integrations, secure deployment, scalability, and
             professional execution that AI tools alone can&apos;t deliver.
           </p>
+          <div className="mt-5">
+            <CurrencySwitcher />
+          </div>
         </div>
 
         {/* ── What I Build ── */}

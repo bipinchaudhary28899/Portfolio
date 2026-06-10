@@ -77,12 +77,15 @@ export function About() {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="about-header mb-14">
+        <div className="about-header mb-14 text-center flex flex-col items-center">
           <p className="about-label section-label mb-3" style={{ opacity: 0 }}>About</p>
-          <h2 className="about-title heading-accent font-black tracking-tight leading-none"
+          <h2 className="about-title font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
             Who I am
           </h2>
+          <p className="mt-4 text-sm md:text-base leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "44rem" }}>
+            A quick look at my background, what drives me, and how I approach building software end to end.
+          </p>
         </div>
 
         {/* Stats */}

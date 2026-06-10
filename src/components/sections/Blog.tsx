@@ -96,16 +96,16 @@ export function Blog() {
     <section ref={sec} id="blog" className="pt-12 sm:pt-[4.5rem] pb-24 sm:pb-36 px-6 sm:px-12 lg:px-20"
       style={{ background: "var(--bg-alt)" }}>
       <div className="max-w-6xl mx-auto">
-        <div className="blog-header mb-10 sm:mb-14 flex items-end justify-between gap-4 flex-wrap">
-          <div>
+        <div className="blog-header mb-10 sm:mb-14 flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center">
             <p className="blog-label section-label mb-2" style={{ opacity: 0 }}>Writing</p>
             <h2
-              className="blog-title heading-accent font-black tracking-tight"
+              className="blog-title font-black tracking-tight"
               style={{ fontSize: "clamp(1.8rem,8vw,5rem)", color: "var(--fg)", lineHeight: 1.1, opacity: 0 }}
             >
               Blog
             </h2>
-            <p className="mt-3 text-sm max-w-xl" style={{ color: "var(--fg-dim)" }}>
+            <p className="mt-3 text-sm max-w-xl mx-auto" style={{ color: "var(--fg-dim)" }}>
               Lessons from building real systems — written for engineers, recruiters, and anyone curious about the why.
             </p>
           </div>

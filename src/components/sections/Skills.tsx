@@ -81,12 +81,15 @@ export function Skills() {
       <section ref={sec} className="hidden md:block pt-[4.5rem] pb-36 px-12 lg:px-20"
         style={{ background: "var(--bg)" }}>
         <div className="max-w-6xl mx-auto">
-          <div className="skills-header mb-14">
+          <div className="skills-header mb-14 text-center flex flex-col items-center">
             <p className="skills-label section-label mb-3" style={{ opacity: 0 }}>Stack</p>
-            <h2 className="skills-title heading-accent font-black tracking-tight leading-none"
+            <h2 className="skills-title font-black tracking-tight leading-none"
               style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
               Skills & Tools
             </h2>
+            <p className="mt-4 text-sm md:text-base leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "44rem" }}>
+              The languages, frameworks, and tools I reach for to take ideas from design to deployment.
+            </p>
           </div>
           <div className="skills-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {categories.map(([cat, items]) => (
@@ -139,9 +142,12 @@ export function Skills() {
         style={{ background: "var(--bg)" }}>
 
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-6 text-center flex flex-col items-center">
           <p className="section-label mb-2">Stack</p>
-          <h2 className="heading-accent text-3xl font-black" style={{ color: "var(--fg)" }}>Skills & Tools</h2>
+          <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>Skills & Tools</h2>
+          <p className="mt-3 text-sm leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "32rem" }}>
+            The tools I reach for to take ideas from design to deployment.
+          </p>
         </div>
 
         {/* Category tabs - horizontal scroll with < > nav arrows */}

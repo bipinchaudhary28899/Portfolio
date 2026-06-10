@@ -340,14 +340,17 @@ export function Education() {
         <div className="max-w-6xl mx-auto">
 
           {/* Header */}
-          <div className="edu-hd-desktop opacity-0 mb-20">
+          <div className="edu-hd-desktop opacity-0 mb-20 text-center flex flex-col items-center">
             <p className="section-label mb-3">Background</p>
             <h2
-              className="heading-accent font-black tracking-tight leading-none"
+              className="font-black tracking-tight leading-none"
               style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)" }}
             >
               Education
             </h2>
+            <p className="mt-4 text-sm md:text-base leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "44rem" }}>
+              The academic foundation behind my engineering work.
+            </p>
           </div>
 
           {/*
@@ -473,11 +476,14 @@ export function Education() {
         style={{ background: "var(--bg)", overflowX: "clip" }}
       >
         {/* Header */}
-        <div className="edu-hd-mobile opacity-0 mb-10">
+        <div className="edu-hd-mobile opacity-0 mb-10 text-center flex flex-col items-center">
           <p className="section-label mb-2">Background</p>
-          <h2 className="heading-accent text-3xl font-black" style={{ color: "var(--fg)" }}>
+          <h2 className="text-3xl font-black" style={{ color: "var(--fg)" }}>
             Education
           </h2>
+          <p className="mt-3 text-sm leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "32rem" }}>
+            The academic foundation behind my engineering work.
+          </p>
         </div>
 
         <div

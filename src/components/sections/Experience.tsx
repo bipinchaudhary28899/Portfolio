@@ -305,12 +305,15 @@ export function Experience() {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="exp-header mb-10 sm:mb-20">
+        <div className="exp-header mb-10 sm:mb-20 text-center flex flex-col items-center">
           <p className="exp-label section-label mb-3" style={{ opacity: 0 }}>Career</p>
-          <h2 className="exp-title heading-accent font-black tracking-tight leading-none"
+          <h2 className="exp-title font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
             Work Experience
           </h2>
+          <p className="mt-4 text-sm md:text-base leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "44rem" }}>
+            Roles where I&apos;ve designed, built, and shipped production systems across teams and domains.
+          </p>
         </div>
 
         {/* Timeline */}

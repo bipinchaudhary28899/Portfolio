@@ -80,12 +80,15 @@ export function OpenSource() {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="os-header mb-6">
+        <div className="os-header mb-6 text-center flex flex-col items-center">
           <p className="os-label section-label mb-3" style={{ opacity: 0 }}>Community</p>
-          <h2 className="os-title heading-accent font-black tracking-tight leading-none"
+          <h2 className="os-title font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
             Contributions
           </h2>
+          <p className="mt-4 text-sm md:text-base leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "44rem" }}>
+            Pull requests merged into open-source projects I use, learn from, and believe in.
+          </p>
         </div>
 
         {/* Stats bar */}

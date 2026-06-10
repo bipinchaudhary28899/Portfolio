@@ -100,12 +100,15 @@ export function Contact() {
       style={{ background: "var(--bg-alt)" }}>
       <div className="max-w-6xl mx-auto">
 
-        <div className="contact-header opacity-0 mb-14">
-          <p className="section-label mb-3">Let's Talk</p>
-          <h2 className="heading-accent font-black tracking-tight leading-none"
+        <div className="contact-header opacity-0 mb-14 text-center flex flex-col items-center">
+          <p className="section-label mb-3">Let&apos;s Talk</p>
+          <h2 className="font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)" }}>
             Get in Touch
           </h2>
+          <p className="mt-4 text-sm md:text-base leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "44rem" }}>
+            Have an idea, a role, or just want to connect? My inbox is always open.
+          </p>
         </div>
 
         <div className="contact-body grid md:grid-cols-2 gap-12 items-start">

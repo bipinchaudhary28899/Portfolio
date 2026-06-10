@@ -37,44 +37,66 @@ export function HonorsAwards() {
 
   useEffect(() => {
     if (!loadingComplete) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const ctx = gsap.context(() => {
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const start = () => (window.innerWidth < 768 ? "top 80%" : "top bottom");
 
-      /* ── New header entrance: label blurs in from above, title unmasks ── */
+      /* ── Header entrance ── */
       gsap.set([".ha-label", ".ha-title"], { opacity: 0 });
       const htl = gsap.timeline({
         scrollTrigger: { trigger: ".ha-header", start, toggleActions: "play none none none" },
       });
       htl.fromTo(".ha-label",
             { opacity: 0, y: -18, filter: "blur(6px)" },
-            { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power3.out" })
+            { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power3.out", clearProps: "filter" })
          .fromTo(".ha-title",
             { opacity: 0, y: 36, clipPath: "inset(0 0 100% 0)" },
-            { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.85, ease: "power4.out" }, "-=0.2");
+            { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.85, ease: "power4.out", clearProps: "clipPath" }, "-=0.2");
 
-      /* ── New carousel entrance: the whole rail rises + sharpens into view ── */
+      /* ── Rail entrance — clears filter/transform on completion so NO filter
+         context lingers on the element that hosts the moving track (a stray
+         blur(0) there is what makes the loop stutter). ── */
       gsap.fromTo(".ha-viewport",
-        { opacity: 0, y: 56, scale: 0.97, filter: "blur(10px)" },
-        { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.95, ease: "power3.out",
-          scrollTrigger: { trigger: ".ha-viewport", start, toggleActions: "play none none none" } });
-
-      /* ── Seamless, smooth infinite loop (desktop + mobile) ──
-         The track holds two identical copies; sliding it left by exactly one
-         copy (-50%) and repeating gives an endless, even, linear scroll. */
-      if (!reduce && trackRef.current) {
-        loopRef.current = gsap.to(trackRef.current, {
-          xPercent: -50,
-          ease: "none",
-          duration: honors.length * 4.2,
-          repeat: -1,
-        });
-      } else if (viewportRef.current) {
-        /* Reduced motion: let people scroll the rail by hand instead. */
-        viewportRef.current.style.overflowX = "auto";
-      }
+        { opacity: 0, y: 48, filter: "blur(8px)" },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out",
+          scrollTrigger: { trigger: ".ha-viewport", start, toggleActions: "play none none none" },
+          onComplete: () => gsap.set(".ha-viewport", { clearProps: "filter,transform,willChange" }) });
     }, sec);
-    return () => ctx.revert();
+
+    /* ── Seamless, GPU-smooth infinite marquee ──
+       Two identical copies sit in the track; we slide it by exactly one copy
+       and use a wrap modifier so x is recycled continuously (no per-loop reset
+       jump). Constant px/sec keeps the speed even on every screen. */
+    const buildLoop = () => {
+      loopRef.current?.kill();
+      const track = trackRef.current;
+      if (!track) return;
+      if (reduce) { if (viewportRef.current) viewportRef.current.style.overflowX = "auto"; return; }
+      const half = track.scrollWidth / 2;
+      if (half < 1) return;
+      gsap.set(track, { x: 0 });
+      loopRef.current = gsap.to(track, {
+        x: -half,
+        ease: "none",
+        duration: half / 70,
+        repeat: -1,
+        force3D: true,
+        modifiers: { x: gsap.utils.unitize(gsap.utils.wrap(-half, 0)) },
+      });
+    };
+
+    buildLoop();
+    const t = window.setTimeout(buildLoop, 500); // re-measure once images settle
+    const onResize = () => buildLoop();
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("resize", onResize);
+      loopRef.current?.kill();
+      ctx.revert();
+    };
   }, [loadingComplete]);
 
   const pause = () => loopRef.current?.pause();
@@ -140,12 +162,15 @@ export function HonorsAwards() {
       <div className="px-6 sm:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="ha-header mb-12 sm:mb-14">
+          <div className="ha-header mb-12 sm:mb-14 text-center flex flex-col items-center">
             <p className="ha-label section-label mb-3" style={{ opacity: 0 }}>Recognition</p>
-            <h2 className="ha-title heading-accent font-black tracking-tight leading-none"
+            <h2 className="ha-title font-black tracking-tight leading-none"
               style={{ fontSize: "clamp(2.4rem,5.5vw,5rem)", color: "var(--fg)", opacity: 0 }}>
               Beyond the Code
             </h2>
+            <p className="mt-4 text-sm md:text-base leading-relaxed mx-auto" style={{ color: "var(--fg-dim)", maxWidth: "44rem" }}>
+              Awards, honors, and moments that recognize impact reaching beyond writing code.
+            </p>
           </div>
 
           {/* ── Infinite carousel — constrained to the column, soft edge fade ── */}
