@@ -17,8 +17,19 @@ const PAL = {
   bg:     "color-mix(in srgb, var(--accent) 12%, transparent)",
   glow:   "color-mix(in srgb, var(--accent) 22%, transparent)",
   border: "color-mix(in srgb, var(--accent) 32%, transparent)",
+  /* Premium ember gradient — accent → accent2 (e.g. #ff6535 → #ff9f1c). */
+  grad:   "linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%)",
 };
 type Pal = typeof PAL;
+
+/* Gradient-clipped text — reuse on numbers/labels that should pop. */
+const gradText: React.CSSProperties = {
+  background: PAL.grad,
+  WebkitBackgroundClip: "text",
+  backgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  color: "transparent",
+};
 
 /* ── Company logo ─────────────────────────────────────────────────────────── */
 function CompanyLogo({ src, company, pal, size = 40 }: { src: string; company: string; pal: Pal; size?: number }) {
@@ -83,7 +94,7 @@ function Dot({ pal }: { pal: Pal }) {
     <div className="exp-dot relative flex items-center justify-center" style={{ width: 24, height: 24 }}>
       <div
         className="rounded-full"
-        style={{ width: 13, height: 13, background: pal.accent, border: "3px solid var(--bg-alt)", boxShadow: `0 0 8px ${pal.glow}` }}
+        style={{ width: 13, height: 13, background: pal.grad, border: "3px solid var(--bg-alt)", boxShadow: `0 0 8px ${pal.glow}` }}
       />
     </div>
   );
@@ -108,7 +119,7 @@ function DetailBody({ exp }: { exp: (typeof experiences)[number] }) {
         {exp.metrics.map((m, j) => (
           <div key={j} className="flex-1 min-w-[80px] rounded-xl px-3 py-2.5 text-center"
             style={{ background: PAL.bg, border: `1px solid ${PAL.border}` }}>
-            <p className="text-lg font-black tabular-nums leading-none mb-0.5" style={{ color: PAL.accent }}>{m.value}</p>
+            <p className="text-lg font-black tabular-nums leading-none mb-0.5" style={gradText}>{m.value}</p>
             <p className="text-[11px] leading-tight" style={{ color: "var(--muted)" }}>{m.label}</p>
           </div>
         ))}
@@ -132,6 +143,12 @@ export function Experience() {
   const secRef = useRef<HTMLElement>(null);
   const capMobileRef = useRef<HTMLDivElement>(null);
 
+  /* Desktop bubble-tail tracking: the panel's left tail slides vertically to
+     line up with whichever company tab is currently selected. */
+  const panelRef = useRef<HTMLDivElement>(null);
+  const railRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [tailTop, setTailTop] = useState<number | null>(null);
+
   /* Desktop: one role selected at a time (tab/list-select). */
   const [selected, setSelected] = useState(0);
 
@@ -146,6 +163,24 @@ export function Experience() {
     });
 
   const loadingComplete = useLoadingComplete();
+
+  /* Measure the selected tab's vertical centre (relative to the panel) so the
+     tail points at it. Re-runs on selection, load, and resize. */
+  useEffect(() => {
+    const place = () => {
+      const item = railRefs.current[selected];
+      const panel = panelRef.current;
+      if (!item || !panel) return;
+      const ir = item.getBoundingClientRect();
+      const pr = panel.getBoundingClientRect();
+      const radius = 18; // keep the tail off the rounded corners
+      const center = ir.top + ir.height / 2 - pr.top;
+      setTailTop(Math.min(Math.max(center, radius), pr.height - radius));
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [selected, loadingComplete]);
 
   useEffect(() => {
     if (!loadingComplete) return;
@@ -244,19 +279,20 @@ export function Experience() {
               return (
                 <button
                   key={exp.id}
+                  ref={(el) => { railRefs.current[i] = el; }}
                   role="tab"
                   aria-selected={active}
                   onClick={() => setSelected(i)}
                   className="exp-rail-item relative text-left rounded-xl p-3 pl-4 flex items-center gap-3 transition-all duration-300"
                   style={{
-                    background: active ? PAL.bg : "var(--card)",
-                    border: `1px solid ${active ? PAL.border : "var(--border)"}`,
+                    background: "var(--card)",
+                    border: "1px solid var(--border)",
                     boxShadow: active ? "var(--shadow-card)" : "none",
                   }}
                 >
                   {/* Active accent bar */}
                   <span className="absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full"
-                    style={{ width: 3, height: active ? "62%" : "0%", background: PAL.accent, transition: "height 0.3s ease" }} />
+                    style={{ width: 3, height: active ? "62%" : "0%", background: PAL.grad, transition: "height 0.3s ease" }} />
                   <CompanyLogo src={exp.logo} company={exp.company} pal={PAL} size={40} />
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-bold truncate" style={{ color: "var(--fg)" }}>{exp.company}</p>
@@ -268,17 +304,38 @@ export function Experience() {
             })}
           </div>
 
-          {/* Right detail panel */}
-          <div className="exp-panel relative rounded-2xl overflow-hidden p-7 lg:p-8"
-            role="tabpanel"
-            style={{
-              background: "var(--card)",
-              border: `1px solid ${PAL.border}`,
-              boxShadow: "var(--shadow-card), var(--inset-highlight)",
-              minHeight: "clamp(380px, 40vw, 460px)",
-            }}>
-            <div className="absolute top-0 left-0 right-0 h-[2px]"
-              style={{ background: `linear-gradient(to right, ${PAL.accent}, transparent)` }} />
+          {/* Right detail panel — iMessage-style bubble. The tail (left edge)
+              slides vertically to point at the selected company tab. */}
+          <div className="relative">
+
+            {/* Tail — two stacked triangles (border + fill) pointing left.
+                `tailTop` aligns it with the active tab's vertical centre. */}
+            {tailTop !== null && (
+              <div
+                aria-hidden
+                className="exp-tail"
+                style={{
+                  position: "absolute",
+                  top: tailTop,
+                  left: 0,
+                  zIndex: 5,
+                  transform: "translateY(-50%)",
+                  transition: "top 0.4s cubic-bezier(0.4,0,0.2,1)",
+                }}
+              >
+                {/* Single fill triangle — same colour as the bubble so the tail
+                    reads as one continuous unit. Wide isosceles message tail. */}
+                <span style={{ position: "absolute", left: -16, top: "50%", transform: "translateY(-50%)", width: 0, height: 0, borderTop: "11px solid transparent", borderBottom: "11px solid transparent", borderRight: "17px solid var(--card)" }} />
+              </div>
+            )}
+
+            <div ref={panelRef} className="exp-panel relative rounded-2xl overflow-hidden p-7 lg:p-8"
+              role="tabpanel"
+              style={{
+                background: "var(--card)",
+                boxShadow: "var(--shadow-card), var(--inset-highlight)",
+                minHeight: "clamp(380px, 40vw, 460px)",
+              }}>
 
             {/* Faded company-logo watermark filling the top-right quadrant */}
             {sel.logo && (
@@ -331,6 +388,7 @@ export function Experience() {
               <div className="h-px" style={{ background: `linear-gradient(to right, ${PAL.border}, transparent)` }} />
 
               <DetailBody exp={sel} />
+            </div>
             </div>
           </div>
         </div>
@@ -394,7 +452,7 @@ export function Experience() {
                           {exp.metrics.map((m, j) => (
                             <div key={j} className="flex-1 min-w-[72px] rounded-xl px-2.5 py-2 text-center"
                               style={{ background: PAL.bg, border: `1px solid ${PAL.border}` }}>
-                              <p className="text-sm font-black tabular-nums leading-none mb-0.5" style={{ color: PAL.accent }}>{m.value}</p>
+                              <p className="text-sm font-black tabular-nums leading-none mb-0.5" style={gradText}>{m.value}</p>
                               <p className="text-[10px] leading-tight" style={{ color: "var(--muted)" }}>{m.label}</p>
                             </div>
                           ))}
