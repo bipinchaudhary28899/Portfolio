@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Briefcase } from "lucide-react";
+import { Briefcase, MapPin } from "lucide-react";
 import Image from "next/image";
 import { experiences } from "@/data/portfolio";
 import { Highlight } from "@/components/ui/Highlight";
@@ -365,23 +365,34 @@ export function Experience() {
                 minHeight: "clamp(380px, 40vw, 460px)",
               }}>
 
-            {/* Faded company-logo watermark filling the top-right quadrant */}
-            {sel.logo && (
-              <div
-                key={`wm-${selected}`}
-                aria-hidden
-                className="pointer-events-none absolute"
-                style={{ top: 0, right: 0, width: "50%", height: "50%", zIndex: 0 }}
-              >
-                <Image
-                  src={sel.logo}
-                  alt=""
-                  fill
-                  className="select-none"
-                  style={{ objectFit: "contain", objectPosition: "top right", opacity: 0.07, filter: "grayscale(1)" }}
-                />
-              </div>
-            )}
+            {/* Faded company-logo watermark in the top-right corner. Square icon
+                logos fill the quadrant; wide wordmarks (logoMark) use a smaller,
+                corner-tucked box so they don't stretch across or overlap text. */}
+            {sel.logo && (() => {
+              const usingMark = "logoMark" in sel && !!sel.logoMark;
+              return (
+                <div
+                  key={`wm-${selected}`}
+                  aria-hidden
+                  className="pointer-events-none absolute"
+                  style={{
+                    top: usingMark ? 22 : 0,
+                    right: usingMark ? 24 : 0,
+                    width: usingMark ? "34%" : "50%",
+                    height: usingMark ? "18%" : "50%",
+                    zIndex: 0,
+                  }}
+                >
+                  <Image
+                    src={usingMark ? (sel as { logoMark: string }).logoMark : sel.logo}
+                    alt=""
+                    fill
+                    className="select-none"
+                    style={{ objectFit: "contain", objectPosition: "top right", opacity: usingMark ? 0.05 : 0.07, filter: "grayscale(1)" }}
+                  />
+                </div>
+              );
+            })()}
 
             <div key={selected} className="exp-panel-in relative z-10 flex flex-col gap-5">
               {/* Header: logo + company pill + period + role */}
@@ -401,9 +412,10 @@ export function Experience() {
                         {sel.company}
                       </span>
                     )}
-                    <span className="text-xs font-medium px-3 py-1 rounded-full shrink-0"
+                    <span className="text-xs font-medium px-3 py-1 rounded-full shrink-0 inline-flex items-center gap-1"
                       style={{ background: "var(--bg)", color: "var(--muted)", border: "1px solid var(--border)" }}>
-                      {sel.period}
+                      <MapPin size={11} style={{ opacity: 0.8 }} />
+                      {sel.location}
                     </span>
                   </div>
                   <h3 className="text-xl lg:text-2xl font-black leading-tight mt-2" style={{ color: "var(--fg)" }}>
