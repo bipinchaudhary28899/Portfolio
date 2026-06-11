@@ -27,7 +27,19 @@ function DesktopEduCard({ edu, Icon }: { edu: (typeof education)[number]; Icon: 
       style={{ background: "var(--card)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
 
       {/* ── Highlighted header sub-box (inset within the card): icon · date · degree · school · grade ── */}
-      <div className="rounded-xl p-4 flex flex-col" style={{ background: HEADER_BG, border: `1px solid ${ACCENT_BORDER}` }}>
+      <div className="relative rounded-xl p-4 flex flex-col" style={{ background: HEADER_BG, border: `1px solid ${ACCENT_BORDER}` }}>
+
+        {/* Grade — secondary, tinted pill pinned to the top-right corner so the
+            placement is identical across every card and the degree stays the hero. */}
+        <span className="absolute top-4 right-4 text-[11px] font-semibold px-2 py-0.5 rounded-md tabular-nums"
+          style={{
+            background: "color-mix(in srgb, var(--accent) 12%, transparent)",
+            color: "var(--accent)",
+            border: "1px solid color-mix(in srgb, var(--accent) 22%, transparent)",
+          }}>
+          {edu.grade}
+        </span>
+
         <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3 shrink-0"
           style={{ background: "var(--card)", border: `1px solid ${ACCENT_BORDER}` }}>
           <Icon size={20} style={{ color: "var(--accent)" }} />
@@ -53,16 +65,10 @@ function DesktopEduCard({ edu, Icon }: { edu: (typeof education)[number]; Icon: 
         ) : (
           <p className="text-[13px] mt-1" style={{ color: "var(--fg-dim)" }}>{edu.institution}</p>
         )}
-
-        {/* Grade — solid accent pill */}
-        <span className="self-start mt-3 text-xs font-bold px-2.5 py-1 rounded-md"
-          style={{ background: "var(--accent)", color: "#fff" }}>
-          {edu.grade}
-        </span>
       </div>
 
-      {/* ── Body: description + highlights ── */}
-      <div className="px-1 pt-4 flex flex-col flex-1">
+      {/* ── Body: description + highlights (sizes to content) ── */}
+      <div className="px-1 pt-4 flex flex-col">
         {edu.description && (
           <p className="text-[13px] leading-relaxed" style={{ color: "var(--fg-dim)" }}>
             {edu.description}

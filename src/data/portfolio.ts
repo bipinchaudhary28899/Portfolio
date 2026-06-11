@@ -510,7 +510,6 @@ export const education = [
     highlights: [
       "SAP Labs iXp Internship (Aug 2024 - Jun 2025)",
       "Research: distributed systems, cloud-native architectures, database internals",
-      "CPI: 8.75 / 10",
     ],
   },
   {
@@ -538,7 +537,7 @@ export const education = [
     period: "2016 - 2017",
     grade: "87.2%",
     description:
-      "CBSE Boards - Subjects: English Core, Mathematics, Physics, Chemistry, Computer Science, Work Experience, Physical & Health Education, and General Studies.",
+      "CBSE board examinations with a focus on Mathematics, Physics, and Computer Science.",
     highlights: [
       "School topper in Computer Science - 96/100 in CBSE board exam",
     ],
@@ -551,7 +550,7 @@ export const education = [
     period: "2014 - 2015",
     grade: "CGPA: 9.2 / 10",
     description:
-      "CBSE Boards - Subjects: English, Hindi, Mathematics, Science, and Social Science.",
+      "CBSE board examinations across core subjects.",
     highlights: [],
   },
 ];
