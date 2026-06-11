@@ -323,16 +323,44 @@ export function Experience() {
                   transition: "top 0.4s cubic-bezier(0.4,0,0.2,1)",
                 }}
               >
-                {/* Single fill triangle — same colour as the bubble so the tail
-                    reads as one continuous unit. Wide isosceles message tail. */}
-                <span style={{ position: "absolute", left: -16, top: "50%", transform: "translateY(-50%)", width: 0, height: 0, borderTop: "11px solid transparent", borderBottom: "11px solid transparent", borderRight: "17px solid var(--card)" }} />
+                {/* Gradient-outlined tail. The two sloped edges carry the same
+                    ember gradient as the panel border; the base (right edge) is
+                    left open so it merges seamlessly into the box — no seam line.
+                    The card-coloured fill overlaps the panel's left border band
+                    to hide it behind the tail. */}
+                <svg
+                  width="22"
+                  height="26"
+                  viewBox="0 0 22 26"
+                  style={{ position: "absolute", left: -18, top: "50%", transform: "translateY(-50%)", overflow: "visible" }}
+                >
+                  <defs>
+                    <linearGradient id="expTailGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="var(--accent)" />
+                      <stop offset="100%" stopColor="var(--accent2)" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M20 2 L2 13 L20 24"
+                    fill="var(--card)"
+                    stroke="url(#expTailGrad)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </div>
             )}
 
             <div ref={panelRef} className="exp-panel relative rounded-2xl overflow-hidden p-7 lg:p-8"
               role="tabpanel"
               style={{
-                background: "var(--card)",
+                /* Ember gradient border (same accent → accent2 as the rail bars),
+                   painted via padding-box / border-box clip so the inside stays
+                   the card colour while the 2px perimeter shows the gradient. */
+                border: "2px solid transparent",
+                background:
+                  "linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(135deg, var(--accent), var(--accent2)) border-box",
                 boxShadow: "var(--shadow-card), var(--inset-highlight)",
                 minHeight: "clamp(380px, 40vw, 460px)",
               }}>
