@@ -115,9 +115,9 @@ function DetailBody({ exp }: { exp: (typeof experiences)[number] }) {
       </ul>
 
       {/* Metrics */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2.5 justify-center">
         {exp.metrics.map((m, j) => (
-          <div key={j} className="flex-1 min-w-[80px] rounded-xl px-3 py-2.5 text-center"
+          <div key={j} className="flex-none w-[150px] rounded-xl px-3 py-2.5 text-center"
             style={{ background: PAL.bg, border: `1px solid ${PAL.border}` }}>
             <p className="text-lg font-black tabular-nums leading-none mb-0.5" style={gradText}>{m.value}</p>
             <p className="text-[11px] leading-tight" style={{ color: "var(--muted)" }}>{m.label}</p>

@@ -89,9 +89,9 @@ export function About() {
         </div>
 
         {/* Stats */}
-        <div className="stat-grid grid grid-cols-3 gap-2.5 sm:gap-4 mb-16">
+        <div className="stat-grid flex gap-2.5 sm:gap-4 mb-16 sm:justify-center">
           {stats.map((s) => (
-            <div key={s.label} className="stat-item opacity-0 rounded-xl sm:rounded-2xl px-2 py-4 sm:p-6 border min-h-[96px] sm:min-h-0 flex flex-col items-center justify-center text-center gap-1 sm:gap-0 sm:items-start sm:justify-start sm:text-left"
+            <div key={s.label} className="stat-item opacity-0 flex-1 sm:flex-none sm:w-48 rounded-xl sm:rounded-2xl px-2 py-4 sm:p-6 border min-h-[96px] sm:min-h-0 flex flex-col items-center justify-center text-center gap-1 sm:gap-0 sm:items-start sm:justify-start sm:text-left"
               style={{
                 background: "var(--card)",
                 borderColor: "var(--border)",
