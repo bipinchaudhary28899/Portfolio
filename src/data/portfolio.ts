@@ -161,7 +161,7 @@ export const projects = [
   },
   {
     id: 2,
-    title: "DentalConnect",
+    title: "Chaudhary Dental Care",
     description:
       "Full-stack appointment platform for a dental clinic. OTP auth via WhatsApp, dynamic scheduling engine reconciling weekly schedules and slot blocks, doctor dashboard with live queue management, Row-Level Security, and API observability with cron-based log retention.",
     tech: ["Next.js", "PostgreSQL", "Supabase", "Vercel", "WhatsApp API", "Zod", "JWT"],
@@ -175,7 +175,7 @@ export const projects = [
     ],
     caseStudy: {
       origin:
-        "DentalConnect started from a real need in my own family. A close family member is a dentist who wanted a website where patients could book appointments online. That single, concrete use case became the seed for a full platform - a scheduling engine, live queue management, and WhatsApp-based OTP auth all grew around it. The learning curve here was Next.js and PostgreSQL, plus a complete end-to-end integration of the WhatsApp API for real-world messaging.",
+        "Chaudhary Dental Care started from a real need in my own family. A close family member is a dentist who wanted a website where patients could book appointments online. That single, concrete use case became the seed for a full platform - a scheduling engine, live queue management, and WhatsApp-based OTP auth all grew around it. The learning curve here was Next.js and PostgreSQL, plus a complete end-to-end integration of the WhatsApp API for real-world messaging.",
       problem:
         "The clinic was running appointments on paper and WhatsApp messages - doctors double-booked, patients showed up at wrong times, and there was no visibility into the live queue. No-show rates sat around 25-30%, typical for clinics with no automated reminders. The core challenge was modeling a scheduling engine complex enough to handle doctor leaves, emergency slot blocks, and recurring weekly availability without creating a maintenance nightmare.",
       decisions: [
@@ -384,11 +384,11 @@ export const experiences = [
     location: "Remote",
     logo: "",
     description:
-      "Built and deployed production-grade applications including a video streaming platform (StreamSphere) and a clinic management system (DentalConnect) with real-world users. Designed end-to-end system architecture covering authentication, scheduling engines, caching strategies, and async workflows. Integrated third-party services - WhatsApp API and OpenAI - for real-time communication and AI-powered features.",
+      "Built and deployed production-grade applications including a video streaming platform (StreamSphere) and a clinic management system (Chaudhry Dental Care) with real-world users. Designed end-to-end system architecture covering authentication, scheduling engines, caching strategies, and async workflows. Integrated third-party services - WhatsApp API and OpenAI - for real-time communication and AI-powered features.",
     tech: ["Next.js", "Angular", "Node.js", "AWS", "MongoDB", "Redis", "PostgreSQL", "OpenAI", "WhatsApp API"],
     achievements: [
       "Built StreamSphere - serverless HLS video platform reducing playback startup latency by 40%",
-      "Built DentalConnect - full-stack clinic booking system with WhatsApp OTP and live queue management",
+      "Built Chaudhary Dental Care - full-stack clinic booking system with WhatsApp OTP and live queue management",
       "Integrated OpenAI Whisper + GPT pipeline for AI-powered video content enrichment",
       "Designed end-to-end system architecture: auth, scheduling engine, Redis caching, async workflows",
     ],
