@@ -1,0 +1,16 @@
+%% Doctor Authentication (Email + Password)
+sequenceDiagram
+  actor D as Doctor
+  participant API as Next.js API
+  participant DB as doctors
+  participant MW as middleware.ts
+  D->>API: POST /api/auth/doctor/login (email, password)
+  API->>DB: Query doctors by email
+  API->>API: Verify bcrypt hash
+  alt Match
+    API-->>D: JWT (role=doctor) in httpOnly cookie
+    D->>MW: GET /dashboard
+    MW-->>D: Allowed (role=doctor)
+  else No match
+    API-->>D: 401 Unauthorized
+  end

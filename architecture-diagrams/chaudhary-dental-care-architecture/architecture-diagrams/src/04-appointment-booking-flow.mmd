@@ -1,0 +1,14 @@
+%% Appointment Booking Flow
+flowchart TB
+  P([Patient authenticated]) --> Svc["Select service (/book)"]
+  Svc --> Date["Pick date"]
+  Date --> Slots["GET /api/slots?date=..."]
+  Slots --> Pick["Pick time slot + notes"]
+  Pick --> Create["POST /api/appointments"]
+  Create --> Auth{Active session?}
+  Auth -->|no| Reject["Redirect to OTP / 401"]
+  Auth -->|yes| Insert["Insert appointment<br/>status = upcoming"]
+  Insert --> DB[("appointments")]
+  Insert --> Notify["Send WhatsApp<br/>appointment_confirmation"]
+  Notify --> WA["Meta WhatsApp API"]
+  Insert --> Success["/book/success"]

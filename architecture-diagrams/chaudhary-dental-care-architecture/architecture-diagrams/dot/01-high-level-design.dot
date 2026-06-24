@@ -1,0 +1,54 @@
+digraph HLD {
+  label="Chaudhary Dental Care — High-Level Design";
+  labelloc="t";
+  fontname="Helvetica";
+  fontsize=18;
+  bgcolor=white;
+  compound=true;
+  rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  subgraph cluster_clients {
+    label="Clients (browser)";
+    fontname="Helvetica";
+    color=black;
+    patient   [shape=oval, label="Patient"];
+    doctor    [shape=oval, label="Doctor"];
+    developer [shape=oval, label="Developer"];
+    web [label="Next.js 15 / React 19 Web App\n(patient site · doctor dashboard · /dev console)"];
+    patient   -> web;
+    doctor    -> web;
+    developer -> web;
+  }
+
+  subgraph cluster_app {
+    label="Application — Next.js on Vercel (bom1)";
+    fontname="Helvetica";
+    color=black;
+    mw   [label="middleware.ts\n(route protection · JWT role check)"];
+    api  [label="API Routes (/api/*)\nZod validation · withLogging()"];
+    libs [label="lib: auth · db · whatsapp\nqueue · slots · validations"];
+    mw -> api -> libs;
+  }
+
+  subgraph cluster_data {
+    label="Data";
+    fontname="Helvetica";
+    color=black;
+    db [shape=cylinder, label="Supabase PostgreSQL\n(RLS) — patients, doctors,\nappointments, services,\navailability, reviews, api_logs"];
+  }
+
+  subgraph cluster_ext {
+    label="External services";
+    fontname="Helvetica";
+    color=black;
+    wa   [label="Meta WhatsApp\nBusiness API"];
+    cron [shape=hexagon, label="Vercel Cron\n(daily 14:00 UTC)"];
+  }
+
+  web  -> mw   [label="HTTPS", lhead=cluster_app, ltail=cluster_clients];
+  libs -> db   [label="SQL (service role / anon)", lhead=cluster_data];
+  libs -> wa   [label="OTP & notifications", lhead=cluster_ext];
+  cron -> api  [label="POST /api/cron/cleanup-logs", ltail=cluster_ext, lhead=cluster_app];
+}

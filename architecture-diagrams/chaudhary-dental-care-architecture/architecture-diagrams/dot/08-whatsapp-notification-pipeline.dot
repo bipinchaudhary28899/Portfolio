@@ -1,0 +1,33 @@
+digraph WhatsApp {
+  label="WhatsApp Notification Pipeline";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  subgraph cluster_triggers {
+    label="Triggers (events)";
+    fontname="Helvetica"; color=black;
+    t_otp    [shape=hexagon, label="OTP requested"];
+    t_book   [shape=hexagon, label="Appointment created"];
+    t_remind [shape=hexagon, label="Reminder (Vercel Cron)"];
+    t_cancel [shape=hexagon, label="Appointment cancelled"];
+    t_resched[shape=hexagon, label="Appointment rescheduled"];
+  }
+
+  lib   [label="lib/whatsapp.ts\n(select approved template)"];
+  api   [label="Meta WhatsApp Business API\n(POST message)"];
+  guard [shape=diamond, label="Meta credentials set?\n(prod always · dev optional)"];
+  skip  [label="Skip send (dev)"];
+  patient [shape=oval, label="Patient"];
+
+  t_otp     -> lib [label="otp_authentication"];
+  t_book    -> lib [label="appointment_confirmation"];
+  t_remind  -> lib [label="appointment_reminder"];
+  t_cancel  -> lib [label="appointment_cancelled"];
+  t_resched -> lib [label="appointment_rescheduled"];
+  lib -> guard;
+  guard -> skip [label="no"];
+  guard -> api  [label="yes"];
+  api -> patient;
+}

@@ -1,0 +1,35 @@
+digraph Slots {
+  label="Slot Availability Engine (/api/slots)";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  req   [label="GET /api/slots?date=YYYY-MM-DD"];
+
+  subgraph cluster_inputs {
+    label="Cross-referenced inputs";
+    fontname="Helvetica"; color=black;
+    avail   [shape=cylinder, label="availability\n(weekly schedule)"];
+    bdates  [shape=cylinder, label="blocked_dates\n(full-day ranges)"];
+    bslots  [shape=cylinder, label="blocked_slots\n(time windows)"];
+    appts   [shape=cylinder, label="appointments\n(existing bookings)"];
+    services[shape=cylinder, label="services\n(duration / multi-slot)"];
+  }
+
+  blocked [shape=diamond, label="Date in\nblocked_dates?"];
+  none    [label="Return no slots"];
+  gen     [label="Generate candidate slots\nfrom weekly schedule\n+ slot duration"];
+  filter  [label="Remove slots overlapping\nblocked_slots or existing\nappointments (multi-slot aware)"];
+  out     [label="Return available slots"];
+
+  req -> blocked;
+  avail -> gen;
+  blocked -> none [label="yes"];
+  blocked -> gen  [label="no"];
+  services -> gen;
+  gen -> filter;
+  bslots -> filter;
+  appts -> filter;
+  filter -> out;
+}

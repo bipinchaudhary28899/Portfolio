@@ -1,0 +1,30 @@
+digraph Cron {
+  label="Log Cleanup Cron (Tiered Retention)";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  trigger [shape=hexagon, label="Vercel Cron\ndaily 14:00 UTC"];
+  call    [label="POST /api/cron/cleanup-logs"];
+  auth    [shape=diamond, label="Authorization:\nBearer CRON_SECRET\nvalid?"];
+  reject  [label="401 Unauthorized"];
+  run     [label="Apply tiered retention policy"];
+
+  subgraph cluster_tiers {
+    label="Delete api_logs older than";
+    fontname="Helvetica"; color=black;
+    crit [label="CRITICAL > 30 days"];
+    warn [label="WARNING > 14 days"];
+    slow [label="SLOW > 7 days"];
+    norm [label="NORMAL > 3 days"];
+  }
+
+  logs [shape=cylinder, label="api_logs"];
+
+  trigger -> call -> auth;
+  auth -> reject [label="no"];
+  auth -> run [label="yes"];
+  run -> crit; run -> warn; run -> slow; run -> norm;
+  crit -> logs; warn -> logs; slow -> logs; norm -> logs;
+}

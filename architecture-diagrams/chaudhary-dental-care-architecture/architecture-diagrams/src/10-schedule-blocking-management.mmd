@@ -1,0 +1,17 @@
+%% Schedule & Blocking Management (Doctor)
+flowchart TB
+  Doctor([Doctor])
+  subgraph Editors["Dashboard editors"]
+    Sched["Weekly schedule<br/>/api/availability"]
+    Bdate["Blocked dates<br/>/api/blocked-dates (overlap detection)"]
+    Bslot["Blocked slots<br/>/api/blocked-slots"]
+    Svc["Service CRUD<br/>/api/services"]
+  end
+  Doctor --> Sched --> Adb[("availability")]
+  Doctor --> Bdate --> BDdb[("blocked_dates")]
+  Doctor --> Bslot --> BSdb[("blocked_slots")]
+  Doctor --> Svc --> Sdb[("services")]
+  Adb --> Engine["Slot Availability Engine (/api/slots)"]
+  BDdb --> Engine
+  BSdb --> Engine
+  Sdb --> Engine

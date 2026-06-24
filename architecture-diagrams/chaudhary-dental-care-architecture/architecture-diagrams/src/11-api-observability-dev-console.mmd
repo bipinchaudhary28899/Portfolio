@@ -1,0 +1,18 @@
+%% API Observability & Developer Console
+flowchart TB
+  Req["API request to /api/*"] --> Wrap["withLogging() wrapper"]
+  Wrap --> Handler["Route handler runs"]
+  Handler --> Sev{Classify severity<br/>status + latency}
+  Sev --> Insert["Insert log row"]
+  Insert --> Logs[("api_logs")]
+  subgraph Dev["/dev console (password protected)"]
+    Login["POST /dev-login (DEV_PASSWORD)"]
+    Overview["DB Overview"]
+    Metrics["API Metrics"]
+    Explorer["Log Explorer"]
+  end
+  Login --> Overview
+  Login --> Metrics
+  Login --> Explorer
+  Logs --> Metrics
+  Logs --> Explorer

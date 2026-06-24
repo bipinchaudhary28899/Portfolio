@@ -1,0 +1,13 @@
+%% Review Submission & Moderation
+flowchart TB
+  Patient([Patient]) --> Gate{Appointment completed?}
+  Gate -->|no| No["Cannot review"]
+  Gate -->|yes| Submit["POST /api/reviews (rating + comment)"]
+  Submit --> DB[("reviews status = pending")]
+  Doctor([Doctor]) --> Admin["GET /api/reviews/admin"]
+  Admin --> DB
+  DB --> Mod{Approve or reject?}
+  Mod -->|approve| Approve["status = approved"]
+  Mod -->|reject| Reject["status = rejected"]
+  Approve --> Featured["GET /api/reviews/featured"]
+  Featured --> Home["Public homepage carousel"]

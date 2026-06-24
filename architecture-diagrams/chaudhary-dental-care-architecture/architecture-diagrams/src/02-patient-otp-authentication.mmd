@@ -1,0 +1,19 @@
+%% Patient OTP Authentication (WhatsApp)
+sequenceDiagram
+  actor P as Patient
+  participant API as Next.js API
+  participant DB as otp_requests / patients
+  participant WA as Meta WhatsApp API
+  P->>API: POST /api/otp/send (phone)
+  API->>API: Generate 6-digit OTP, hash, 5-min expiry
+  API->>DB: Store OTP request
+  API->>WA: Send otp_authentication template
+  WA-->>P: OTP delivered
+  P->>API: POST /api/otp/verify (otp)
+  API->>API: Check hash, expiry, attempts < 3
+  alt Valid
+    API->>DB: Find/create phone_account + patient
+    API-->>P: JWT (role=patient) in httpOnly cookie
+  else Invalid
+    API-->>P: Reject (increment attempt)
+  end

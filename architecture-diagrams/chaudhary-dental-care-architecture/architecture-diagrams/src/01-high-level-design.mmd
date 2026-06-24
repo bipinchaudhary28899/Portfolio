@@ -1,0 +1,27 @@
+%% Chaudhary Dental Care — High-Level Design
+flowchart TB
+  subgraph Clients["Clients (browser)"]
+    Patient([Patient])
+    Doctor([Doctor])
+    Developer([Developer])
+    Web["Next.js 15 / React 19 Web App<br/>(patient site · doctor dashboard · /dev)"]
+    Patient --> Web
+    Doctor --> Web
+    Developer --> Web
+  end
+
+  subgraph App["Application — Next.js on Vercel (bom1)"]
+    MW["middleware.ts<br/>(route protection · JWT role check)"]
+    API["API Routes (/api/*)<br/>Zod validation · withLogging()"]
+    Libs["lib: auth · db · whatsapp<br/>queue · slots · validations"]
+    MW --> API --> Libs
+  end
+
+  DB[("Supabase PostgreSQL (RLS)<br/>patients, doctors, appointments,<br/>services, availability, reviews, api_logs")]
+  WA["Meta WhatsApp Business API"]
+  Cron{{"Vercel Cron (daily 14:00 UTC)"}}
+
+  Web -->|HTTPS| MW
+  Libs -->|SQL service role / anon| DB
+  Libs -->|OTP & notifications| WA
+  Cron -->|POST /api/cron/cleanup-logs| API

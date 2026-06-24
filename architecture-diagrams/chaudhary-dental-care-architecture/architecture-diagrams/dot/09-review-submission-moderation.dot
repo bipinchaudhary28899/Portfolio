@@ -1,0 +1,32 @@
+digraph Reviews {
+  label="Review Submission & Moderation";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  patient [shape=oval, label="Patient"];
+  gate    [shape=diamond, label="Appointment\ncompleted?"];
+  no      [label="Cannot review"];
+  submit  [label="POST /api/reviews\n(star rating + comment)"];
+  db      [shape=cylinder, label="reviews\n(status = pending)"];
+
+  doctor  [shape=oval, label="Doctor"];
+  admin   [label="GET /api/reviews/admin\n(all reviews)"];
+  mod     [shape=diamond, label="Approve\nor reject?"];
+  approve [label="status = approved"];
+  reject  [label="status = rejected"];
+
+  featured[label="GET /api/reviews/featured\n(high-rated, approved)"];
+  home    [label="Public homepage\nreviews carousel"];
+
+  patient -> gate;
+  gate -> no [label="no"];
+  gate -> submit [label="yes"];
+  submit -> db;
+  doctor -> admin -> db;
+  db -> mod;
+  mod -> approve [label="approve"];
+  mod -> reject  [label="reject"];
+  approve -> featured -> home;
+}

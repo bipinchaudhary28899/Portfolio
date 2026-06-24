@@ -1,0 +1,24 @@
+digraph DoctorAuth {
+  label="Doctor Authentication (Email + Password)";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  doctor [shape=oval, label="Doctor"];
+  login  [label="/doctor/login\nsubmit email + password"];
+  post   [label="POST /api/auth/doctor/login\n(Zod validation)"];
+  query  [label="Query doctors table"];
+  db     [shape=cylinder, label="doctors\n(email · bcrypt hash)"];
+  verify [shape=diamond, label="bcrypt hash\nmatches?"];
+  reject [label="401 Unauthorized"];
+  jwt    [label="Create JWT (role = doctor)\nset httpOnly cookie"];
+  mw     [label="middleware.ts guards\n/dashboard/*"];
+  dash   [label="Redirect to /dashboard"];
+
+  doctor -> login -> post -> query -> db;
+  db -> verify;
+  verify -> reject [label="no"];
+  verify -> jwt    [label="yes"];
+  jwt -> mw -> dash;
+}

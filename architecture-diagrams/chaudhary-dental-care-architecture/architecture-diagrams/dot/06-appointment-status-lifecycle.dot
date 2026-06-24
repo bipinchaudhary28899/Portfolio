@@ -1,0 +1,23 @@
+digraph Lifecycle {
+  label="Appointment Status Lifecycle";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=LR;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  created [shape=hexagon, label="created\n(POST /api/appointments)"];
+  upcoming [label="upcoming\n(auto-confirmed)"];
+  due     [label="due\n(frontend-only:\ntime passed, IST)", style=dashed];
+  cons    [label="in_consultation"];
+  treat   [label="in_treatment"];
+  done    [label="completed"];
+  cancel  [label="cancelled"];
+
+  created -> upcoming;
+  upcoming -> due [label="time passes", style=dashed];
+  upcoming -> cons [label="PATCH status"];
+  cons -> treat;
+  treat -> done;
+  upcoming -> cancel [label="DELETE / cancel\n(+ WhatsApp notice)"];
+  cons -> cancel;
+}

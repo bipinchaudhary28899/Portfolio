@@ -1,0 +1,30 @@
+digraph Observability {
+  label="API Observability & Developer Console";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  req    [label="API request to /api/*"];
+  wrap   [label="withLogging() wrapper"];
+  handler[label="Route handler runs"];
+  sev    [shape=diamond, label="Classify severity\n(status + latency)"];
+  insert [label="Insert log row\n(endpoint, method, status,\nresponse time, severity, error)"];
+  logs   [shape=cylinder, label="api_logs"];
+
+  subgraph cluster_dev {
+    label="/dev console (password protected)";
+    fontname="Helvetica"; color=black;
+    devlogin [label="POST /dev-login\n(DEV_PASSWORD)"];
+    overview [label="DB Overview\n(counts by entity)"];
+    metrics  [label="API Metrics\n(volume, avg time,\nerror rate, slow endpoints)"];
+    explorer [label="Log Explorer\n(severity / endpoint /\ntime-range filters)"];
+  }
+
+  req -> wrap -> handler -> sev -> insert -> logs;
+  devlogin -> overview;
+  devlogin -> metrics;
+  devlogin -> explorer;
+  logs -> metrics;
+  logs -> explorer;
+}

@@ -1,0 +1,14 @@
+%% Live Queue & Walk-in Management (/dashboard/queue)
+flowchart TB
+  Doctor([Doctor]) --> Load["GET /api/appointments (today)"]
+  Load --> DB[("appointments")]
+  DB --> Cards["Render queue cards<br/>(time · patient · service)"]
+  Cards --> Overdue{Past due IST?}
+  Overdue -->|yes| HL["Highlight as overdue"]
+  Cards --> S1
+  subgraph Stepper["4-step workflow"]
+    S1["Waiting"] --> S2["In Consultation"] --> S3["In Treatment"] --> S4["Done"]
+  end
+  Doctor --> Search["Patient search<br/>GET /api/patients/search"]
+  Doctor --> Walkin["Walk-in registration<br/>POST /api/patients/walk-in"]
+  Walkin --> DB

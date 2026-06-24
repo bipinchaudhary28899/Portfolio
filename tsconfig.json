@@ -39,6 +39,7 @@
     ".next-dexy-verify/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "architecture-diagrams"
   ]
 }

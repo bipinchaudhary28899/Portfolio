@@ -1,0 +1,18 @@
+%% WhatsApp Notification Pipeline
+flowchart TB
+  subgraph Triggers["Triggers (events)"]
+    Totp{{OTP requested}}
+    Tbook{{Appointment created}}
+    Tremind{{Reminder Vercel Cron}}
+    Tcancel{{Appointment cancelled}}
+    Tresched{{Appointment rescheduled}}
+  end
+  Totp -->|otp_authentication| Lib
+  Tbook -->|appointment_confirmation| Lib
+  Tremind -->|appointment_reminder| Lib
+  Tcancel -->|appointment_cancelled| Lib
+  Tresched -->|appointment_rescheduled| Lib
+  Lib["lib/whatsapp.ts (select template)"] --> Guard{Meta credentials set?}
+  Guard -->|no dev| Skip["Skip send"]
+  Guard -->|yes| API["Meta WhatsApp Business API"]
+  API --> Patient([Patient])

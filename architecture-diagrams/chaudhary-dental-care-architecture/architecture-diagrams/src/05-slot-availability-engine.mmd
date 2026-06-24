@@ -1,0 +1,11 @@
+%% Slot Availability Engine (/api/slots)
+flowchart TB
+  Req["GET /api/slots?date=YYYY-MM-DD"] --> Blocked{Date in blocked_dates?}
+  Avail[("availability")] --> Gen
+  Services[("services duration / multi-slot")] --> Gen
+  Blocked -->|yes| None["Return no slots"]
+  Blocked -->|no| Gen["Generate candidate slots<br/>from weekly schedule + duration"]
+  Gen --> Filter["Remove slots overlapping blocked_slots<br/>or existing appointments (multi-slot aware)"]
+  Bslots[("blocked_slots")] --> Filter
+  Appts[("appointments")] --> Filter
+  Filter --> Out["Return available slots"]

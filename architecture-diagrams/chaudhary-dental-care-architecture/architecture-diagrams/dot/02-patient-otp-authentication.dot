@@ -1,0 +1,27 @@
+digraph OTPAuth {
+  label="Patient OTP Authentication (WhatsApp)";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  patient [shape=oval, label="Patient"];
+  enter   [label="Enter phone number"];
+  send    [label="POST /api/otp/send"];
+  gen     [label="Generate 6-digit OTP,\nhash it, store w/ 5-min expiry"];
+  store   [shape=cylinder, label="otp_requests"];
+  wa      [label="Meta WhatsApp Business API\n(otp_authentication template)"];
+  submit  [label="Patient submits OTP\nPOST /api/otp/verify"];
+  check   [shape=diamond, label="Hash match\n& not expired\n& attempts < 3?"];
+  fail    [label="Reject\n(increment attempt count)"];
+  jwt     [label="Create JWT (role = patient)\nset httpOnly cookie"];
+  acct    [shape=cylinder, label="phone_accounts / patients\n(find or create)"];
+  done    [label="Session established"];
+
+  patient -> enter -> send -> gen -> store;
+  gen -> wa -> patient [label="OTP delivered"];
+  patient -> submit -> check;
+  check -> fail [label="no"];
+  check -> jwt  [label="yes"];
+  jwt -> acct -> done;
+}

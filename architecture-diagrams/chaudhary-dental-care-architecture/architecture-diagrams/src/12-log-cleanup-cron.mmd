@@ -1,0 +1,16 @@
+%% Log Cleanup Cron (Tiered Retention)
+flowchart TB
+  Trigger{{Vercel Cron daily 14:00 UTC}} --> Call["POST /api/cron/cleanup-logs"]
+  Call --> Auth{Bearer CRON_SECRET valid?}
+  Auth -->|no| Reject["401 Unauthorized"]
+  Auth -->|yes| Run["Apply tiered retention"]
+  subgraph Tiers["Delete api_logs older than"]
+    Crit["CRITICAL > 30 days"]
+    Warn["WARNING > 14 days"]
+    Slow["SLOW > 7 days"]
+    Norm["NORMAL > 3 days"]
+  end
+  Run --> Crit --> Logs[("api_logs")]
+  Run --> Warn --> Logs
+  Run --> Slow --> Logs
+  Run --> Norm --> Logs

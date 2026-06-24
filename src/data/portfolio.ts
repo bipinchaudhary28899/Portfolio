@@ -163,7 +163,7 @@ export const projects = [
     id: 2,
     title: "Chaudhary Dental Care",
     description:
-      "Full-stack appointment platform for a dental clinic. OTP auth via WhatsApp, dynamic scheduling engine reconciling weekly schedules and slot blocks, doctor dashboard with live queue management, Row-Level Security, and API observability with cron-based log retention.",
+      "Full-stack appointment platform for a dental clinic. WhatsApp OTP patient login and bcrypt doctor auth, a slot-availability engine reconciling weekly hours, blocked dates and slots, a real-time doctor dashboard with live queue and walk-in management, a WhatsApp notification pipeline, review moderation, and a /dev console for API observability with cron-based tiered log retention.",
     tech: ["Next.js", "PostgreSQL", "Supabase", "Vercel", "WhatsApp API", "Zod", "JWT"],
     liveUrl: "https://www.chaudharydentalcare.com/",
     githubUrl: "https://github.com/bipinchaudhary28899/DentalConnect",
@@ -177,7 +177,7 @@ export const projects = [
       origin:
         "Chaudhary Dental Care started from a real need in my own family. A close family member is a dentist who wanted a website where patients could book appointments online. That single, concrete use case became the seed for a full platform - a scheduling engine, live queue management, and WhatsApp-based OTP auth all grew around it. The learning curve here was Next.js and PostgreSQL, plus a complete end-to-end integration of the WhatsApp API for real-world messaging.",
       problem:
-        "The clinic was running appointments on paper and WhatsApp messages - doctors double-booked, patients showed up at wrong times, and there was no visibility into the live queue. No-show rates sat around 25-30%, typical for clinics with no automated reminders. The core challenge was modeling a scheduling engine complex enough to handle doctor leaves, emergency slot blocks, and recurring weekly availability without creating a maintenance nightmare.",
+        "The clinic was running appointments on paper and WhatsApp messages - slots got double-booked, patients showed up at wrong times, and there was no visibility into the live queue or the day's walk-ins. No-show rates sat around 25-30%, typical for clinics with no automated reminders. The core challenge was modeling a scheduling engine complex enough to handle the doctor's leaves, emergency slot blocks, partial-day blocks, and recurring weekly availability without creating a maintenance nightmare.",
       decisions: [
         {
           title: "WhatsApp OTP over SMS",
@@ -212,9 +212,14 @@ export const projects = [
             "WhatsApp webhooks retry on non-200 responses, which caused duplicate OTP sends if the DB write was slow. Added idempotency keys (hash of phone + timestamp rounded to 30s) to deduplicate incoming webhook events before processing - solved duplicate OTP complaints on day 2 of launch.",
         },
         {
-          title: "Live queue without WebSockets",
+          title: "Live queue without a WebSocket server",
           detail:
-            "A full WebSocket server felt like over-engineering for a 2-doctor clinic. Used Supabase Realtime (Postgres LISTEN/NOTIFY under the hood) to push queue updates to the doctor dashboard. Zero additional infrastructure - the queue refreshes within 200ms of any appointment status change.",
+            "A full WebSocket server felt like over-engineering for a single-doctor clinic. The dashboard keeps a real-time queue of today's appointments - cards advance through a Waiting → In Consultation → In Treatment → Done stepper, overdue appointments are highlighted, and walk-ins can be registered straight into the queue - all driven off lightweight polling against the appointment status lifecycle. Zero additional infrastructure.",
+        },
+        {
+          title: "Observability without a third-party APM",
+          detail:
+            "Paid APM tools were overkill for one clinic, but flying blind in production was not an option. A withLogging() wrapper around every API route writes an api_logs row with a computed severity, and a password-protected /dev console surfaces a DB overview, API metrics, and a searchable log explorer. A daily Vercel Cron job (authorized with CRON_SECRET) then prunes api_logs on a tiered retention policy - CRITICAL kept 30 days down to NORMAL at 3 - so the table never grows unbounded.",
         },
       ],
       metrics: [
@@ -222,8 +227,82 @@ export const projects = [
         { value: "100%", label: "WhatsApp delivery rate", detail: "Compared to ~80% for SMS in India due to DND filters. Zero failed OTP deliveries." },
       ],
       architecture:
-        "Patient → Next.js → /api/book → Zod validation → Supabase (slot conflict check + RLS) → WhatsApp API (OTP)\n\nDoctor Dashboard → Supabase Realtime subscription → Live queue (LISTEN/NOTIFY)\n\nCron → /api/cleanup → Supabase → Log retention (7-day rolling)",
+        "Patient → Next.js → /api/otp/send → WhatsApp OTP → /api/otp/verify → JWT session cookie\n\nBooking: service + date → /api/slots (availability − blocks − existing appts × service duration) → /api/appointments (session-gated insert) → WhatsApp confirmation\n\nDoctor → bcrypt login → middleware-guarded /dashboard → live queue + walk-ins + schedule/blocking editors\n\nObservability: withLogging() → api_logs (severity) → /dev console (DB overview · API metrics · log explorer)\n\nVercel Cron → /api/cron/cleanup-logs (CRON_SECRET) → tiered log retention (CRITICAL 30d → NORMAL 3d)",
     } satisfies CaseStudy,
+    diagrams: [
+      {
+        src: "/images/chaudhary-dental-care-architecture/01-high-level-design.png",
+        title: "High-Level Design",
+        caption:
+          "The whole system at a glance: patient, doctor and developer clients hit a Next.js app on Vercel, backed by Supabase Postgres, with the WhatsApp Business API and Vercel Cron as external services.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/02-patient-otp-authentication.png",
+        title: "Patient OTP Authentication",
+        caption:
+          "Patients sign in with a 6-digit WhatsApp OTP (hashed, 5-minute expiry, max 3 attempts) that mints a JWT patient session in an httpOnly cookie.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/03-doctor-authentication.png",
+        title: "Doctor Authentication",
+        caption:
+          "Doctors log in with email and password verified against a bcrypt hash; the resulting JWT lets middleware guard every /dashboard route.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/04-appointment-booking-flow.png",
+        title: "Appointment Booking Flow",
+        caption:
+          "The multi-step booking journey from service and date selection through live slot lookup to a session-gated appointment insert plus a WhatsApp confirmation.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/05-slot-availability-engine.png",
+        title: "Slot Availability Engine",
+        caption:
+          "How /api/slots computes open times by cross-referencing weekly availability, blocked dates, blocked slots, existing appointments and multi-slot service durations.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/06-appointment-status-lifecycle.png",
+        title: "Appointment Status Lifecycle",
+        caption:
+          "The status machine from upcoming through in_consultation, in_treatment and completed, plus cancellation and the frontend-only overdue (due) state.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/07-live-queue-walkin.png",
+        title: "Live Queue & Walk-in Management",
+        caption:
+          "The doctor's real-time queue: today's cards, overdue highlighting, the Waiting → In Consultation → In Treatment → Done workflow stepper, patient search and walk-in registration.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/08-whatsapp-notification-pipeline.png",
+        title: "WhatsApp Notification Pipeline",
+        caption:
+          "Five appointment and OTP events map to Meta-approved templates through lib/whatsapp.ts, with sends gated on whether Meta credentials are configured.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/09-review-submission-moderation.png",
+        title: "Review Submission & Moderation",
+        caption:
+          "Patients can only review completed appointments; reviews stay pending until the doctor approves them, after which high-rated ones surface on the homepage carousel.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/10-schedule-blocking-management.png",
+        title: "Schedule & Blocking Management",
+        caption:
+          "The doctor's editors for weekly hours, blocked date ranges, partial-day blocked slots and service CRUD — all feeding back into the slot availability engine.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/11-api-observability-dev-console.png",
+        title: "API Observability & Dev Console",
+        caption:
+          "Every wrapped route logs an api_logs row with a computed severity; the password-protected /dev console surfaces DB overview, API metrics and a log explorer.",
+      },
+      {
+        src: "/images/chaudhary-dental-care-architecture/12-log-cleanup-cron.png",
+        title: "Log Cleanup Cron",
+        caption:
+          "A daily Vercel Cron call, authorized with CRON_SECRET, applies a tiered retention policy that prunes api_logs by severity (CRITICAL 30d down to NORMAL 3d).",
+      },
+    ],
   },
   {
     id: 3,

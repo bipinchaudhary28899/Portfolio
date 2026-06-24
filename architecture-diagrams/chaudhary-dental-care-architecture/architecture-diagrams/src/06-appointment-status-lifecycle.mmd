@@ -1,0 +1,9 @@
+%% Appointment Status Lifecycle
+flowchart LR
+  Created{{created}} --> Upcoming["upcoming (auto-confirmed)"]
+  Upcoming -. time passes IST .-> Due["due (frontend-only)"]
+  Upcoming -->|PATCH status| Cons["in_consultation"]
+  Cons --> Treat["in_treatment"]
+  Treat --> Done["completed"]
+  Upcoming -->|cancel + WhatsApp| Cancel["cancelled"]
+  Cons --> Cancel

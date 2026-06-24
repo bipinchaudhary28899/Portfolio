@@ -1,0 +1,28 @@
+digraph Booking {
+  label="Appointment Booking Flow";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  patient [shape=oval, label="Patient (authenticated)"];
+  svc     [label="Select service\n(/book)"];
+  date    [label="Pick date"];
+  slots   [label="GET /api/slots?date=...\n(available slots)"];
+  pick    [label="Pick time slot + notes"];
+  create  [label="POST /api/appointments\n(Zod validation)"];
+  authchk [shape=diamond, label="Active session\n(middleware)?"];
+  reject  [label="Redirect to OTP / 401"];
+  insert  [label="Insert appointment\nstatus = upcoming"];
+  db      [shape=cylinder, label="appointments"];
+  notify  [label="Send WhatsApp\nappointment_confirmation"];
+  wa      [label="Meta WhatsApp API"];
+  success [label="/book/success\nconfirmation page"];
+
+  patient -> svc -> date -> slots -> pick -> create -> authchk;
+  authchk -> reject [label="no"];
+  authchk -> insert [label="yes"];
+  insert -> db;
+  insert -> notify -> wa;
+  insert -> success;
+}

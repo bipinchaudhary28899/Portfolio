@@ -1,0 +1,33 @@
+digraph Schedule {
+  label="Schedule & Blocking Management (Doctor)";
+  labelloc="t";
+  fontname="Helvetica"; fontsize=16; bgcolor=white; rankdir=TB;
+  node [shape=box, fontname="Helvetica", color=black, fontcolor=black];
+  edge [color=black, fontname="Helvetica", fontcolor=black];
+
+  doctor [shape=oval, label="Doctor"];
+
+  subgraph cluster_actions {
+    label="Dashboard editors";
+    fontname="Helvetica"; color=black;
+    sched [label="Weekly schedule\n/api/availability\n(hours + slot duration)"];
+    bdate [label="Blocked dates\n/api/blocked-dates\n(overlap detection)"];
+    bslot [label="Blocked slots\n/api/blocked-slots\n(time windows)"];
+    svc   [label="Service CRUD\n/api/services"];
+  }
+
+  a_db [shape=cylinder, label="availability"];
+  bd_db[shape=cylinder, label="blocked_dates"];
+  bs_db[shape=cylinder, label="blocked_slots"];
+  s_db [shape=cylinder, label="services"];
+  engine [label="Feeds Slot Availability Engine\n(/api/slots)"];
+
+  doctor -> sched -> a_db;
+  doctor -> bdate -> bd_db;
+  doctor -> bslot -> bs_db;
+  doctor -> svc  -> s_db;
+  a_db -> engine;
+  bd_db -> engine;
+  bs_db -> engine;
+  s_db -> engine;
+}
